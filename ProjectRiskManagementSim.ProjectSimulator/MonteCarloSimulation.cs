@@ -57,34 +57,61 @@ internal class MonteCarloSimulation
         // For each deliverable, simulate the probability of 
         // completion for each column holding the contrains of 
         // the WIPs in each column
-        int wipStack = 0;
-        int interval = 0;
 
-        // Columns are sorted in the right flow order
+        var columnDeliverables = columns.ToDictionary(c => c,
+                                                      c => new SortedSet<DeliverableModel>(
+                                                        Comparer<DeliverableModel>.Create(
+                                                          (x, y) => x.CompletionDays.CompareTo(y.CompletionDays))));
+
+        // Initialize deliverables
+        foreach (var deliverable in deliverables)
+        {
+            var firstColumn = columns.First();
+            columnDeliverables[firstColumn].Add(deliverable);
+            Console.Write(deliverable.Nr);
+        }
+
         foreach (var column in columns)
         {
-            var delivarableCompletionList = new List<double>();
-            foreach (var deliverable in deliverables)
+            Console.WriteLine(column.Name);
+            var wipQueue = columnDeliverables[column];
+            var wipStack = new List<DeliverableModel>();
+
+            while (wipQueue.Count > 0)
             {
+                var deliverable = wipQueue.Min();
+                Console.Write($"{deliverable!.Nr} ");
                 // Probability is always a random % between the low and high bounds
                 var probability = backlog.PercentageLowBound + (backlog.PercentageHighBound - backlog.PercentageLowBound) * ThreadSafeRandom.ThisThreadsRandom.NextDouble();
-
                 // CompletionDays is always a random day between the low and high bounds for the column
                 var completionDays = column.EstimatedLowBound + (column.EstimatedHighBound - column.EstimatedLowBound) * ThreadSafeRandom.ThisThreadsRandom.NextDouble();
+                // Random generated completionDay for deliverable
+                deliverable!.CompletionDays = completionDays * probability;
 
-                var deliverableCompletionDay = completionDays * probability;
-                delivarableCompletionList.Add(deliverableCompletionDay);
-
-                wipStack += 1;
-
-                if (wipStack == column.WIP)
+                if (wipStack.Count >= column.WIP)
                 {
-                    var moveDelivToNextColumn = delivarableCompletionList.Min();
-                    // Reset the wipStack
-                    wipStack -= 1;
+                    Console.WriteLine($"WIP Stack = {wipStack.Count}");
+                    var moveDeliverable = wipStack.OrderBy(d => d.CompletionDays).First();
+                    Console.WriteLine(moveDeliverable.Nr);
+                    wipStack.Remove(moveDeliverable);
+                    wipQueue.Remove(moveDeliverable);
+
+                    // Move deliverable to the next column
+                    var nextColumnIndex = columns.IndexOf(column) + 1;
+                    if (nextColumnIndex < columns.Count)
+                    {
+                        columnDeliverables[columns[nextColumnIndex]].Add(moveDeliverable);
+                    }
+                }
+                else
+                {
+                    // Add deliverable to the WIP stack
+                    wipStack.Add(deliverable);
+                    wipQueue.Remove(deliverable);
                 }
             }
         }
+
     }
     static void ValidateProps(List<StaffModel>? staff, RevenueModel? revenue, CostModel cost, BacklogModel deliverables)
     {
@@ -96,7 +123,7 @@ internal class MonteCarloSimulation
 }
 public static class ThreadSafeRandom
 {
-    [ThreadStatic] private static Random Local;
+    [ThreadStatic] private static Random? Local;
 
     public static Random ThisThreadsRandom
     {
