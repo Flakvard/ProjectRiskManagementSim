@@ -12,6 +12,7 @@ internal class StaffModel
 {
     public string Name { get; set; }
     public Role Role { get; set; }
+    public double Sale { get; set; }
     public double Cost { get; set; }
     public int Days { get; set; }
 }

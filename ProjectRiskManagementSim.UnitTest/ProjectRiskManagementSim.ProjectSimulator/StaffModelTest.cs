@@ -12,7 +12,8 @@ public class StaffModelTest
         {
             Name = "John Doe",
             Role = Role.ProjectManager,
-            Cost = 1000,
+            Sale = 1000,
+            Cost = 370,
             Days = 20
         };
 
@@ -20,12 +21,14 @@ public class StaffModelTest
         var name = staff.Name;
         var role = staff.Role;
         var cost = staff.Cost;
+        var sale = staff.Sale;
         var days = staff.Days;
 
         // Assert
         Assert.Equal("John Doe", name);
         Assert.Equal(Role.ProjectManager, role);
-        Assert.Equal(1000, cost);
+        Assert.Equal(1000, sale);
+        Assert.Equal(370, cost);
         Assert.Equal(20, days);
     }
 }
