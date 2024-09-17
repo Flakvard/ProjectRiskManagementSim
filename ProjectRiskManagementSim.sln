@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectRiskManagementSim.UnitTest", "ProjectRiskManagementSim.UnitTest\ProjectRiskManagementSim.UnitTest.csproj", "{C077067F-5BB0-4BFB-81F0-43E2A6D735D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectRiskManagementSim.ProjectSimulator", "ProjectRiskManagementSim.ProjectSimulator\ProjectSimulator.csproj", "{430779C4-CFE9-4479-B4D4-AE209AC04C29}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectRiskManagementSim.ProjectSimulator", "ProjectRiskManagementSim.ProjectSimulator\ProjectRiskManagementSim.ProjectSimulator.csproj", "{430779C4-CFE9-4479-B4D4-AE209AC04C29}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
