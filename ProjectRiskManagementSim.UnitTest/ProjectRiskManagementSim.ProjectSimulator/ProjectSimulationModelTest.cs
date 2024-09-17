@@ -13,6 +13,12 @@ public class ProjectSimulationModelTest
         {
             deliverableModel.Add(new DeliverableModel { Id = Guid.NewGuid() });
         }
+        var backlog = new BacklogModel
+        {
+            Deliverables = deliverableModel,
+            PercentageLowBound = 0.5,
+            PercentageHighBound = 0.8
+        };
         var projectSimModel = new ProjectSimulationModel
         {
             Staff = new List<StaffModel>
@@ -31,7 +37,43 @@ public class ProjectSimulationModelTest
                 Amount = 1000,
                 Date = new DateTime(2024, 1, 1),
             },
-            Deliverables = deliverableModel,
+            Costs = new CostModel
+            {
+                Cost = 1000,
+                Days = 20
+            },
+            Columns = new List<ColumnModel>
+            {
+                new ColumnModel
+                {
+                    Name = "To Do",
+                    WIP = 10,
+                    EstimatedLowBound = 1,
+                    EstimatedHighBound = 54
+                },
+                new ColumnModel
+                {
+                    Name = "In Progress",
+                    WIP = 2,
+                    EstimatedLowBound = 1,
+                    EstimatedHighBound = 47
+                },
+                new ColumnModel
+                {
+                    Name = "Testing",
+                    WIP = 5,
+                    EstimatedLowBound = 1,
+                    EstimatedHighBound = 52
+                },
+                new ColumnModel
+                {
+                    Name = "Done",
+                    WIP = 3,
+                    EstimatedLowBound = 1,
+                    EstimatedHighBound = 5
+                }
+            },
+            Backlog = backlog,
         };
 
         // Act
@@ -42,7 +84,7 @@ public class ProjectSimulationModelTest
         var targetDate = projectSimModel.TargetDate;
         var amount = projectSimModel.Revenue.Amount;
         var date = projectSimModel.Revenue.Date;
-        var deliverables = projectSimModel.Deliverables;
+        var deliverables = projectSimModel.Backlog.Deliverables;
 
 
         // Assert
