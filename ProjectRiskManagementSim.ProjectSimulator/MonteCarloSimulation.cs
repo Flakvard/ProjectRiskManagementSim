@@ -52,11 +52,40 @@ internal class MonteCarloSimulation
                                       double? revenuePerDay,
                                       double costPerDay)
     {
-        backlog.Deliverables.Shuffle();
+        var deliverables = backlog.Deliverables;
         // Simulation logic
+        // For each deliverable, simulate the probability of 
+        // completion for each column holding the contrains of 
+        // the WIPs in each column
+        int wipStack = 0;
+        int interval = 0;
 
+        // Columns are sorted in the right flow order
+        foreach (var column in columns)
+        {
+            var delivarableCompletionList = new List<double>();
+            foreach (var deliverable in deliverables)
+            {
+                // Probability is always a random % between the low and high bounds
+                var probability = backlog.PercentageLowBound + (backlog.PercentageHighBound - backlog.PercentageLowBound) * ThreadSafeRandom.ThisThreadsRandom.NextDouble();
+
+                // CompletionDays is always a random day between the low and high bounds for the column
+                var completionDays = column.EstimatedLowBound + (column.EstimatedHighBound - column.EstimatedLowBound) * ThreadSafeRandom.ThisThreadsRandom.NextDouble();
+
+                var deliverableCompletionDay = completionDays * probability;
+                delivarableCompletionList.Add(deliverableCompletionDay);
+
+                wipStack += 1;
+
+                if (wipStack == column.WIP)
+                {
+                    var moveDelivToNextColumn = delivarableCompletionList.Min();
+                    // Reset the wipStack
+                    wipStack -= 1;
+                }
+            }
+        }
     }
-
     static void ValidateProps(List<StaffModel>? staff, RevenueModel? revenue, CostModel cost, BacklogModel deliverables)
     {
         if (staff == null || revenue == null || cost == null || deliverables == null)
