@@ -26,5 +26,5 @@ var projectSimModel = new ProjectSimulationModel
 
 var MCS = new MonteCarloSimulation(projectSimModel);
 
-MCS.RunSimulation();
+MCS.InitiateSimulation();
 

@@ -10,7 +10,7 @@ internal class MonteCarloSimulation
         _projectSimulationModel = projectSimulationModel;
     }
 
-    public void RunSimulation()
+    public void InitiateSimulation()
     {
         var staff = _projectSimulationModel.Staff;
         var startDate = _projectSimulationModel.StartDate;
@@ -25,7 +25,7 @@ internal class MonteCarloSimulation
 
         var totalRevenue = 0.0;
         var totalCost = 0.0;
-        for (var i = 0; i < staff.Count; i++)
+        for (var i = 0; i < staff?.Count; i++)
         {
             var staffMember = staff[i];
             var staffDays = staffMember.Days;
@@ -34,7 +34,7 @@ internal class MonteCarloSimulation
             totalRevenue += staffRevenue;
             totalCost += staffCost;
         }
-        var revenuePerDay = revenue.Amount / days;
+        var revenuePerDay = revenue?.Amount / days;
         var costPerDay = cost.Cost / days;
 
         Console.WriteLine($"Total Revenue: {totalRevenue}");
@@ -42,6 +42,7 @@ internal class MonteCarloSimulation
         Console.WriteLine($"Total Deliverables: {deliverables.Count}");
 
     }
+
     static void ValidateProps(List<StaffModel>? staff, RevenueModel? revenue, CostModel cost, List<DeliverableModel> deliverables)
     {
         if (staff == null || revenue == null || cost == null || deliverables == null)
