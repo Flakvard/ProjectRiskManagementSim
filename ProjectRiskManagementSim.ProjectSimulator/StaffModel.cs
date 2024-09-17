@@ -10,7 +10,7 @@ internal enum Role
 }
 internal class StaffModel
 {
-    public string Name { get; set; }
+    public required string Name { get; set; }
     public Role Role { get; set; }
     public double Sale { get; set; }
     public double Cost { get; set; }

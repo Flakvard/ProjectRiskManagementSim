@@ -4,7 +4,7 @@ using ProjectRiskManagementSim.ProjectSimulation;
 var deliverableModel = new List<DeliverableModel>();
 for (var i = 0; i < 25; i++)
 {
-    deliverableModel.Add(new DeliverableModel { Id = Guid.NewGuid() });
+    deliverableModel.Add(new DeliverableModel { Id = Guid.NewGuid(), Nr = i });
 }
 var backLogModel = new BacklogModel
 {
