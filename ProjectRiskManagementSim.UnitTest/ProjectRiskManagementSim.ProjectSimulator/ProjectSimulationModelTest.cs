@@ -8,6 +8,11 @@ public class ProjectSimulationModelTest
     public void ProjectSimulationModel()
     {
         // Arrange
+        var deliverableModel = new List<DeliverableModel>();
+        for (var i = 0; i < 25; i++)
+        {
+            deliverableModel.Add(new DeliverableModel { Id = Guid.NewGuid() });
+        }
         var projectSimModel = new ProjectSimulationModel
         {
             Staff = new List<StaffModel>
@@ -25,7 +30,8 @@ public class ProjectSimulationModelTest
             {
                 Amount = 1000,
                 Date = new DateTime(2024, 1, 1),
-            }
+            },
+            Deliverables = deliverableModel,
         };
 
         // Act
@@ -36,6 +42,7 @@ public class ProjectSimulationModelTest
         var targetDate = projectSimModel.TargetDate;
         var amount = projectSimModel.Revenue.Amount;
         var date = projectSimModel.Revenue.Date;
+        var deliverables = projectSimModel.Deliverables;
 
 
         // Assert
@@ -46,6 +53,7 @@ public class ProjectSimulationModelTest
         Assert.Equal(new DateTime(2024, 12, 31), targetDate);
         Assert.Equal(1000, amount);
         Assert.Equal(new DateTime(2024, 1, 1), date);
+        Assert.Equal(25, deliverables.Count);
     }
 }
 
