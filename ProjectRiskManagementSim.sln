@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectRiskManagementSim.UnitTest", "ProjectRiskManagementSim.UnitTest\ProjectRiskManagementSim.UnitTest.csproj", "{C077067F-5BB0-4BFB-81F0-43E2A6D735D3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectRiskManagementSim.ProjectSimulator", "ProjectRiskManagementSim.ProjectSimulator\ProjectSimulator.csproj", "{430779C4-CFE9-4479-B4D4-AE209AC04C29}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{C077067F-5BB0-4BFB-81F0-43E2A6D735D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C077067F-5BB0-4BFB-81F0-43E2A6D735D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C077067F-5BB0-4BFB-81F0-43E2A6D735D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{430779C4-CFE9-4479-B4D4-AE209AC04C29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{430779C4-CFE9-4479-B4D4-AE209AC04C29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{430779C4-CFE9-4479-B4D4-AE209AC04C29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{430779C4-CFE9-4479-B4D4-AE209AC04C29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
