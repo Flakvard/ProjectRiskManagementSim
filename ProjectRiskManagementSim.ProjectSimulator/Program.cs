@@ -6,6 +6,12 @@ for (var i = 0; i < 25; i++)
 {
     deliverableModel.Add(new DeliverableModel { Id = Guid.NewGuid() });
 }
+var backLogModel = new BacklogModel
+{
+    Deliverables = deliverableModel,
+    PercentageLowBound = 0.5,
+    PercentageHighBound = 0.8
+};
 
 var projectSimModel = new ProjectSimulationModel
 {
@@ -21,7 +27,13 @@ var projectSimModel = new ProjectSimulationModel
     TargetDate = new DateTime(2024, 8, 31),
     Revenue = new RevenueModel { Amount = 1000 },
     Costs = new CostModel { Cost = 370, Days = 20 },
-    Deliverables = deliverableModel
+    Backlog = backLogModel,
+    Columns = new List<ColumnModel>
+    {
+        new ColumnModel { Name = "To Do", WIP = 10, EstimatedLowBound = 1, EstimatedHighBound = 54 },
+        new ColumnModel { Name = "In Progress", WIP = 2, EstimatedLowBound = 1, EstimatedHighBound = 47 },
+        new ColumnModel { Name = "Testing", WIP = 5, EstimatedLowBound = 1, EstimatedHighBound = 52 },
+        new ColumnModel { Name = "Done", WIP = 3, EstimatedLowBound = 1, EstimatedHighBound = 5 },    }
 };
 
 var MCS = new MonteCarloSimulation(projectSimModel);
