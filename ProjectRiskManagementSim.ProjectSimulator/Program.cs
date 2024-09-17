@@ -1,7 +1,11 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using ProjectRiskManagementSim.ProjectSimulation;
 
-Console.WriteLine("Hello, World!");
+var deliverableModel = new List<DeliverableModel>();
+for (var i = 0; i < 25; i++)
+{
+    deliverableModel.Add(new DeliverableModel { Id = Guid.NewGuid() });
+}
 
 var projectSimModel = new ProjectSimulationModel
 {
@@ -16,7 +20,8 @@ var projectSimModel = new ProjectSimulationModel
     StartDate = new DateTime(2024, 1, 1),
     TargetDate = new DateTime(2024, 8, 31),
     Revenue = new RevenueModel { Amount = 1000 },
-    Costs = new CostModel { Cost = 370, Days = 20 }
+    Costs = new CostModel { Cost = 370, Days = 20 },
+    Deliverables = deliverableModel
 };
 
 var MCS = new MonteCarloSimulation(projectSimModel);

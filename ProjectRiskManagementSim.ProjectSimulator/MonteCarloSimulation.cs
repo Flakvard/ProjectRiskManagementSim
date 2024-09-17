@@ -17,10 +17,11 @@ internal class MonteCarloSimulation
         var targetDate = _projectSimulationModel.TargetDate;
         var revenue = _projectSimulationModel.Revenue;
         var cost = _projectSimulationModel.Costs;
+        var deliverables = _projectSimulationModel.Deliverables;
 
-        if (staff == null || revenue == null || cost == null)
+        if (staff == null || revenue == null || cost == null || deliverables == null)
         {
-            throw new InvalidOperationException("Staff, Revenue, and Cost must be set before running the simulation.");
+            throw new InvalidOperationException("Staff, Revenue, Cost, and Deliverables must be set.");
         }
 
         var days = (targetDate - startDate).TotalDays;
@@ -41,5 +42,6 @@ internal class MonteCarloSimulation
 
         Console.WriteLine($"Total Revenue: {totalRevenue}");
         Console.WriteLine($"Total Cost: {totalCost}");
+        Console.WriteLine($"Total Deliverables: {deliverables.Count}");
     }
 }
