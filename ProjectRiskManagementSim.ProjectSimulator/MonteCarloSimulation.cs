@@ -7,15 +7,15 @@ internal class MonteCarloSimulation
 {
     private readonly ProjectSimulationModel _projectSimulationModel;
     private readonly Random _random = new Random();
-    public List<double> SimResult { get; set; }
-    public List<List<DeliverableModel>> Simulations { get; set; }
+    public List<double>? SimResult { get; set; }
+    public List<List<DeliverableModel>>? Simulations { get; set; }
     private readonly int _simulationCount;
 
-    public MonteCarloSimulation(ProjectSimulationModel projectSimulationModel, int simulationCount, List<List<DeliverableModel>> simulations = null)
+    public MonteCarloSimulation(ProjectSimulationModel projectSimulationModel,
+                                int simulationCount)
     {
         _projectSimulationModel = projectSimulationModel;
         _simulationCount = simulationCount;
-        Simulations = simulations;
     }
 
     public void InitiateAndRunSimulation()

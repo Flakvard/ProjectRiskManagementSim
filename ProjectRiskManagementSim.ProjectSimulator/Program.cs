@@ -1,5 +1,4 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using Dumpify;
 using System.Diagnostics;
 using ProjectRiskManagementSim.ProjectSimulation;
 
@@ -38,31 +37,13 @@ var projectSimModel = new ProjectSimulationModel
         new ColumnModel { Name = "Done", WIP = 3, EstimatedLowBound = 1, EstimatedHighBound = 5 },    }
 };
 
-// Start timing the simulations
-Stopwatch stopwatch = Stopwatch.StartNew();
-//
-//
-const int projectsCount = 10;
+const int projectsCount = 30;
 const int projectSimulationsCount = 10000;
-// Create and run simulations sequentially
-for (int i = 0; i < projectsCount; i++)
-{
-    var MCS = new MonteCarloSimulation(projectSimModel, projectSimulationsCount);
-    MCS.InitiateAndRunSimulation();
-    Console.WriteLine($"Simulation {i + 1} Average: {MCS.SimResult.Average()}");
-}
-
-// simulationsList.Dump();
-Console.WriteLine("");
-// Stop timing
-stopwatch.Stop();
-// Output the elapsed time
-Console.WriteLine($"Total time for all single-threaded simulations: {stopwatch.ElapsedMilliseconds} ms");
-
-// Start timing the simulations
-stopwatch = Stopwatch.StartNew();
 
 // Create and run simulations concurrently
+// Start timing the simulations
+var stopwatch = Stopwatch.StartNew();
+
 var tasks = new List<Task<double>>();
 for (int i = 0; i < projectsCount; i++)
 {
@@ -70,7 +51,7 @@ for (int i = 0; i < projectsCount; i++)
     {
         var MCS = new MonteCarloSimulation(projectSimModel, projectSimulationsCount);
         MCS.InitiateAndRunSimulation();
-        return MCS.SimResult.Average();
+        return MCS.SimResult!.Average();
     }));
 };
 
@@ -85,9 +66,5 @@ for (int i = 0; i < results.Length; i++)
 stopwatch.Stop();
 // Output the elapsed time
 Console.WriteLine($"Total time for all multi-threaded simulations: {stopwatch.ElapsedMilliseconds} ms");
-// foreach (var simulation in simulationsResult)
-// {
-//     Console.WriteLine(simulation);
-// }
 
 
