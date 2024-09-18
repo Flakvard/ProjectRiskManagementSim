@@ -60,24 +60,57 @@ for (int i = 0; i < projectSimModel.Columns.Count; i++)
     projectWithModifiedEstimates.Add(newProjectSimModel);
 
 }
+// Loop through each column and modify EstimatedLowBound and EstimatedHighBound
+for (int i = 0; i < projectSimModel.Columns.Count; i++)
+{
+
+    var columnName = projectSimModel.Columns[i].Name! + " WIP";
+    // Clone the original model
+    var newProjectSimModel = projectSimModel.CloneProjectSimModel(projectSimModel, columnName);
+    // Modify the estimated bounds of the specific column
+    var columnToModify = newProjectSimModel.Columns[i];
+    columnToModify.WIP *= (int)(1.0 + estimateMultiplier);
+    projectWithModifiedEstimates.Add(newProjectSimModel);
+
+}
 // projectWithModifiedEstimates.Dump();
 
 int projectsCount = projectWithModifiedEstimates.Count;
-const int projectSimulationsCount = 50000;
+const int projectSimulationsCount = 1000;
 
 // Create and run simulations concurrently
 // Start timing the simulations
 var stopwatch = Stopwatch.StartNew();
 
-var tasks = new List<Task<(double, double, double, string)>>();
+var tasks = new List<Task<MonteCarloSimulation>>();
 foreach (var projectSimModels in projectWithModifiedEstimates)
 {
     tasks.Add(Task.Run(() =>
     {
         var MCS = new MonteCarloSimulation(projectSimModels, projectSimulationsCount);
         MCS.InitiateAndRunSimulation();
-        var name = MCS.ProjectSimulationModel.Name;
+        return MCS;
+    }));
+};
 
+// Wait for all tasks to finish and print results
+var results = await Task.WhenAll(tasks);
+// Order the results by the average total days
+var orderedByTotalDays = results.OrderBy(r => r.SimTotalDaysResult.Average()).ToArray();
+
+PrintResults(orderedByTotalDays, projectSimModel);
+
+// Stop timing
+stopwatch.Stop();
+// Output the elapsed time
+Console.WriteLine($"Total time for all multi-threaded simulations: {stopwatch.ElapsedMilliseconds} ms");
+
+static void PrintResults(MonteCarloSimulation[] orderedByTotalDays, ProjectSimulationModel projectSimModel)
+{
+    for (int i = 0; i < orderedByTotalDays.Length; i++)
+    {
+        var MCS = orderedByTotalDays[i];
+        var name = MCS.ProjectSimulationModel.Name;
         // Get the average values, check if the lists are empty before calculating
         var totalDays = MCS.SimTotalDaysResult != null && MCS.SimTotalDaysResult.Any()
             ? MCS.SimTotalDaysResult.Average()
@@ -90,28 +123,12 @@ foreach (var projectSimModels in projectWithModifiedEstimates)
         var totalSales = MCS.SimTotalSalesResult != null && MCS.SimTotalSalesResult.Any()
             ? MCS.SimTotalSalesResult.Average()
             : 0.0;
-        return (totalDays, totalCosts, totalSales, name);
-    }));
-};
 
-// Wait for all tasks to finish and print results
-var results = await Task.WhenAll(tasks);
-for (int i = 0; i < results.Length; i++)
-{
-    // Deconstruct the tuple into individual variables
-    var (totalDays, totalCosts, totalSales, name) = results[i];
-    Console.WriteLine($"Simulation {i + 1} - {name} Results: ");
-    Console.WriteLine($"  Total Days (Avg): {double.Round(totalDays)} compared to 80 days");
-    Console.WriteLine($"  Total Costs (Avg): {double.Round(totalCosts)} compared to {projectSimModel.Costs.Cost}");
-    Console.WriteLine($"  Total Sales (Avg): {double.Round(totalSales)} compared to {projectSimModel.Revenue.Amount}");
-    Console.WriteLine($"  Costs pr day (Avg): {double.Round(totalCosts / totalDays)} compared to {projectSimModel.Costs.Cost / 80.0}");
-    Console.WriteLine($"  Sales pr day (Avg): {double.Round(totalSales / totalDays)} to {projectSimModel.Revenue.Amount / 80.0}");
-    Console.WriteLine();
+        Console.WriteLine($"Simulation {i + 1} - {name} Results: ");
+        Console.WriteLine($"  Total Days (Avg): {double.Round(totalDays)} compared to 80 days");
+        Console.WriteLine($"  Total Costs (Avg): {double.Round(totalCosts)} compared to {projectSimModel.Costs.Cost}");
+        Console.WriteLine($"  Total Sales (Avg): {double.Round(totalSales)} compared to {projectSimModel.Revenue.Amount}");
+        Console.WriteLine();
+    }
+
 }
-
-// Stop timing
-stopwatch.Stop();
-// Output the elapsed time
-Console.WriteLine($"Total time for all multi-threaded simulations: {stopwatch.ElapsedMilliseconds} ms");
-
-
