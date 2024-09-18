@@ -24,10 +24,11 @@ var projectSimModel = new ProjectSimulationModel
       new StaffModel { Name = "Jill Doe", Role = Role.SoftwareTester, Sale = 1000, Cost = 370, Days = 20 },
       new StaffModel { Name = "Jim Doe", Role = Role.UXUIDesigner, Sale = 1000, Cost = 370, Days = 20 }
     },
+    // 80 days beween start and target date
     StartDate = new DateTime(2024, 1, 1),
-    TargetDate = new DateTime(2024, 8, 31),
-    Revenue = new RevenueModel { Amount = 1000 },
-    Costs = new CostModel { Cost = 370, Days = 20 },
+    TargetDate = new DateTime(2024, 3, 21),
+    Revenue = new RevenueModel { Amount = 480000 },
+    Costs = new CostModel { Cost = 177600, Days = 20 },
     Backlog = backLogModel,
     Columns = new List<ColumnModel>
     {
@@ -37,21 +38,34 @@ var projectSimModel = new ProjectSimulationModel
         new ColumnModel { Name = "Done", WIP = 3, EstimatedLowBound = 1, EstimatedHighBound = 5 },    }
 };
 
-const int projectsCount = 30;
+const int projectsCount = 1;
 const int projectSimulationsCount = 10000;
 
 // Create and run simulations concurrently
 // Start timing the simulations
 var stopwatch = Stopwatch.StartNew();
 
-var tasks = new List<Task<double>>();
+var tasks = new List<Task<(double, double, double)>>();
 for (int i = 0; i < projectsCount; i++)
 {
     tasks.Add(Task.Run(() =>
     {
         var MCS = new MonteCarloSimulation(projectSimModel, projectSimulationsCount);
         MCS.InitiateAndRunSimulation();
-        return MCS.SimResult!.Average();
+
+        // Get the average values, check if the lists are empty before calculating
+        var totalDays = MCS.SimTotalDaysResult != null && MCS.SimTotalDaysResult.Any()
+            ? MCS.SimTotalDaysResult.Average()
+            : 0.0;
+
+        var totalCosts = MCS.SimTotalCostsResult != null && MCS.SimTotalCostsResult.Any()
+            ? MCS.SimTotalCostsResult.Average()
+            : 0.0;
+
+        var totalSales = MCS.SimTotalSalesResult != null && MCS.SimTotalSalesResult.Any()
+            ? MCS.SimTotalSalesResult.Average()
+            : 0.0;
+        return (totalDays, totalCosts, totalSales);
     }));
 };
 
@@ -59,7 +73,15 @@ for (int i = 0; i < projectsCount; i++)
 var results = await Task.WhenAll(tasks);
 for (int i = 0; i < results.Length; i++)
 {
-    Console.WriteLine($"Simulation {i + 1} Average: {results[i]}");
+    // Deconstruct the tuple into individual variables
+    var (totalDays, totalCosts, totalSales) = results[i];
+    Console.WriteLine($"Simulation {i + 1} Results: ");
+    Console.WriteLine($"  Total Days (Avg): {double.Round(totalDays)} compared to 80 days");
+    Console.WriteLine($"  Total Costs (Avg): {double.Round(totalCosts)} compared to {projectSimModel.Costs.Cost}");
+    Console.WriteLine($"  Total Sales (Avg): {double.Round(totalSales)} compared to {projectSimModel.Revenue.Amount}");
+    Console.WriteLine();
+    Console.WriteLine($"  Total Costs (Avg): {double.Round(totalCosts / totalDays)} compared to {projectSimModel.Costs.Cost / 80.0}");
+    Console.WriteLine($"  Total Sales (Avg): {double.Round(totalSales / totalDays)} to {projectSimModel.Revenue.Amount / 80.0}");
 }
 
 // Stop timing

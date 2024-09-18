@@ -7,7 +7,9 @@ internal class MonteCarloSimulation
 {
     private readonly ProjectSimulationModel _projectSimulationModel;
     private readonly Random _random = new Random();
-    public List<double>? SimResult { get; set; }
+    public List<double>? SimTotalDaysResult { get; set; }
+    public List<double>? SimTotalCostsResult { get; set; }
+    public List<double>? SimTotalSalesResult { get; set; }
     public List<List<DeliverableModel>>? Simulations { get; set; }
     private readonly int _simulationCount;
 
@@ -43,8 +45,8 @@ internal class MonteCarloSimulation
             totalRevenue += staffRevenue;
             totalCost += staffCost;
         }
-        var revenuePerDay = revenue?.Amount / totalDays;
-        var costPerDay = cost.Cost / totalDays;
+        var estimatedRevenuePerDay = revenue.Amount / totalDays;
+        var estimatedCostPerDay = cost.Cost / totalDays;
 
         // Console.WriteLine($"Total Days: {totalDays}");
         // Console.WriteLine($"Total Revenue: {totalRevenue}");
@@ -54,17 +56,19 @@ internal class MonteCarloSimulation
         var simulationList = new List<DeliverableModel>();
         var simulationListofList = new List<List<DeliverableModel>>();
         var simulationDays = new List<double>();
+        var simulationsSalesResults = new List<double>();
+        var simulationsCostResults = new List<double>();
         for (int i = 0; i < _simulationCount; ++i)
         {
-            // var result = MCS.SimResult;
-            // simulations.Add(result);
-
-            simulationList = MonteCarloSimulation.RunSimulation(backlog, columns, totalDays, revenuePerDay, costPerDay);
+            simulationList = MonteCarloSimulation.RunSimulation(backlog, columns, totalDays, estimatedRevenuePerDay, estimatedCostPerDay);
             simulationListofList.Add(simulationList);
             simulationDays.Add(simulationList.Max(d => d.AccumulatedDays));
-
+            simulationsSalesResults.Add(simulationList.Max(d => d.AccumulatedDays) * estimatedRevenuePerDay);
+            simulationsCostResults.Add(simulationList.Max(d => d.AccumulatedDays) * estimatedCostPerDay);
         }
-        SimResult = simulationDays;
+        SimTotalSalesResult = simulationsSalesResults;
+        SimTotalCostsResult = simulationsCostResults;
+        SimTotalDaysResult = simulationDays;
         Simulations = simulationListofList;
     }
 
