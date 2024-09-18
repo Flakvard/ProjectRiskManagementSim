@@ -5,7 +5,7 @@ namespace ProjectRiskManagementSim.ProjectSimulation;
 
 internal class MonteCarloSimulation
 {
-    private readonly ProjectSimulationModel _projectSimulationModel;
+    public readonly ProjectSimulationModel ProjectSimulationModel;
     private readonly Random _random = new Random();
     public List<double>? SimTotalDaysResult { get; set; }
     public List<double>? SimTotalCostsResult { get; set; }
@@ -16,19 +16,19 @@ internal class MonteCarloSimulation
     public MonteCarloSimulation(ProjectSimulationModel projectSimulationModel,
                                 int simulationCount)
     {
-        _projectSimulationModel = projectSimulationModel;
+        ProjectSimulationModel = projectSimulationModel;
         _simulationCount = simulationCount;
     }
 
     public void InitiateAndRunSimulation()
     {
-        var staff = _projectSimulationModel.Staff;
-        var startDate = _projectSimulationModel.StartDate;
-        var targetDate = _projectSimulationModel.TargetDate;
-        var revenue = _projectSimulationModel.Revenue;
-        var cost = _projectSimulationModel.Costs;
-        var backlog = _projectSimulationModel.Backlog;
-        var columns = _projectSimulationModel.Columns;
+        var staff = ProjectSimulationModel.Staff;
+        var startDate = ProjectSimulationModel.StartDate;
+        var targetDate = ProjectSimulationModel.TargetDate;
+        var revenue = ProjectSimulationModel.Revenue;
+        var cost = ProjectSimulationModel.Costs;
+        var backlog = ProjectSimulationModel.Backlog;
+        var columns = ProjectSimulationModel.Columns;
 
         ValidateProps(staff, revenue, cost, backlog);
 

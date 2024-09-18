@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using System.Diagnostics;
 using ProjectRiskManagementSim.ProjectSimulation;
+using Dumpify;
 
 var deliverableModel = new List<DeliverableModel>();
 for (var i = 0; i < 10; i++)
@@ -16,6 +17,7 @@ var backLogModel = new BacklogModel
 
 var projectSimModel = new ProjectSimulationModel
 {
+    Name = "Baseline Project Simulation",
     Staff = new List<StaffModel>
     {
       new StaffModel { Name = "John Doe", Role = Role.ProjectManager, Sale = 1000, Cost = 370, Days = 20 },
@@ -38,20 +40,43 @@ var projectSimModel = new ProjectSimulationModel
         new ColumnModel { Name = "Done", WIP = 3, EstimatedLowBound = 1, EstimatedHighBound = 5 },    }
 };
 
-const int projectsCount = 1;
-const int projectSimulationsCount = 10000;
+
+const double estimateMultiplier = 0.5;
+
+var projectWithModifiedEstimates = new List<ProjectSimulationModel>();
+projectWithModifiedEstimates.Add(projectSimModel);
+
+// Loop through each column and modify EstimatedLowBound and EstimatedHighBound
+for (int i = 0; i < projectSimModel.Columns.Count; i++)
+{
+
+    var columnName = projectSimModel.Columns[i].Name!;
+    // Clone the original model
+    var newProjectSimModel = projectSimModel.CloneProjectSimModel(projectSimModel, columnName);
+    // Modify the estimated bounds of the specific column
+    var columnToModify = newProjectSimModel.Columns[i];
+    columnToModify.EstimatedLowBound *= estimateMultiplier;
+    columnToModify.EstimatedHighBound *= estimateMultiplier;
+    projectWithModifiedEstimates.Add(newProjectSimModel);
+
+}
+// projectWithModifiedEstimates.Dump();
+
+int projectsCount = projectWithModifiedEstimates.Count;
+const int projectSimulationsCount = 50000;
 
 // Create and run simulations concurrently
 // Start timing the simulations
 var stopwatch = Stopwatch.StartNew();
 
-var tasks = new List<Task<(double, double, double)>>();
-for (int i = 0; i < projectsCount; i++)
+var tasks = new List<Task<(double, double, double, string)>>();
+foreach (var projectSimModels in projectWithModifiedEstimates)
 {
     tasks.Add(Task.Run(() =>
     {
-        var MCS = new MonteCarloSimulation(projectSimModel, projectSimulationsCount);
+        var MCS = new MonteCarloSimulation(projectSimModels, projectSimulationsCount);
         MCS.InitiateAndRunSimulation();
+        var name = MCS.ProjectSimulationModel.Name;
 
         // Get the average values, check if the lists are empty before calculating
         var totalDays = MCS.SimTotalDaysResult != null && MCS.SimTotalDaysResult.Any()
@@ -65,7 +90,7 @@ for (int i = 0; i < projectsCount; i++)
         var totalSales = MCS.SimTotalSalesResult != null && MCS.SimTotalSalesResult.Any()
             ? MCS.SimTotalSalesResult.Average()
             : 0.0;
-        return (totalDays, totalCosts, totalSales);
+        return (totalDays, totalCosts, totalSales, name);
     }));
 };
 
@@ -74,14 +99,14 @@ var results = await Task.WhenAll(tasks);
 for (int i = 0; i < results.Length; i++)
 {
     // Deconstruct the tuple into individual variables
-    var (totalDays, totalCosts, totalSales) = results[i];
-    Console.WriteLine($"Simulation {i + 1} Results: ");
+    var (totalDays, totalCosts, totalSales, name) = results[i];
+    Console.WriteLine($"Simulation {i + 1} - {name} Results: ");
     Console.WriteLine($"  Total Days (Avg): {double.Round(totalDays)} compared to 80 days");
     Console.WriteLine($"  Total Costs (Avg): {double.Round(totalCosts)} compared to {projectSimModel.Costs.Cost}");
     Console.WriteLine($"  Total Sales (Avg): {double.Round(totalSales)} compared to {projectSimModel.Revenue.Amount}");
+    Console.WriteLine($"  Costs pr day (Avg): {double.Round(totalCosts / totalDays)} compared to {projectSimModel.Costs.Cost / 80.0}");
+    Console.WriteLine($"  Sales pr day (Avg): {double.Round(totalSales / totalDays)} to {projectSimModel.Revenue.Amount / 80.0}");
     Console.WriteLine();
-    Console.WriteLine($"  Total Costs (Avg): {double.Round(totalCosts / totalDays)} compared to {projectSimModel.Costs.Cost / 80.0}");
-    Console.WriteLine($"  Total Sales (Avg): {double.Round(totalSales / totalDays)} to {projectSimModel.Revenue.Amount / 80.0}");
 }
 
 // Stop timing
