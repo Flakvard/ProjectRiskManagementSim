@@ -1,3 +1,5 @@
+using Dumpify;
+
 namespace ProjectRiskManagementSim.ProjectSimulation;
 
 internal class MonteCarloSimulation
@@ -58,29 +60,40 @@ internal class MonteCarloSimulation
         // completion for each column holding the contrains of 
         // the WIPs in each column
 
-        var columnDeliverables = columns.ToDictionary(c => c,
-                                                      c => new SortedSet<DeliverableModel>(
-                                                        Comparer<DeliverableModel>.Create(
-                                                          (x, y) => x.CompletionDays.CompareTo(y.CompletionDays))));
+        // var columnDeliverables = columns.ToDictionary(c => c,
+        //                                               c => new SortedSet<DeliverableModel>(
+        //                                                 Comparer<DeliverableModel>.Create(
+        //                                                   (x, y) => x.CompletionDays.CompareTo(y.CompletionDays))));
+        var columnDeliverables = columns.ToDictionary(c => c, c => new List<DeliverableModel>());
 
         // Initialize deliverables
-        foreach (var deliverable in deliverables)
+        foreach (var deliverable in backlog.Deliverables)
         {
+            Console.Write(deliverable.Nr);
             var firstColumn = columns.First();
             columnDeliverables[firstColumn].Add(deliverable);
-            Console.Write(deliverable.Nr);
+            // columnDeliverables.Dump();
         }
+
+        // foreach (var deliv in columnDeliverables)
+        // {
+        //     Console.WriteLine(deliv.Key.Name);
+        //     foreach (var d in deliv.Value)
+        //     {
+        //         Console.WriteLine(d.Nr);
+        //     }
+        // }
 
         foreach (var column in columns)
         {
-            Console.WriteLine(column.Name);
+            Console.WriteLine($"Loop column: {column.Name}");
             var wipQueue = columnDeliverables[column];
             var wipStack = new List<DeliverableModel>();
+            var interval = 0;
 
             while (wipQueue.Count > 0)
             {
-                var deliverable = wipQueue.Min();
-                Console.Write($"{deliverable!.Nr} ");
+                var deliverable = wipQueue.First();
                 // Probability is always a random % between the low and high bounds
                 var probability = backlog.PercentageLowBound + (backlog.PercentageHighBound - backlog.PercentageLowBound) * ThreadSafeRandom.ThisThreadsRandom.NextDouble();
                 // CompletionDays is always a random day between the low and high bounds for the column
@@ -88,11 +101,10 @@ internal class MonteCarloSimulation
                 // Random generated completionDay for deliverable
                 deliverable!.CompletionDays = completionDays * probability;
 
+                // If the WIP stack is full, move deliverable to the next column
                 if (wipStack.Count >= column.WIP)
                 {
-                    Console.WriteLine($"WIP Stack = {wipStack.Count}");
                     var moveDeliverable = wipStack.OrderBy(d => d.CompletionDays).First();
-                    Console.WriteLine(moveDeliverable.Nr);
                     wipStack.Remove(moveDeliverable);
                     wipQueue.Remove(moveDeliverable);
 
@@ -100,9 +112,39 @@ internal class MonteCarloSimulation
                     var nextColumnIndex = columns.IndexOf(column) + 1;
                     if (nextColumnIndex < columns.Count)
                     {
+                        ++interval;
+                        Console.WriteLine($"Interval = {interval} Deliverable Nr.: {moveDeliverable.Nr}, Days {moveDeliverable.CompletionDays} - moved from {column.Name} to column {columns[nextColumnIndex].Name}");
                         columnDeliverables[columns[nextColumnIndex]].Add(moveDeliverable);
                     }
                 }
+                // When the queue is empty, move deliverables from the stack to the next column
+                else if (wipStack.Count <= column.WIP && wipQueue.Count == 1)
+                {
+                    while (wipStack.Count > 0)
+                    {
+
+                        var moveDeliverable = wipStack.OrderBy(d => d.CompletionDays).First();
+                        wipStack.Remove(moveDeliverable);
+
+                        // Move deliverable to the next column
+                        var nextColumnIndex = columns.IndexOf(column) + 1;
+                        if (nextColumnIndex < columns.Count)
+                        {
+                            ++interval;
+                            Console.WriteLine($"Interval = {interval} Deliverable Nr.: {moveDeliverable.Nr}, Days {moveDeliverable.CompletionDays} - moved from {column.Name} to column {columns[nextColumnIndex].Name}");
+                            columnDeliverables[columns[nextColumnIndex]].Add(moveDeliverable);
+                        }
+                    }
+                    var lastColumnIndexInStack = columns.IndexOf(column) + 1;
+                    if (lastColumnIndexInStack < columns.Count)
+                    {
+                        ++interval;
+                        Console.WriteLine($"Interval = {interval} Deliverable Nr.: {deliverable.Nr}, Days {deliverable.CompletionDays} - moved from {column.Name} to column {columns[lastColumnIndexInStack].Name}");
+                        columnDeliverables[columns[lastColumnIndexInStack]].Add(deliverable);
+                    }
+                    wipQueue.Remove(deliverable);
+                }
+                // When the WIP stack is not full, keep adding them to the stack and remove from Queue
                 else
                 {
                     // Add deliverable to the WIP stack
@@ -111,7 +153,7 @@ internal class MonteCarloSimulation
                 }
             }
         }
-
+        // columnDeliverables.Dump();
     }
     static void ValidateProps(List<StaffModel>? staff, RevenueModel? revenue, CostModel cost, BacklogModel deliverables)
     {
