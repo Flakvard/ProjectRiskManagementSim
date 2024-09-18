@@ -1,3 +1,4 @@
+using System.Linq;
 using Dumpify;
 
 namespace ProjectRiskManagementSim.ProjectSimulation;
@@ -6,10 +7,15 @@ internal class MonteCarloSimulation
 {
     private readonly ProjectSimulationModel _projectSimulationModel;
     private readonly Random _random = new Random();
+    public List<double> SimResult { get; set; }
+    public List<List<DeliverableModel>> Simulations { get; set; }
+    private readonly int _simulationCount;
 
-    public MonteCarloSimulation(ProjectSimulationModel projectSimulationModel)
+    public MonteCarloSimulation(ProjectSimulationModel projectSimulationModel, int simulationCount, List<List<DeliverableModel>> simulations = null)
     {
         _projectSimulationModel = projectSimulationModel;
+        _simulationCount = simulationCount;
+        Simulations = simulations;
     }
 
     public void InitiateSimulation()
@@ -40,53 +46,62 @@ internal class MonteCarloSimulation
         var revenuePerDay = revenue?.Amount / totalDays;
         var costPerDay = cost.Cost / totalDays;
 
-        Console.WriteLine($"Total Days: {totalDays}");
-        Console.WriteLine($"Total Revenue: {totalRevenue}");
-        Console.WriteLine($"Total Cost: {totalCost}");
-        Console.WriteLine($"Total Deliverables: {backlog.Deliverables.Count}");
+        // Console.WriteLine($"Total Days: {totalDays}");
+        // Console.WriteLine($"Total Revenue: {totalRevenue}");
+        // Console.WriteLine($"Total Cost: {totalCost}");
+        // Console.WriteLine($"Total Deliverables: {backlog.Deliverables.Count}");
 
-        MonteCarloSimulation.RunSimulation(backlog, columns, totalDays, revenuePerDay, costPerDay);
+        var simulationList = new List<DeliverableModel>();
+        var simulationListofList = new List<List<DeliverableModel>>();
+        var simulationDays = new List<double>();
+        for (int i = 0; i < _simulationCount; ++i)
+        {
+            // var result = MCS.SimResult;
+            // simulations.Add(result);
+
+            simulationList = MonteCarloSimulation.RunSimulation(backlog, columns, totalDays, revenuePerDay, costPerDay);
+            simulationListofList.Add(simulationList);
+            simulationDays.Add(simulationList.Max(d => d.AccumulatedDays));
+
+        }
+        SimResult = simulationDays;
+        Simulations = simulationListofList;
     }
 
-    private static void RunSimulation(BacklogModel backlog,
+    private static List<DeliverableModel> RunSimulation(BacklogModel backlog,
                                       List<ColumnModel> columns,
                                       double totalDays,
                                       double? revenuePerDay,
                                       double costPerDay)
     {
-        var deliverables = backlog.Deliverables;
         // Simulation logic
         // For each deliverable, simulate the probability of 
         // completion for each column holding the contrains of 
         // the WIPs in each column
 
-        // var columnDeliverables = columns.ToDictionary(c => c,
-        //                                               c => new SortedSet<DeliverableModel>(
-        //                                                 Comparer<DeliverableModel>.Create(
-        //                                                   (x, y) => x.CompletionDays.CompareTo(y.CompletionDays))));
+        var deliverablesCopy = backlog.Deliverables.Select(d => new DeliverableModel
+        {
+            Id = d.Id,
+            Nr = d.Nr,
+            CompletionDays = d.CompletionDays,
+            AccumulatedDays = d.AccumulatedDays
+        }).ToList();
+
         var columnDeliverables = columns.ToDictionary(c => c, c => new List<DeliverableModel>());
 
         // Initialize deliverables
-        foreach (var deliverable in backlog.Deliverables)
+        deliverablesCopy.Shuffle();
+        foreach (var deliverable in deliverablesCopy)
         {
-            Console.Write(deliverable.Nr);
+            //Console.Write(deliverable.Nr);
             var firstColumn = columns.First();
             columnDeliverables[firstColumn].Add(deliverable);
             // columnDeliverables.Dump();
         }
 
-        // foreach (var deliv in columnDeliverables)
-        // {
-        //     Console.WriteLine(deliv.Key.Name);
-        //     foreach (var d in deliv.Value)
-        //     {
-        //         Console.WriteLine(d.Nr);
-        //     }
-        // }
-
         foreach (var column in columns)
         {
-            Console.WriteLine($"Loop column: {column.Name}");
+            // Console.WriteLine($"Loop column: {column.Name}");
             var wipQueue = columnDeliverables[column];
             var wipStack = new List<DeliverableModel>();
             var interval = 0;
@@ -112,8 +127,9 @@ internal class MonteCarloSimulation
                     var nextColumnIndex = columns.IndexOf(column) + 1;
                     if (nextColumnIndex < columns.Count)
                     {
+                        moveDeliverable.AccumulatedDays += moveDeliverable.CompletionDays;
                         ++interval;
-                        Console.WriteLine($"Interval = {interval} Deliverable Nr.: {moveDeliverable.Nr}, Days {moveDeliverable.CompletionDays} - moved from {column.Name} to column {columns[nextColumnIndex].Name}");
+                        PrintDeliverable(columns, column, interval, moveDeliverable, nextColumnIndex);
                         columnDeliverables[columns[nextColumnIndex]].Add(moveDeliverable);
                     }
                 }
@@ -130,16 +146,18 @@ internal class MonteCarloSimulation
                         var nextColumnIndex = columns.IndexOf(column) + 1;
                         if (nextColumnIndex < columns.Count)
                         {
+                            moveDeliverable.AccumulatedDays += moveDeliverable.CompletionDays;
                             ++interval;
-                            Console.WriteLine($"Interval = {interval} Deliverable Nr.: {moveDeliverable.Nr}, Days {moveDeliverable.CompletionDays} - moved from {column.Name} to column {columns[nextColumnIndex].Name}");
+                            PrintDeliverable(columns, column, interval, moveDeliverable, nextColumnIndex);
                             columnDeliverables[columns[nextColumnIndex]].Add(moveDeliverable);
                         }
                     }
                     var lastColumnIndexInStack = columns.IndexOf(column) + 1;
                     if (lastColumnIndexInStack < columns.Count)
                     {
+                        deliverable.AccumulatedDays += deliverable.CompletionDays;
                         ++interval;
-                        Console.WriteLine($"Interval = {interval} Deliverable Nr.: {deliverable.Nr}, Days {deliverable.CompletionDays} - moved from {column.Name} to column {columns[lastColumnIndexInStack].Name}");
+                        PrintDeliverable(columns, column, interval, deliverable, lastColumnIndexInStack);
                         columnDeliverables[columns[lastColumnIndexInStack]].Add(deliverable);
                     }
                     wipQueue.Remove(deliverable);
@@ -153,8 +171,16 @@ internal class MonteCarloSimulation
                 }
             }
         }
-        // columnDeliverables.Dump();
+        var orderdedByAccumulated = deliverablesCopy.OrderBy(d => d.AccumulatedDays).ToList();
+
+        return orderdedByAccumulated;
     }
+
+    private static void PrintDeliverable(List<ColumnModel> columns, ColumnModel column, int interval, DeliverableModel moveDeliverable, int nextColumnIndex)
+    {
+        // Console.WriteLine($"Interval = {interval} Deliverable Nr.: {moveDeliverable.Nr}, Days {moveDeliverable.CompletionDays} - moved from {column.Name} to column {columns[nextColumnIndex].Name}");
+    }
+
     static void ValidateProps(List<StaffModel>? staff, RevenueModel? revenue, CostModel cost, BacklogModel deliverables)
     {
         if (staff == null || revenue == null || cost == null || deliverables == null)

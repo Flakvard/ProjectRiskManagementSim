@@ -1,8 +1,9 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using Dumpify;
 using ProjectRiskManagementSim.ProjectSimulation;
 
 var deliverableModel = new List<DeliverableModel>();
-for (var i = 0; i < 25; i++)
+for (var i = 0; i < 10; i++)
 {
     deliverableModel.Add(new DeliverableModel { Id = Guid.NewGuid(), Nr = i });
 }
@@ -36,7 +37,19 @@ var projectSimModel = new ProjectSimulationModel
         new ColumnModel { Name = "Done", WIP = 3, EstimatedLowBound = 1, EstimatedHighBound = 5 },    }
 };
 
-var MCS = new MonteCarloSimulation(projectSimModel);
 
+var MCS = new MonteCarloSimulation(projectSimModel, 1000);
 MCS.InitiateSimulation();
+var simulationsResult = MCS.SimResult;
+var simulationsList = MCS.Simulations;
+// simulationsList.Dump();
+
+Console.WriteLine("");
+Console.WriteLine(simulationsResult.Average());
+
+// foreach (var simulation in simulationsResult)
+// {
+//     Console.WriteLine(simulation);
+// }
+
 
