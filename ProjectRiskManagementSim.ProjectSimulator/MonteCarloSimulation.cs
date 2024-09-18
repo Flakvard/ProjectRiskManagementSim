@@ -18,7 +18,7 @@ internal class MonteCarloSimulation
         Simulations = simulations;
     }
 
-    public void InitiateSimulation()
+    public void InitiateAndRunSimulation()
     {
         var staff = _projectSimulationModel.Staff;
         var startDate = _projectSimulationModel.StartDate;
