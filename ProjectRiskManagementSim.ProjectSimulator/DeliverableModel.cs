@@ -6,6 +6,7 @@ internal class DeliverableModel : IComparer<DeliverableModel>
     public int Nr { get; set; }
     public double CompletionDays { get; set; }
     public double AccumulatedDays { get; set; }
+    public int ColumnIndex { get; set; }
 
     public DeliverableModel()
     {

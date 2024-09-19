@@ -21,7 +21,7 @@ internal class ProjectSimulationModel
         return new ProjectSimulationModel
         {
             Name = Name,
-            Staff = original.Staff.Select(s => new StaffModel
+            Staff = original.Staff!.Select(s => new StaffModel
             {
                 Name = s.Name,
                 Role = s.Role,
