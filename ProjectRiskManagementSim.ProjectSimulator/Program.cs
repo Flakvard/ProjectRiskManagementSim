@@ -96,14 +96,22 @@ foreach (var projectSimModels in projectWithModifiedEstimates)
 // Wait for all tasks to finish and print results
 var results = await Task.WhenAll(tasks);
 // Order the results by the average total days
-var orderedByTotalDays = results.OrderBy(r => r.SimTotalDaysResult.Average()).ToArray();
+var orderedByTotalDays = results.OrderBy(r => r.SimTotalDaysResult!.Average()).ToArray();
 
-PrintResults(orderedByTotalDays, projectSimModel);
+// PrintResults(orderedByTotalDays, projectSimModel);
 
 // Stop timing
 stopwatch.Stop();
 // Output the elapsed time
-Console.WriteLine($"Total time for all multi-threaded simulations: {stopwatch.ElapsedMilliseconds} ms");
+//Console.WriteLine($"Total time for all multi-threaded simulations: {stopwatch.ElapsedMilliseconds} ms");
+
+Console.WriteLine();
+Console.WriteLine();
+Console.WriteLine();
+Console.WriteLine();
+
+var MCS = new MonteCarloSimulation(projectSimModel, projectSimulationsCount);
+MCS.PrintSimulationResults();
 
 static void PrintResults(MonteCarloSimulation[] orderedByTotalDays, ProjectSimulationModel projectSimModel)
 {
