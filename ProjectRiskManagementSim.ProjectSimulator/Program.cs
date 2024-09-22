@@ -4,7 +4,7 @@ using ProjectRiskManagementSim.ProjectSimulation;
 using Dumpify;
 
 var deliverableModel = new List<DeliverableModel>();
-for (var i = 0; i < 10; i++)
+for (var i = 1; i < 21; i++)
 {
     deliverableModel.Add(new DeliverableModel { Id = Guid.NewGuid(), Nr = i });
 }
@@ -34,7 +34,8 @@ var projectSimModel = new ProjectSimulationModel
     Backlog = backLogModel,
     Columns = new List<ColumnModel>
     {
-        new ColumnModel { Name = "To Do", WIP = 10, EstimatedLowBound = 1, EstimatedHighBound = 54 },
+        new ColumnModel { Name = "Backlog", WIP = 20, EstimatedLowBound = 1, EstimatedHighBound = 54 },
+        new ColumnModel { Name = "To Do", WIP = 5, EstimatedLowBound = 1, EstimatedHighBound = 54 },
         new ColumnModel { Name = "In Progress", WIP = 2, EstimatedLowBound = 1, EstimatedHighBound = 47 },
         new ColumnModel { Name = "Testing", WIP = 5, EstimatedLowBound = 1, EstimatedHighBound = 52 },
         new ColumnModel { Name = "Done", WIP = 3, EstimatedLowBound = 1, EstimatedHighBound = 5 },    }
@@ -76,7 +77,7 @@ for (int i = 0; i < projectSimModel.Columns.Count; i++)
 // projectWithModifiedEstimates.Dump();
 
 int projectsCount = projectWithModifiedEstimates.Count;
-const int projectSimulationsCount = 1000;
+const int projectSimulationsCount = 1;
 
 // Create and run simulations concurrently
 // Start timing the simulations

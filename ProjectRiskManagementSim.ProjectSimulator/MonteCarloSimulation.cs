@@ -249,109 +249,151 @@ internal class MonteCarloSimulation
             AccumulatedDays = d.AccumulatedDays
         }).ToList();
 
+        // List of deliverables in each column
         var columnDeliverables = columns.ToDictionary(c => c, c => new List<DeliverableModel>());
 
         // Initialize deliverables
-        deliverablesCopy.Shuffle();
+        //deliverablesCopy.Shuffle();
         foreach (var deliverable in deliverablesCopy)
         {
-            //Console.Write(deliverable.Nr);
             var firstColumn = columns.First();
             columnDeliverables[firstColumn].Add(deliverable);
-            // columnDeliverables.Dump();
         }
 
-        foreach (var column in columns)
+
+        double currentDay = 0;
+
+        // While there are deliverables in the system
+        while (columnDeliverables.Any(kvp => kvp.Value.Count > 0))
         {
-            // Console.WriteLine($"Loop column: {column.Name}");
-            var wipQueue = columnDeliverables[column];
-            var wipStack = new List<DeliverableModel>();
-            var interval = 0;
+            // Increment the current day for each iteration
+            currentDay++;
 
-            while (wipQueue.Count > 0)
+            foreach (var column in columns)
             {
-                var deliverable = wipQueue.First();
-                // Probability is always a random % between the low and high bounds
-                var probability = backlog.PercentageLowBound + (backlog.PercentageHighBound - backlog.PercentageLowBound) * ThreadSafeRandom.ThisThreadsRandom.NextDouble();
-                // CompletionDays is always a random day between the low and high bounds for the column
-                var completionDays = column.EstimatedLowBound + (column.EstimatedHighBound - column.EstimatedLowBound) * ThreadSafeRandom.ThisThreadsRandom.NextDouble();
-                // Random generated completionDay for deliverable
-                deliverable!.CompletionDays = completionDays * probability;
+                // Console.WriteLine($"Loop column: {column.Name}");
+                var wipQueue = columnDeliverables[column];
+                var wipStack = new List<DeliverableModel>();
 
-                // If the WIP stack is full, move deliverable to the next column
-                if (wipStack.Count >= column.WIP)
+                // We use a new list to keep track of deliverables to move to next column
+                var deliverablesToMove = new List<DeliverableModel>();
+
+                foreach (var deliverable in wipQueue.ToList()) // iterate over a copy of the list
                 {
-                    var moveDeliverable = wipStack.OrderBy(d => d.CompletionDays).First();
-                    wipStack.Remove(moveDeliverable);
-                    wipQueue.Remove(moveDeliverable);
+                    // Probability is always a random % between the low and high bounds
+                    var probability = backlog.PercentageLowBound
+                                      + (backlog.PercentageHighBound - backlog.PercentageLowBound)
+                                      * ThreadSafeRandom.ThisThreadsRandom.NextDouble();
 
-                    // Move deliverable to the next column
-                    var nextColumnIndex = columns.IndexOf(column) + 1;
-                    if (nextColumnIndex < columns.Count)
+                    // CompletionDays is always a random day between the low and high bounds for the column
+                    var completionDays = column.EstimatedLowBound
+                                         + (column.EstimatedHighBound - column.EstimatedLowBound)
+                                         * ThreadSafeRandom.ThisThreadsRandom.NextDouble();
+
+                    // Random generated completionDay for deliverable
+                    deliverable!.CompletionDays = completionDays * probability;
+
+
+                    // Check if deliverable is done with this column
+                    if (deliverable.CompletionDays <= currentDay - deliverable.AccumulatedDays)
                     {
-                        moveDeliverable.AccumulatedDays += moveDeliverable.CompletionDays;
-                        ++interval;
-                        PrintDeliverable(columns, column, interval, moveDeliverable, nextColumnIndex);
-                        columnDeliverables[columns[nextColumnIndex]].Add(moveDeliverable);
+                        // Deliverable is ready to move
+                        deliverablesToMove.Add(deliverable);
+                        deliverable.AccumulatedDays += deliverable.CompletionDays;
                     }
-                }
-                // When the queue is empty, move deliverables from the stack to the next column
-                else if (wipStack.Count <= column.WIP && wipQueue.Count == 1)
-                {
-                    while (wipStack.Count > 0)
+                    else
                     {
-
-                        var moveDeliverable = wipStack.OrderBy(d => d.CompletionDays).First();
-                        wipStack.Remove(moveDeliverable);
-
-                        // Move deliverable to the next column
-                        var nextColumnIndex = columns.IndexOf(column) + 1;
-                        if (nextColumnIndex < columns.Count)
+                        // Deliverable is still in progress, add to WIP stack if there's space
+                        if (wipStack.Count < column.WIP)
                         {
-                            moveDeliverable.AccumulatedDays += moveDeliverable.CompletionDays;
-                            ++interval;
-                            PrintDeliverable(columns, column, interval, moveDeliverable, nextColumnIndex);
-                            columnDeliverables[columns[nextColumnIndex]].Add(moveDeliverable);
+                            wipStack.Add(deliverable);
                         }
                     }
-                    var lastColumnIndexInStack = columns.IndexOf(column) + 1;
-                    if (lastColumnIndexInStack < columns.Count)
+                }
+                // Move deliverables to the next column if possible
+                foreach (var deliverable in deliverablesToMove)
+                {
+                    wipQueue.Remove(deliverable); // remove from current column
+
+                    var nextColumnIndex = columns.IndexOf(column) + 1;
+
+                    // If there's a next column
+                    if (nextColumnIndex < columns.Count)
                     {
-                        deliverable.AccumulatedDays += deliverable.CompletionDays;
-                        ++interval;
-                        PrintDeliverable(columns, column, interval, deliverable, lastColumnIndexInStack);
-                        columnDeliverables[columns[lastColumnIndexInStack]].Add(deliverable);
+                        var nextColumn = columns[nextColumnIndex];
+
+                        // Check if next column's WIP limit is not exceeded
+                        if (columnDeliverables[nextColumn].Count < nextColumn.WIP)
+                        {
+                            deliverable.AccumulatedDays += deliverable.CompletionDays;
+                            deliverable.ColumnIndex = nextColumnIndex;
+                            columnDeliverables[nextColumn].Add(deliverable);
+                        }
+                        else
+                        {
+                            // If next column WIP is full, hold the deliverable here
+                            wipQueue.Add(deliverable);
+                        }
                     }
-                    wipQueue.Remove(deliverable);
-                }
-                // When the WIP stack is not full, keep adding them to the stack and remove from Queue
-                else
-                {
-                    // Add deliverable to the WIP stack
-                    wipStack.Add(deliverable);
-                    wipQueue.Remove(deliverable);
-                }
-
-                var columnsToPrint = new Dictionary<int, int>()
-                {
-                    { 0, 0 },
-                    { 1, 20 },
-                    { 2, 40 },
-                    { 3, 60 }
-                };
-
-                for (var i = 0; i < 4; ++i)
-                {
-                    System.Threading.Thread.Sleep(TimeSpan.FromSeconds(1));
-                    Console.SetCursorPosition(columnsToPrint[i], 5);
-                    Console.WriteLine(columns[i].Name);
-
                 }
             }
+            PrintEachIteration(columns, deliverablesCopy, currentDay, columnDeliverables);
         }
         var orderdedByAccumulated = deliverablesCopy.OrderBy(d => d.AccumulatedDays).ToList();
-
         return orderdedByAccumulated;
+    }
+
+
+    private static void PrintEachIteration(List<ColumnModel> columns, List<DeliverableModel> deliverablesCopy, double currentDay, Dictionary<ColumnModel, List<DeliverableModel>> columnDeliverables)
+    {
+        Console.Clear();
+        var columnsToPrint = new Dictionary<int, int>()
+                {
+                    { 0, 0 },
+                    { 1, 30 },
+                    { 2, 60 },
+                    { 3, 90 },
+                    { 4, 120 }
+                };
+
+        Console.WriteLine($"Current Day: {currentDay}");
+        for (var i = 0; i < columns.Count; ++i)
+        {
+            // Printing each header position
+            Console.SetCursorPosition(columnsToPrint[i], 1);
+            Console.WriteLine(columns[i].Name);
+
+        }
+        foreach (var printColumn in columns)
+        {
+            int index = 0;
+            if (index > printColumn.WIP)
+            {
+                index = 0;
+            }
+            // Printing rows for each deliverable to each header position
+            foreach (var deliverableToPrint in deliverablesCopy)
+            {
+                // check if deliverableToPrint is in wipQueue
+                // var isDeliverableInQueue = wipQueue.Any(d => d.Id == deliverableToPrint.Id);
+                // var isDeliverableInStack = wipStack.Any(d => d.Id == deliverableToPrint.Id);
+                if (deliverableToPrint.ColumnIndex == columns.IndexOf(printColumn))
+                {
+                    Console.SetCursorPosition(columnsToPrint[deliverableToPrint.ColumnIndex], index + 2);
+                    if (deliverableToPrint.ColumnIndex == columns.Count - 1)
+                    {
+                        Console.WriteLine($"Task:{deliverableToPrint.Nr} Days: {double.Round(deliverableToPrint.AccumulatedDays)}, ColIndex {deliverableToPrint.ColumnIndex}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Task:{deliverableToPrint.Nr} Days: {double.Round(deliverableToPrint.CompletionDays)}, ColIndex {deliverableToPrint.ColumnIndex}");
+                    }
+                    index++;
+                }
+                // Pause every print
+            }
+        }
+        System.Threading.Thread.Sleep(TimeSpan.FromSeconds(0.8));
     }
 }
 public static class ThreadSafeRandom
