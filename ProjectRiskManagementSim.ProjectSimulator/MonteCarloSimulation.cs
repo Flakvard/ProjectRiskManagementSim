@@ -419,6 +419,26 @@ internal class MonteCarloSimulation
         }
         System.Threading.Thread.Sleep(TimeSpan.FromSeconds(0.3));
     }
+
+    public static List<ProjectSimulationModel> SensitivityAnalysis(ProjectSimulationModel projectSimModel, double estimateMultiplier)
+    {
+        var projectWithModifiedEstimates = new List<ProjectSimulationModel>();
+        projectWithModifiedEstimates.Add(projectSimModel);
+
+        // Loop through each column and modify EstimatedLowBound and EstimatedHighBound
+        for (int i = 0; i < projectSimModel.Columns.Count; i++)
+        {
+            var columnName = projectSimModel.Columns[i].Name!;
+            // Clone the original model
+            var newProjectSimModel = projectSimModel.CloneProjectSimModel(projectSimModel, columnName);
+            // Modify the estimated bounds of the specific column
+            var columnToModify = newProjectSimModel.Columns[i];
+            columnToModify.EstimatedLowBound *= estimateMultiplier;
+            columnToModify.EstimatedHighBound *= estimateMultiplier;
+            projectWithModifiedEstimates.Add(newProjectSimModel);
+        }
+        return projectWithModifiedEstimates;
+    }
 }
 public static class ThreadSafeRandom
 {

@@ -34,7 +34,7 @@ var projectSimModel = new ProjectSimulationModel
     Backlog = backLogModel,
     Columns = new List<ColumnModel>
     {
-        new ColumnModel { Name = "Backlog", WIP = 20, EstimatedLowBound = 1, EstimatedHighBound = 54 },
+        new ColumnModel { Name = "Backlog", IsBuffer=true, WIP = 20, EstimatedLowBound = 1, EstimatedHighBound = 54 },
         new ColumnModel { Name = "To Do", IsBuffer=true, WIP = 10, EstimatedLowBound = 1, EstimatedHighBound = 54 },
         new ColumnModel { Name = "In Progress", WIP = 2, EstimatedLowBound = 1, EstimatedHighBound = 23 },
         new ColumnModel { Name = "Finished", IsBuffer=true, WIP = 10, EstimatedLowBound = 1, EstimatedHighBound = 65 },
@@ -45,21 +45,7 @@ var projectSimModel = new ProjectSimulationModel
 
 const double estimateMultiplier = 0.5;
 
-var projectWithModifiedEstimates = new List<ProjectSimulationModel>();
-projectWithModifiedEstimates.Add(projectSimModel);
-
-// Loop through each column and modify EstimatedLowBound and EstimatedHighBound
-for (int i = 0; i < projectSimModel.Columns.Count; i++)
-{
-    var columnName = projectSimModel.Columns[i].Name!;
-    // Clone the original model
-    var newProjectSimModel = projectSimModel.CloneProjectSimModel(projectSimModel, columnName);
-    // Modify the estimated bounds of the specific column
-    var columnToModify = newProjectSimModel.Columns[i];
-    columnToModify.EstimatedLowBound *= estimateMultiplier;
-    columnToModify.EstimatedHighBound *= estimateMultiplier;
-    projectWithModifiedEstimates.Add(newProjectSimModel);
-}
+var projectWithModifiedEstimates = MonteCarloSimulation.SensitivityAnalysis(projectSimModel, estimateMultiplier);
 
 // Loop through each column and modify WIP
 // for (int i = 0; i < projectSimModel.Columns.Count; i++)
