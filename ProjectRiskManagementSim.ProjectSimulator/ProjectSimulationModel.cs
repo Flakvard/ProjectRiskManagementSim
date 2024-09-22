@@ -14,8 +14,8 @@ internal class ProjectSimulationModel
     // public List<PhaseModel> Phases { get; set; }
     // public List<DefectModel> Defects { get; set; }
     // public List<BlockingEventModel> BlockingEvents { get; set; }
-    // Function to deep copy a ProjectSimulationModel
 
+    // Function to deep copy a ProjectSimulationModel
     internal ProjectSimulationModel CloneProjectSimModel(ProjectSimulationModel original, string Name)
     {
         return new ProjectSimulationModel
@@ -38,7 +38,13 @@ internal class ProjectSimulationModel
                 Deliverables = original.Backlog.Deliverables.Select(d => new DeliverableModel
                 {
                     Id = d.Id,
-                    Nr = d.Nr
+                    Nr = d.Nr,
+                    CompletionDays = d.CompletionDays,
+                    AccumulatedDays = d.AccumulatedDays,
+                    ColumnIndex = d.ColumnIndex,
+                    IsCalculated = d.IsCalculated,
+                    WaitTime = d.WaitTime
+
                 }).ToList(),
                 PercentageLowBound = original.Backlog.PercentageLowBound,
                 PercentageHighBound = original.Backlog.PercentageHighBound
@@ -46,9 +52,11 @@ internal class ProjectSimulationModel
             Columns = original.Columns.Select(c => new ColumnModel
             {
                 Name = c.Name,
-                WIP = c.WIP,
                 EstimatedLowBound = c.EstimatedLowBound,
-                EstimatedHighBound = c.EstimatedHighBound
+                EstimatedHighBound = c.EstimatedHighBound,
+                WIP = c.WIP,
+                IsBuffer = c.IsBuffer
+
             }).ToList()
         };
     }
