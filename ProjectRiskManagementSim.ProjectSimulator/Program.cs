@@ -4,7 +4,7 @@ using ProjectRiskManagementSim.ProjectSimulation;
 using Dumpify;
 
 var deliverableModel = new List<DeliverableModel>();
-for (var i = 1; i < 21; i++)
+for (var i = 1; i < 36; i++)
 {
     deliverableModel.Add(new DeliverableModel { Id = Guid.NewGuid(), Nr = i });
 }

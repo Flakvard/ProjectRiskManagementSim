@@ -271,7 +271,6 @@ internal class MonteCarloSimulation
 
             foreach (var column in columns)
             {
-                // Console.WriteLine($"Loop column: {column.Name}");
                 var wipQueue = columnDeliverables[column];
                 var wipStack = new List<DeliverableModel>();
 
@@ -280,26 +279,28 @@ internal class MonteCarloSimulation
 
                 foreach (var deliverable in wipQueue.ToList()) // iterate over a copy of the list
                 {
-                    // Probability is always a random % between the low and high bounds
-                    var probability = backlog.PercentageLowBound
-                                      + (backlog.PercentageHighBound - backlog.PercentageLowBound)
-                                      * ThreadSafeRandom.ThisThreadsRandom.NextDouble();
+                    if (!deliverable.IsCalculated)
+                    {
+                        // Probability is always a random % between the low and high bounds
+                        var probability = backlog.PercentageLowBound
+                                          + (backlog.PercentageHighBound - backlog.PercentageLowBound)
+                                          * ThreadSafeRandom.ThisThreadsRandom.NextDouble();
 
-                    // CompletionDays is always a random day between the low and high bounds for the column
-                    var completionDays = column.EstimatedLowBound
-                                         + (column.EstimatedHighBound - column.EstimatedLowBound)
-                                         * ThreadSafeRandom.ThisThreadsRandom.NextDouble();
+                        // CompletionDays is always a random day between the low and high bounds for the column
+                        var completionDays = column.EstimatedLowBound
+                                             + (column.EstimatedHighBound - column.EstimatedLowBound)
+                                             * ThreadSafeRandom.ThisThreadsRandom.NextDouble();
 
-                    // Random generated completionDay for deliverable
-                    deliverable!.CompletionDays = completionDays * probability;
-
+                        // Random generated completionDay for deliverable
+                        deliverable!.CompletionDays = completionDays * probability;
+                        deliverable.IsCalculated = true;
+                    }
 
                     // Check if deliverable is done with this column
-                    if (deliverable.CompletionDays <= currentDay - deliverable.AccumulatedDays)
+                    if (deliverable.AccumulatedDays <= currentDay)
                     {
                         // Deliverable is ready to move
                         deliverablesToMove.Add(deliverable);
-                        deliverable.AccumulatedDays += deliverable.CompletionDays;
                     }
                     else
                     {
@@ -327,12 +328,16 @@ internal class MonteCarloSimulation
                         {
                             deliverable.AccumulatedDays += deliverable.CompletionDays;
                             deliverable.ColumnIndex = nextColumnIndex;
+                            deliverable.IsCalculated = false;
                             columnDeliverables[nextColumn].Add(deliverable);
+                            wipStack.Remove(deliverable);
                         }
                         else
                         {
                             // If next column WIP is full, hold the deliverable here
                             wipQueue.Add(deliverable);
+                            // If deliverable is still in wipStack add WaitTime
+                            deliverable.WaitTime += 1;
                         }
                     }
                 }
@@ -372,28 +377,21 @@ internal class MonteCarloSimulation
                 index = 0;
             }
             // Printing rows for each deliverable to each header position
+            // Sort by AccumulatedDays
+            deliverablesCopy.Sort((x, y) => x.AccumulatedDays.CompareTo(y.AccumulatedDays));
             foreach (var deliverableToPrint in deliverablesCopy)
             {
                 // check if deliverableToPrint is in wipQueue
-                // var isDeliverableInQueue = wipQueue.Any(d => d.Id == deliverableToPrint.Id);
-                // var isDeliverableInStack = wipStack.Any(d => d.Id == deliverableToPrint.Id);
                 if (deliverableToPrint.ColumnIndex == columns.IndexOf(printColumn))
                 {
                     Console.SetCursorPosition(columnsToPrint[deliverableToPrint.ColumnIndex], index + 2);
-                    if (deliverableToPrint.ColumnIndex == columns.Count - 1)
-                    {
-                        Console.WriteLine($"Task:{deliverableToPrint.Nr} Days: {double.Round(deliverableToPrint.AccumulatedDays)}, ColIndex {deliverableToPrint.ColumnIndex}");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Task:{deliverableToPrint.Nr} Days: {double.Round(deliverableToPrint.CompletionDays)}, ColIndex {deliverableToPrint.ColumnIndex}");
-                    }
+                    Console.WriteLine($"Task:{deliverableToPrint.Nr} Days: {double.Round(deliverableToPrint.AccumulatedDays)},  Wait: {double.Round(deliverableToPrint.WaitTime)}");
                     index++;
                 }
                 // Pause every print
             }
         }
-        System.Threading.Thread.Sleep(TimeSpan.FromSeconds(0.8));
+        System.Threading.Thread.Sleep(TimeSpan.FromSeconds(0.5));
     }
 }
 public static class ThreadSafeRandom
