@@ -7,6 +7,7 @@ internal class ColumnModel
     public double EstimatedLowBound { get; set; }
     public double EstimatedHighBound { get; set; }
     public int WIP { get; set; }
+    public bool IsBuffer { get; set; } = false;
     // public List<CardModel> Cards { get; set; }
     // public List<PhaseModel> Phases { get; set; }
     // public List<BlockingEventModel> BlockingEvents { get; set; }

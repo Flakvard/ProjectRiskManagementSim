@@ -279,7 +279,7 @@ internal class MonteCarloSimulation
 
                 foreach (var deliverable in wipQueue.ToList()) // iterate over a copy of the list
                 {
-                    if (!deliverable.IsCalculated)
+                    if (!deliverable.IsCalculated && column.IsBuffer == false)
                     {
                         // Probability is always a random % between the low and high bounds
                         var probability = backlog.PercentageLowBound
@@ -294,6 +294,10 @@ internal class MonteCarloSimulation
                         // Random generated completionDay for deliverable
                         deliverable!.CompletionDays = completionDays * probability;
                         deliverable.IsCalculated = true;
+                    }
+                    if (column.IsBuffer == true)
+                    {
+                        deliverable.CompletionDays = 0.0;
                     }
 
                     // Check if deliverable is done with this column
@@ -358,7 +362,8 @@ internal class MonteCarloSimulation
                     { 1, 30 },
                     { 2, 60 },
                     { 3, 90 },
-                    { 4, 120 }
+                    { 4, 120 },
+                    { 5, 150 }
                 };
 
         Console.WriteLine($"Current Day: {currentDay}");
@@ -391,7 +396,7 @@ internal class MonteCarloSimulation
                 // Pause every print
             }
         }
-        System.Threading.Thread.Sleep(TimeSpan.FromSeconds(0.5));
+        System.Threading.Thread.Sleep(TimeSpan.FromSeconds(0.8));
     }
 }
 public static class ThreadSafeRandom
