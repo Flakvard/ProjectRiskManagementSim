@@ -48,16 +48,16 @@ const double estimateMultiplier = 0.5;
 var projectWithModifiedEstimates = MonteCarloSimulation.SensitivityAnalysis(projectSimModel, estimateMultiplier);
 
 // Loop through each column and modify WIP
-// for (int i = 0; i < projectSimModel.Columns.Count; i++)
-// {
-//     var columnName = projectSimModel.Columns[i].Name! + " WIP";
-//     // Clone the original model
-//     var newProjectSimModel = projectSimModel.CloneProjectSimModel(projectSimModel, columnName);
-//     // Modify the estimated bounds of the specific column
-//     var columnToModify = newProjectSimModel.Columns[i];
-//     columnToModify.WIP += 4;
-//     projectWithModifiedEstimates.Add(newProjectSimModel);
-// }
+for (int i = 0; i < projectSimModel.Columns.Count; i++)
+{
+    var columnName = projectSimModel.Columns[i].Name! + " WIP";
+    // Clone the original model
+    var newProjectSimModel = projectSimModel.CloneProjectSimModel(projectSimModel, columnName);
+    // Modify the estimated bounds of the specific column
+    var columnToModify = newProjectSimModel.Columns[i];
+    columnToModify.WIP += 5;
+    projectWithModifiedEstimates.Add(newProjectSimModel);
+}
 
 int projectsCount = projectWithModifiedEstimates.Count;
 const int projectSimulationsCount = 1000;
@@ -80,7 +80,7 @@ foreach (var projectSimModels in projectWithModifiedEstimates)
 // Wait for all tasks to finish and print results
 var results = await Task.WhenAll(tasks);
 // Order the results by the average total days
-var orderedByTotalDays = results.OrderBy(r => r.SimTotalDaysResult!.Average()).ToArray();
+var orderedByTotalDays = results.OrderBy(r => r.SimTotalDaysResult!.Percentile(0.9)).ToArray();
 
 PrintResults(orderedByTotalDays, projectSimModel);
 
@@ -101,19 +101,19 @@ static void PrintResults(MonteCarloSimulation[] orderedByTotalDays, ProjectSimul
         var name = MCS.ProjectSimulationModel.Name;
         // Get the average values, check if the lists are empty before calculating
         var totalDays = MCS.SimTotalDaysResult != null && MCS.SimTotalDaysResult.Any()
-            ? MCS.SimTotalDaysResult.Average()
+            ? MCS.SimTotalDaysResult.Percentile(0.9)
             : 0.0;
 
         var totalCosts = MCS.SimTotalCostsResult != null && MCS.SimTotalCostsResult.Any()
-            ? MCS.SimTotalCostsResult.Average()
+            ? MCS.SimTotalCostsResult.Percentile(0.9)
             : 0.0;
 
         var totalSales = MCS.SimTotalSalesResult != null && MCS.SimTotalSalesResult.Any()
-            ? MCS.SimTotalSalesResult.Average()
+            ? MCS.SimTotalSalesResult.Percentile(0.9)
             : 0.0;
 
-        Console.Write($"Simulation {i + 1} - {name} Results: ");
-        Console.WriteLine($"  Total Days (Avg): {double.Round(totalDays)}, compared to {MCS.NewDate.Subtract(projectSimModel.TargetDate).Days}");
+        Console.Write($"Simulation {i + 1}\t- {name} Results:\t\t");
+        Console.WriteLine($"Total Days (Percentile 90%):\t{double.Round(totalDays)}, compared to\t{MCS.NewDate.Subtract(projectSimModel.TargetDate).Days}");
         // Console.WriteLine($"  Total Costs (Avg): {double.Round(totalCosts)} compared to {projectSimModel.Costs.Cost}");
         // Console.WriteLine($"  Total Sales (Avg): {double.Round(totalSales)} compared to {projectSimModel.Revenue.Amount}");
         // Console.WriteLine();
