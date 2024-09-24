@@ -21,6 +21,7 @@ public class ProjectSimulationModelTest
         };
         var projectSimModel = new ProjectSimulationModel
         {
+            Name = "Baseline",
             Staff = new List<StaffModel>
             {
                 new StaffModel
