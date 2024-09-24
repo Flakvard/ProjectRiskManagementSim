@@ -1,0 +1,21 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "command":"C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\MSBuild\\Current\\Bin\\MSBuild.exe.config",
+            "type": "shell",
+            "args": [
+                "ProjectRiskManagementSim.sln",
+                "/t:Build",
+                "/p:Configuration=Debug",
+                "/p:Platform=\"Any CPU\"",
+                "/p:Project=\"ProjectRiskManagementSim.ProjectSimulator\\ProjectRiskManagementSim.ProjectSimulator.csproj\"",
+                "/p:Project=\"ProjectRiskManagementSim.SimulationAPI\\ProjectRiskManagementSim.SimulationAPI.csproj\"",
+                "/p:Project=\"ProjectRiskManagementSim.UnitTest\\ProjectRiskManagementSim.UnitTest.csproj\""
+    
+            ],
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}
