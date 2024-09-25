@@ -380,11 +380,14 @@ internal class MonteCarloSimulation
         var columnsToPrint = new Dictionary<int, int>()
                 {
                     { 0, 0 },
-                    { 1, 30 },
-                    { 2, 60 },
-                    { 3, 90 },
-                    { 4, 120 },
-                    { 5, 150 }
+                    { 1, 20 },
+                    { 2, 40 },
+                    { 3, 60 },
+                    { 4, 80 },
+                    { 5, 100 },
+                    { 6, 120 },
+                    { 7, 140 },
+                    { 8, 160 }
                 };
 
         Console.WriteLine($"Current Day: {currentDay}");
@@ -408,10 +411,10 @@ internal class MonteCarloSimulation
             foreach (var deliverableToPrint in deliverablesCopy)
             {
                 // check if deliverableToPrint is in wipQueue
-                if (deliverableToPrint.ColumnIndex == columns.IndexOf(printColumn))
+                if (deliverableToPrint.ColumnIndex == columns.IndexOf(printColumn) && index < 35)
                 {
                     Console.SetCursorPosition(columnsToPrint[deliverableToPrint.ColumnIndex], index + 2);
-                    Console.WriteLine($"Task:{deliverableToPrint.Nr} Days: {double.Round(deliverableToPrint.AccumulatedDays)},  Wait: {double.Round(deliverableToPrint.WaitTime)}");
+                    Console.WriteLine($"T:{deliverableToPrint.Nr} D: {double.Round(deliverableToPrint.AccumulatedDays)}, W: {double.Round(deliverableToPrint.WaitTime)}");
                     index++;
                 }
                 // Pause every print

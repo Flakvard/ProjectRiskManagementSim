@@ -4,7 +4,7 @@ using ProjectRiskManagementSim.ProjectSimulation;
 using Dumpify;
 
 var deliverableModel = new List<DeliverableModel>();
-for (var i = 1; i < 36; i++)
+for (var i = 1; i < 120; i++)
 {
     deliverableModel.Add(new DeliverableModel { Id = Guid.NewGuid(), Nr = i });
 }
@@ -34,12 +34,16 @@ var projectSimModel = new ProjectSimulationModel
     Backlog = backLogModel,
     Columns = new List<ColumnModel>
     {
-        new ColumnModel { Name = "Backlog", IsBuffer=true, WIP = 20, EstimatedLowBound = 1, EstimatedHighBound = 54 },
-        new ColumnModel { Name = "To Do", IsBuffer=true, WIP = 10, EstimatedLowBound = 1, EstimatedHighBound = 54 },
-        new ColumnModel { Name = "In Progress", WIP = 2, EstimatedLowBound = 1, EstimatedHighBound = 23 },
-        new ColumnModel { Name = "Finished", IsBuffer=true, WIP = 10, EstimatedLowBound = 1, EstimatedHighBound = 65 },
-        new ColumnModel { Name = "Testing", WIP = 2, EstimatedLowBound = 1, EstimatedHighBound = 52 },
-        new ColumnModel { Name = "Done", WIP = 3, EstimatedLowBound = 1, EstimatedHighBound = 5 },    }
+        new ColumnModel { Name = "Open", IsBuffer=true, WIP = 7, EstimatedLowBound = 1, EstimatedHighBound = 54 },
+        new ColumnModel { Name = "In Progress", WIP = 3, EstimatedLowBound = 1, EstimatedHighBound = 47 },
+        new ColumnModel { Name = "Stuck", IsBuffer=true, WIP = 12, EstimatedLowBound = 1, EstimatedHighBound = 24.79 },
+        new ColumnModel { Name = "Finished", IsBuffer=true, WIP = 35, EstimatedLowBound = 1, EstimatedHighBound = 65 },
+        new ColumnModel { Name = "Rdy For Test on Stage", IsBuffer=true, WIP = 21, EstimatedLowBound = 1, EstimatedHighBound = 50 },
+        new ColumnModel { Name = "Test on Stage", WIP = 2, EstimatedLowBound = 1, EstimatedHighBound = 11 },
+        new ColumnModel { Name = "Await Dply on Prod", IsBuffer=true, WIP = 21, EstimatedLowBound = 1, EstimatedHighBound = 22 },
+        new ColumnModel { Name = "Rdy For Test on Prod", WIP = 2, EstimatedLowBound = 1, EstimatedHighBound = 54 },
+        new ColumnModel { Name = "Done", IsBuffer=true, WIP = backLogModel.Deliverables.Count, EstimatedLowBound = 1, EstimatedHighBound = 54 }
+    }
 };
 
 
@@ -60,7 +64,7 @@ for (int i = 0; i < projectSimModel.Columns.Count; i++)
 }
 
 int projectsCount = projectWithModifiedEstimates.Count;
-const int projectSimulationsCount = 1000;
+const int projectSimulationsCount = 1;
 
 // Create and run simulations concurrently
 // Start timing the simulations
@@ -80,18 +84,18 @@ foreach (var projectSimModels in projectWithModifiedEstimates)
 // Wait for all tasks to finish and print results
 var results = await Task.WhenAll(tasks);
 // Order the results by the average total days
-var orderedByTotalDays = results.OrderBy(r => r.SimTotalDaysResult!.Percentile(0.9)).ToArray();
+// var orderedByTotalDays = results.OrderBy(r => r.SimTotalDaysResult!.Percentile(0.9)).ToArray();
 
-PrintResults(orderedByTotalDays, projectSimModel);
+// PrintResults(orderedByTotalDays, projectSimModel);
 
 // Stop timing
 stopwatch.Stop();
 // Output the elapsed time
-Console.WriteLine();
-Console.WriteLine($"Total time for all multi-threaded simulations: {stopwatch.ElapsedMilliseconds} ms");
+// Console.WriteLine();
+// Console.WriteLine($"Total time for all multi-threaded simulations: {stopwatch.ElapsedMilliseconds} ms");
 
-// var MCS = new MonteCarloSimulation(projectSimModel, projectSimulationsCount);
-// MCS.PrintSimulationResults();
+var MCS = new MonteCarloSimulation(projectSimModel, projectSimulationsCount);
+MCS.PrintSimulationResults();
 
 static void PrintResults(MonteCarloSimulation[] orderedByTotalDays, ProjectSimulationModel projectSimModel)
 {
