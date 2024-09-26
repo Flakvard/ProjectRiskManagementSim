@@ -96,14 +96,11 @@ internal class MonteCarloSimulation
             AccumulatedDays = d.AccumulatedDays
         }).ToList();
 
-        // Initialize deliverables
-        deliverablesCopy.Shuffle();
-
         // List of deliverables in each column
         var columnDeliverables = columns.ToDictionary(c => c, c => new List<DeliverableModel>());
 
         // Initialize deliverables
-        //deliverablesCopy.Shuffle();
+        deliverablesCopy.Shuffle();
         foreach (var deliverable in deliverablesCopy)
         {
             var firstColumn = columns.First();
@@ -141,16 +138,16 @@ internal class MonteCarloSimulation
                                              * ThreadSafeRandom.ThisThreadsRandom.NextDouble();
 
                         // Random generated completionDay for deliverable
-                        deliverable!.CompletionDays = completionDays * probability;
+                        deliverable!.CompletionDays = currentDay + (completionDays * probability);
                         deliverable.IsCalculated = true;
                     }
                     if (column.IsBuffer == true)
                     {
-                        deliverable.CompletionDays = 0.0;
+                        deliverable.CompletionDays = 0.0 + currentDay;
                     }
 
                     // Check if deliverable is done with this column
-                    if (deliverable.AccumulatedDays <= currentDay)
+                    if (deliverable.CompletionDays <= currentDay)
                     {
                         // Deliverable is ready to move
                         deliverablesToMove.Add(deliverable);
@@ -179,7 +176,7 @@ internal class MonteCarloSimulation
                         // Check if next column's WIP limit is not exceeded
                         if (columnDeliverables[nextColumn].Count < nextColumn.WIP)
                         {
-                            deliverable.AccumulatedDays += deliverable.CompletionDays;
+                            deliverable.AccumulatedDays = currentDay; // += deliverable.CompletionDays;
                             deliverable.ColumnIndex = nextColumnIndex;
                             deliverable.IsCalculated = false;
                             columnDeliverables[nextColumn].Add(deliverable);
@@ -314,16 +311,16 @@ internal class MonteCarloSimulation
                                              * ThreadSafeRandom.ThisThreadsRandom.NextDouble();
 
                         // Random generated completionDay for deliverable
-                        deliverable!.CompletionDays = completionDays * probability;
+                        deliverable!.CompletionDays = currentDay + (completionDays * probability);
                         deliverable.IsCalculated = true;
                     }
                     if (column.IsBuffer == true)
                     {
-                        deliverable.CompletionDays = 0.0;
+                        deliverable.CompletionDays = 0.0 + currentDay;
                     }
 
                     // Check if deliverable is done with this column
-                    if (deliverable.AccumulatedDays <= currentDay)
+                    if (deliverable.CompletionDays <= currentDay)
                     {
                         // Deliverable is ready to move
                         deliverablesToMove.Add(deliverable);
@@ -352,7 +349,7 @@ internal class MonteCarloSimulation
                         // Check if next column's WIP limit is not exceeded
                         if (columnDeliverables[nextColumn].Count < nextColumn.WIP)
                         {
-                            deliverable.AccumulatedDays += deliverable.CompletionDays;
+                            deliverable.AccumulatedDays = currentDay; // += deliverable.CompletionDays;
                             deliverable.ColumnIndex = nextColumnIndex;
                             deliverable.IsCalculated = false;
                             columnDeliverables[nextColumn].Add(deliverable);
@@ -383,11 +380,10 @@ internal class MonteCarloSimulation
                     { 1, 20 },
                     { 2, 40 },
                     { 3, 60 },
-                    { 4, 80 },
+                    { 4, 90 },
                     { 5, 100 },
                     { 6, 120 },
-                    { 7, 140 },
-                    { 8, 160 }
+                    { 7, 160 }
                 };
 
         Console.WriteLine($"Current Day: {currentDay}");
@@ -407,23 +403,24 @@ internal class MonteCarloSimulation
             }
             // Printing rows for each deliverable to each header position
             // Sort by AccumulatedDays
-            deliverablesCopy.Sort((x, y) => x.AccumulatedDays.CompareTo(y.AccumulatedDays));
+            // If printColumn is the first column, do not sort by AccumulatedDays otherwise sort
             foreach (var deliverableToPrint in deliverablesCopy)
             {
                 // check if deliverableToPrint is in wipQueue
-                if (deliverableToPrint.ColumnIndex == columns.IndexOf(printColumn) && index < 35)
+                if (deliverableToPrint.ColumnIndex == columns.IndexOf(printColumn) && index < 36)
                 {
                     Console.SetCursorPosition(columnsToPrint[deliverableToPrint.ColumnIndex], index + 2);
-                    Console.WriteLine($"T:{deliverableToPrint.Nr} D: {double.Round(deliverableToPrint.AccumulatedDays)}, W: {double.Round(deliverableToPrint.WaitTime)}");
+                    // T=Task, D=Days, W=WaitTime
+                    Console.WriteLine($"T:{deliverableToPrint.Nr} D: {double.Round(deliverableToPrint.CompletionDays)}, W: {double.Round(deliverableToPrint.WaitTime)}");
                     index++;
                 }
-                // Pause every print
             }
         }
+        // Pause every print
         System.Threading.Thread.Sleep(TimeSpan.FromSeconds(0.3));
     }
 
-    public static List<ProjectSimulationModel> SensitivityAnalysis(ProjectSimulationModel projectSimModel, double estimateMultiplier)
+    public static List<ProjectSimulationModel> ProjectEstimateMultiplier(ProjectSimulationModel projectSimModel, double estimateMultiplier)
     {
         var projectWithModifiedEstimates = new List<ProjectSimulationModel>();
         projectWithModifiedEstimates.Add(projectSimModel);
