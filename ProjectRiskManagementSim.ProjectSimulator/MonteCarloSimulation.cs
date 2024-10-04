@@ -420,11 +420,10 @@ internal class MonteCarloSimulation
         System.Threading.Thread.Sleep(TimeSpan.FromSeconds(0.3));
     }
 
-    public static List<ProjectSimulationModel> ProjectEstimateMultiplier(ProjectSimulationModel projectSimModel, double estimateMultiplier)
+    public static async Task ColumnEstimateAnalysis(ProjectSimulationModel projectSimModel, int projectSimulationsCount)
     {
-        var projectWithModifiedEstimates = new List<ProjectSimulationModel>();
-        projectWithModifiedEstimates.Add(projectSimModel);
-
+        const double estimateMultiplier = 0.5;
+        var projectWithModifiedEstimates = new List<ProjectSimulationModel> { projectSimModel };
         // Loop through each column and modify EstimatedLowBound and EstimatedHighBound
         for (int i = 0; i < projectSimModel.Columns.Count; i++)
         {
@@ -437,7 +436,109 @@ internal class MonteCarloSimulation
             columnToModify.EstimatedHighBound *= estimateMultiplier;
             projectWithModifiedEstimates.Add(newProjectSimModel);
         }
-        return projectWithModifiedEstimates;
+
+        int projectsCount = projectWithModifiedEstimates.Count;
+        var orderedByTotalDays = await RunSimulationAsync(projectWithModifiedEstimates, projectSimulationsCount);
+
+        var baselineProject = orderedByTotalDays.FirstOrDefault(mcs => mcs.ProjectSimulationModel.Name == projectSimModel.Name);
+        var baselineTotalDays = baselineProject!.SimTotalDaysResult!.Percentile(0.9);
+        foreach (var MCS in orderedByTotalDays)
+        {
+            var name = MCS.ProjectSimulationModel.Name;
+            var totalDays = MCS.SimTotalDaysResult != null && MCS.SimTotalDaysResult.Any()
+                ? MCS.SimTotalDaysResult.Percentile(0.9)
+                : 0.0;
+            if (totalDays < baselineTotalDays)
+            {
+                Console.WriteLine($"Simulation {name} is {totalDays}\t\t\t\tdays from {baselineProject.ProjectSimulationModel.Name} {baselineTotalDays}\t\t\tDifference {baselineTotalDays - totalDays}");
+            }
+        }
+    }
+
+
+    public static async Task WIPAnalysis(ProjectSimulationModel projectSimModel, int projectSimulationsCount)
+    {
+
+        // Rerun the simulation with the modified WIP and get the Results
+        for (int k = 1; k <= 5; k++)
+        {
+            // setting constant for the estimate multiplier
+            int wipMultiplier = 1;
+
+            // getting all the projects with modified estimates
+            var projectWithModifiedWIP = new List<ProjectSimulationModel> { projectSimModel };
+            ProjectWIPMultiplier(projectSimModel, projectWithModifiedWIP, wipMultiplier);
+
+            int projectsCount = projectWithModifiedWIP.Count;
+
+            //var orderedByTotalDays = await RunSimulationAsync(projectWithModifiedEstimates, projectSimulationsCount);
+            var orderedByTotalDays = await RunSimulationAsync(projectWithModifiedWIP, projectSimulationsCount);
+
+            var baselineProject = orderedByTotalDays.FirstOrDefault(mcs => mcs.ProjectSimulationModel.Name == projectSimModel.Name);
+            if (baselineProject == null)
+            {
+                Console.WriteLine("Baseline project not found.");
+                continue;
+            }
+            var baselineTotalDays = baselineProject!.SimTotalDaysResult!.Percentile(0.9);
+            var simulationWithLowestTotalDays = baselineTotalDays;
+            var simulationWithLowestTotalDaysIndex = baselineProject;
+
+            // Column with most impact on the project duration
+            foreach (var MCS in orderedByTotalDays)
+            {
+                var name = MCS.ProjectSimulationModel.Name;
+                var totalDays = MCS.SimTotalDaysResult != null && MCS.SimTotalDaysResult.Any()
+                    ? MCS.SimTotalDaysResult.Percentile(0.9)
+                    : 0.0;
+                if (totalDays < simulationWithLowestTotalDays)
+                {
+                    simulationWithLowestTotalDays = totalDays;
+                    simulationWithLowestTotalDaysIndex = MCS;
+                }
+            }
+            // print the simulation with the lowest total Days
+            Console.WriteLine($"Simulation with the lowest total days: {simulationWithLowestTotalDaysIndex.ProjectSimulationModel.Name} is {simulationWithLowestTotalDays} days from {baselineProject.ProjectSimulationModel.Name} {baselineTotalDays}");
+            projectSimModel = simulationWithLowestTotalDaysIndex.ProjectSimulationModel;
+            wipMultiplier += 1;
+
+        }
+    }
+
+    private static void ProjectWIPMultiplier(ProjectSimulationModel projectSimModel, List<ProjectSimulationModel> projectWithModifiedEstimates, int multiplier)
+    {
+        // Loop through each column and modify WIP
+        for (int i = 0; i < projectSimModel.Columns.Count; i++)
+        {
+            var columnName = projectSimModel.Columns[i].Name! + " WIP";
+            // Clone the original model
+            var newProjectSimModel = projectSimModel.CloneProjectSimModel(projectSimModel, columnName);
+            // Modify the estimated bounds of the specific column
+            var columnToModify = newProjectSimModel.Columns[i];
+            columnToModify.WIP += multiplier;
+            projectWithModifiedEstimates.Add(newProjectSimModel);
+        }
+    }
+
+    private static async Task<MonteCarloSimulation[]> RunSimulationAsync(List<ProjectSimulationModel> projectWithModifiedEstimates, int projectSimulationsCount)
+    {
+        // Create and run simulations concurrently
+        var tasks = new List<Task<MonteCarloSimulation>>();
+        foreach (var projectSimModels in projectWithModifiedEstimates)
+        {
+            tasks.Add(Task.Run(() =>
+            {
+                var MCS = new MonteCarloSimulation(projectSimModels, projectSimulationsCount);
+                MCS.InitiateAndRunSimulation();
+                return MCS;
+            }));
+        };
+
+        // Wait for all tasks to finish and print results
+        var results = await Task.WhenAll(tasks);
+        // Order the results by the average total days
+        var orderedByTotalDays = results.OrderBy(r => r.SimTotalDaysResult!.Percentile(0.9)).ToArray();
+        return orderedByTotalDays;
     }
 }
 public static class ThreadSafeRandom
