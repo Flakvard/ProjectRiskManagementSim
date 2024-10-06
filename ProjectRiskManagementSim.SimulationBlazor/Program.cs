@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using ProjectRiskManagementSim.SimulationBlazor.Components;
+using ProjectRiskManagementSim.SimulationBlazor.Components.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,5 +25,8 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+app.MapGet("/htmx-test",
+    () => new RazorComponentResult<HtmxTest>());
 
 app.Run();
