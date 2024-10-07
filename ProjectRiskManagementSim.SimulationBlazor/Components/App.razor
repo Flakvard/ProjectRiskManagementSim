@@ -2,21 +2,19 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <base href="/" />
-    <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
-    <link rel="stylesheet" href="app.css" />
-    <link rel="stylesheet" href="ProjectRiskManagementSim.SimulationBlazor.styles.css" />
-    <link rel="icon" type="image/png" href="favicon.png" />
-    <script defer src="https://unpkg.com/htmx.org@1.9.8"></script>
-    <script defer src="js/htmx-blazor.js"></script>
-    <HeadOutlet />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <base href="/" />
+  <link rel="stylesheet" href="css/app.min.css" />
+  <link rel="stylesheet" href="ProjectRiskManagementSim.SimulationBlazor.styles.css" />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <script defer src="https://unpkg.com/htmx.org@1.9.8"></script>
+  <script defer src="js/htmx-blazor.js"></script>
+  <HeadOutlet />
 </head>
 
-<body>
-    <Routes />
-    <script src="_framework/blazor.web.js"></script>
+<body hx-boost="true">
+  <Routes />
 </body>
 
 </html>
