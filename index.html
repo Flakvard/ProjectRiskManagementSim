@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen flex flex-col overflow-hidden">
+  <!-- Main container should take the full viewport height -->
+  <div class="Home relative min-h-screen w-full bg-[#192b3e] flex flex-col justify-between items-center z-0">
+
+    <!-- BgCircles will be absolutely positioned and in the background -->
+    <div
+      class="BgCircles fixed inset-0 w-[2000px] origin-top-left rotate-[8deg] justify-center items-start gap-[839.88px] flex z-[-1] pointer-events-none">
+      <div class="Ellipse1 absolute top-0 left-0 w-[600px] h-[600px] bg-[#7e44eb]/90 rounded-full blur-[150px]"></div>
+      <div class="Ellipse2 absolute top-0 right-0 w-[600px] h-[600px] bg-[#ff7c87] rounded-full blur-[150px]"></div>
+    </div>
+    <div class="Navbar self-stretch px-[180px] justify-between items-center inline-flex">
+      <div class="Companyname w-[167px] h-[100px] justify-center items-center gap-2.5 flex">
+        <div class="Oxygen w-[74.93px] text-white text-xl font-semibold font-['Inter']">Oxygen</div>
+      </div>
+      <div class="Menunav justify-start items-center gap-9 flex">
+        <div class="Settings text-white text-xl font-normal font-['Inter']">Settings</div>
+        <div class="Projects w-[76.93px] text-white text-xl font-normal font-['Inter']">Projects</div>
+        <div class="Dashboard w-[103.90px] text-white text-xl font-normal font-['Inter']">Dashboard</div>
+        <div class="Simulations w-[108.90px] text-white text-xl font-normal font-['Inter']">Simulations</div>
+        <div class="User w-[44.96px] text-white text-xl font-normal font-['Inter']">User</div>
+      </div>
+    </div>
+    <div class="Hero w-[1080px] mx-[180px] py-5 grow shrink basis-0 justify-start items-start gap-2.5 inline-flex">
+      <div class="Leftsidehero self-stretch flex-col justify-start items-start gap-10 inline-flex">
+        <div class="Header1 self-stretch w-[535px] py-px justify-start items-start gap-2.5 inline-flex">
+          <div class="RunSimulationsOnYourProjects text-white text-[70px] font-extrabold font-['Inter'] capitalize">
+            Run simulations on your projects</div>
+        </div>
+        <div class="Subtext self-stretch py-px justify-center items-start gap-2.5 inline-flex">
+          <div
+            class="ToolForIdentifyingAnalyzingAndRespondingToAnyRiskThatArisesOverTheLifeCycleOfAProjectToHelpTheProjectRemainOnTrackAndMeetItsGoal w-[525px] text-white text-base font-normal font-['Inter'] tracking-wider">
+            Tool for identifying, analyzing and responding to any risk that arises over the life cycle of a project to
+            help the project remain on track and meet its goal</div>
+        </div>
+        <div class="Buttonsection self-stretch py-px justify-between items-end inline-flex">
+          <div
+            class="Buttonnewsim w-[255px] h-[66px] px-8 py-5 bg-[#7e44eb] rounded-[168px] justify-center items-center gap-2.5 flex">
+            <div class="NewSimulation text-white text-xl font-semibold font-['Outfit'] uppercase tracking-wider">New
+              simulation</div>
+          </div>
+          <div
+            class="Buttonoldsim w-[255px] h-[64.78px] px-[27px] py-5 rounded-[168px] border border-[#ff7c87] justify-center items-center gap-2.5 flex">
+            <div class="OldSimulations text-white text-xl font-semibold font-['Outfit'] uppercase tracking-wider">OLD
+              simulations</div>
+          </div>
+        </div>
+      </div>
+      <div class="Rightsidehero grow pt-[10px] shrink basis-0 self-stretch justify-center items-start gap-2.5 flex">
+        <img class="Simchartimg h-[440px] rounded-[31px] object-cover object-center"
+          src="./openart-image_OgGepPGA_1728025728373_raw.png" />
+      </div>
+    </div>
+    <div class="Footer self-stretch h-[243px] flex-col justify-end items-center gap-2.5 flex">
+      <div class="Rectangle1 self-stretch h-[11px] bg-gradient-to-r from-[#7e44eb] to-[#ff7c87]"></div>
+    </div>
+  </div>
+</body>
+
+</html>
