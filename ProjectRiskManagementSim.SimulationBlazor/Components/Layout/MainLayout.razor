@@ -1,6 +1,7 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="Home relative min-h-screen w-full bg-[#192b3e] flex flex-col justify-between items-center z-0">
+  <NavMenu />
   <main>
     <TwoBgCircles />
     <!--
@@ -11,11 +12,9 @@
       @Body
     </article>
     -->
-
-    <NavMenu />
     @Body
   </main>
-  <div class="Footer self-stretch h-[243px] flex-col justify-end items-center gap-2.5 flex">
+  <footer class="Footer self-stretch h-[243px] flex-col justify-end items-center gap-2.5 flex">
     <div class="Rectangle1 self-stretch h-[11px] bg-gradient-to-r from-[#7e44eb] to-[#ff7c87]"></div>
-  </div>
+  </footer>
 </div>
