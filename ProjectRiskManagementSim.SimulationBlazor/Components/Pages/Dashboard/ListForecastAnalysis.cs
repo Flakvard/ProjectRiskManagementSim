@@ -17,7 +17,13 @@ public class ForecastAnalysisModel
             new ForecastAnalysisModel { Percentage = "85%", EndDate = "Nov 2024", Days = 0, Cost = "1.000.000", CostOfDelay = "0" },
             new ForecastAnalysisModel { Percentage = "80%", EndDate = "Okt 2024", Days = -10, Cost = "970.000", CostOfDelay = "-7.000" },
             new ForecastAnalysisModel { Percentage = "75%", EndDate = "Okt 2024", Days = -21, Cost = "900.000", CostOfDelay = "-14.000" },
-            new ForecastAnalysisModel { Percentage = "75%", EndDate = "Mai 2024", Days = -21, Cost = "900.000", CostOfDelay = "0" }
+            new ForecastAnalysisModel { Percentage = "70%", EndDate = "Okt 2024", Days = -22, Cost = "890.000", CostOfDelay = "-15.000" },
+            new ForecastAnalysisModel { Percentage = "65%", EndDate = "Okt 2024", Days = -23, Cost = "880.000", CostOfDelay = "-16.000" },
+            new ForecastAnalysisModel { Percentage = "60%", EndDate = "Okt 2024", Days = -24, Cost = "870.000", CostOfDelay = "-17.000" },
+            new ForecastAnalysisModel { Percentage = "55%", EndDate = "Okt 2024", Days = -25, Cost = "860.000", CostOfDelay = "-18.000" },
+            new ForecastAnalysisModel { Percentage = "50%", EndDate = "Okt 2024", Days = -26, Cost = "850.000", CostOfDelay = "-19.000" },
+            new ForecastAnalysisModel { Percentage = "45%", EndDate = "Okt 2024", Days = -27, Cost = "840.000", CostOfDelay = "-20.000" },
+            new ForecastAnalysisModel { Percentage = "40%", EndDate = "Okt 2024", Days = -28, Cost = "830.000", CostOfDelay = "-21.000" }
         };
     }
 }
