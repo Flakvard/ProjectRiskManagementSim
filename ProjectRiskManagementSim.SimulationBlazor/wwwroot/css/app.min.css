@@ -1007,6 +1007,10 @@ video {
   overflow-y: auto;
 }
 
+.overflow-y-scroll {
+  overflow-y: scroll;
+}
+
 .rounded {
   border-radius: 0.25rem;
 }
@@ -1446,6 +1450,14 @@ video {
 .blur-\[150px\] {
   --tw-blur: blur(150px);
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
+.hover\:overflow-y-auto:hover {
+  overflow-y: auto;
+}
+
+.hover\:overflow-y-scroll:hover {
+  overflow-y: scroll;
 }
 
 .hover\:bg-\[\#5e33c9\]:hover {
