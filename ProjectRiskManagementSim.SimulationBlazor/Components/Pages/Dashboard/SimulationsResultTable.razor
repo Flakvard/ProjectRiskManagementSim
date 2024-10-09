@@ -1,4 +1,6 @@
+@using ProjectRiskManagementSim.SimulationBlazor.Components.Pages.Dashboard
 <!-- SimulationsResultTable -->
+@* Render the table dynamically *@
 <div class="Table1 grow shrink basis-0 self-stretch flex-col justify-start items-start inline-flex">
   <div
     class="Table self-stretch grow shrink basis-0 bg-white rounded border border-[#b9b9b9] flex-col justify-start items-start flex">
@@ -76,24 +78,26 @@
         </div>
       </div>
     </div>
+    @foreach (var result in simulationResults)
+    {
     <div class="Row self-stretch justify-start items-start inline-flex">
       <div
         class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
         <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text text-black text-xs font-normal font-['Inter'] leading-none">Phase 1</div>
+          <div class="Text text-black text-xs font-normal font-['Inter'] leading-none">@result.SimulationName</div>
         </div>
       </div>
       <div
         class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
         <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text text-center text-black text-xs font-normal font-['Inter'] leading-none">25.09.2024
-          </div>
+          <div class="Text text-center text-black text-xs font-normal font-['Inter'] leading-none">
+            @result.SimulationDate</div>
         </div>
       </div>
       <div
         class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
         <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text text-center text-black text-xs font-normal font-['Inter'] leading-none">01-10-2024
+          <div class="Text text-center text-black text-xs font-normal font-['Inter'] leading-none">@result.TargetDate
           </div>
         </div>
       </div>
@@ -101,238 +105,51 @@
         class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
         <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
           <div class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-            -6</div>
+            @result.Days</div>
         </div>
       </div>
       <div
         class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
         <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
           <div class="Text grow shrink basis-0 text-right text-black text-xs font-normal font-['Inter'] leading-none">
-            1.100.000</div>
+            @result.Budget</div>
         </div>
       </div>
       <div
         class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
         <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
           <div class="Text grow shrink basis-0 text-right text-black text-xs font-normal font-['Inter'] leading-none">
-            80.000</div>
+            @result.ActualCost</div>
         </div>
       </div>
       <div
         class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
         <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
           <div class="Text grow shrink basis-0 text-right text-black text-xs font-normal font-['Inter'] leading-none">
-            2.846</div>
+            @result.CostPerDay</div>
         </div>
       </div>
       <div
         class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
         <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
           <div class="Text grow shrink basis-0 text-right text-black text-xs font-normal font-['Inter'] leading-none">
-            5.320</div>
+            @result.DelayPerDay</div>
         </div>
       </div>
       <div
         class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
         <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
           <div class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-            25</div>
+            @result.Epics</div>
         </div>
       </div>
     </div>
-    <div class="Row self-stretch justify-start items-start inline-flex">
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text text-black text-xs font-normal font-['Inter'] leading-none">Ekstra feature on project
-          </div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text text-center text-black text-xs font-normal font-['Inter'] leading-none">20.10.2024
-          </div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text text-center text-black text-xs font-normal font-['Inter'] leading-none">01-10-2024
-          </div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-            19</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text grow shrink basis-0 text-right text-black text-xs font-normal font-['Inter'] leading-none">
-            1.200.000</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text grow shrink basis-0 text-right text-black text-xs font-normal font-['Inter'] leading-none">
-            110.000</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text grow shrink basis-0 text-right text-black text-xs font-normal font-['Inter'] leading-none">
-            2.996</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text grow shrink basis-0 text-right text-black text-xs font-normal font-['Inter'] leading-none">
-            5.320</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-            30</div>
-        </div>
-      </div>
-    </div>
-    <div class="Row self-stretch justify-start items-start inline-flex">
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text text-black text-xs font-normal font-['Inter'] leading-none">New Deadline</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text text-center text-black text-xs font-normal font-['Inter'] leading-none">09.11.2024
-          </div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text text-center text-black text-xs font-normal font-['Inter'] leading-none">09-11-2024
-          </div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-            0</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text grow shrink basis-0 text-right text-black text-xs font-normal font-['Inter'] leading-none">
-            1.200.000</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text grow shrink basis-0 text-right text-black text-xs font-normal font-['Inter'] leading-none">
-            140.000</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text grow shrink basis-0 text-right text-black text-xs font-normal font-['Inter'] leading-none">
-            3.154</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text grow shrink basis-0 text-right text-black text-xs font-normal font-['Inter'] leading-none">
-            5.320</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-            30</div>
-        </div>
-      </div>
-    </div>
-    <div class="Row self-stretch justify-start items-start inline-flex">
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text text-black text-xs font-normal font-['Inter'] leading-none">Phase II of bech bruun project
-          </div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text text-center text-black text-xs font-normal font-['Inter'] leading-none">19.11.2024
-          </div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text text-center text-black text-xs font-normal font-['Inter'] leading-none">09-11-2024
-          </div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-            10</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text grow shrink basis-0 text-right text-black text-xs font-normal font-['Inter'] leading-none">
-            1.250.000</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text grow shrink basis-0 text-right text-black text-xs font-normal font-['Inter'] leading-none">
-            180.000</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text grow shrink basis-0 text-right text-black text-xs font-normal font-['Inter'] leading-none">
-            3.154</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text grow shrink basis-0 text-right text-black text-xs font-normal font-['Inter'] leading-none">
-            5.320</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-            30</div>
-        </div>
-      </div>
-    </div>
+    }
   </div>
 </div>
+
+@code {
+[Parameter]
+public List<SimulationsResultTableModel> simulationResults { get; set; } =
+  SimulationsResultTableModel.InitializeSimulationResults();
+  }
