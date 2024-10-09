@@ -13,36 +13,38 @@
   </div>
   <div
     class="Table self-stretch grow shrink basis-0 bg-white rounded border border-[#b9b9b9] flex-col justify-start items-start flex">
-    <table class="self-stretch grow shrink basis-0 bg-white rounded border border-[#b9b9b9]">
-      <thead>
-        <tr class="bg-[#7e44eb] border-l border-t border-[#b9b9b9]">
-          <th class="px-3 py-2.5 text-center cell-header-text">%</th>
-          <th class="px-3 py-2.5 text-center cell-header-text">End date
-          </th>
-          <th class="px-3 py-2.5 text-center cell-header-text">Days</th>
-          <th class="px-3 py-2.5 text-center cell-header-text">Cost</th>
-          <th class="px-3 py-2.5 text-center cell-header-text">Cost of
-            Delay</th>
-        </tr>
-      </thead>
-      <tbody>
-        @foreach (var result in simulationResults)
-        {
-        <tr class="bg-white/0 border-l border-t border-[#b9b9b9]">
-          <td class="px-3 py-2.5 text-center cell-text">
-            @result.Percentage</td>
-          <td class="px-3 py-2.5 text-center cell-text">@result.EndDate
-          </td>
-          <td class="px-3 py-2.5 text-center cell-text">@result.Days
-          </td>
-          <td class="px-3 py-2.5 text-right cell-text">@result.Cost
-          </td>
-          <td class="px-3 py-2.5 text-right cell-text">
-            @result.CostOfDelay</td>
-        </tr>
-        }
-      </tbody>
-    </table>
+    <div class="overflow-auto max-h-[300px] w-full">
+      <table class="table-auto w-full self-stretch grow shrink basis-0 bg-white rounded border border-[#b9b9b9]">
+        <thead class="sticky top-0 bg-[#7e44eb]">
+          <tr class="border-l border-t border-[#b9b9b9]">
+            <th class="px-3 py-2.5 text-center cell-header-text">%</th>
+            <th class="px-3 py-2.5 text-center cell-header-text">End date
+            </th>
+            <th class="px-3 py-2.5 text-center cell-header-text">Days</th>
+            <th class="px-3 py-2.5 text-center cell-header-text">Cost</th>
+            <th class="px-3 py-2.5 text-center cell-header-text">Cost of
+              Delay</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var result in simulationResults)
+          {
+          <tr class="bg-white/0 border-l border-t border-[#b9b9b9]">
+            <td class="px-3 py-2.5 text-center cell-text">
+              @result.Percentage</td>
+            <td class="px-3 py-2.5 text-center cell-text">@result.EndDate
+            </td>
+            <td class="px-3 py-2.5 text-center cell-text">@result.Days
+            </td>
+            <td class="px-3 py-2.5 text-right cell-text">@result.Cost
+            </td>
+            <td class="px-3 py-2.5 text-right cell-text">
+              @result.CostOfDelay</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 
