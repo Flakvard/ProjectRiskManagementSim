@@ -2,150 +2,57 @@
 <!-- SimulationsResultTable -->
 @* Render the table dynamically *@
 <div class="Table1 grow shrink basis-0 self-stretch flex-col justify-start items-start inline-flex">
-  <div
-    class="Table self-stretch grow shrink basis-0 bg-white rounded border border-[#b9b9b9] flex-col justify-start items-start flex">
-    <div class="Row self-stretch justify-start items-start inline-flex">
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-[#7e44eb] border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch p-0.5 justify-start items-start inline-flex">
-          <div
-            class="Text grow shrink basis-0 text-center text-white text-xs font-semibold font-['Inter'] leading-none">
-            Simulations</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-[#7e44eb] border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch p-0.5 justify-start items-start inline-flex">
-          <div
-            class="Text grow shrink basis-0 text-center text-white text-xs font-semibold font-['Inter'] leading-none">
-            Sim. Date</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-[#7e44eb] border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch p-0.5 justify-start items-start inline-flex">
-          <div
-            class="Text grow shrink basis-0 self-stretch text-center text-white text-xs font-semibold font-['Inter'] leading-none">
-            Target Date</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-[#7e44eb] border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch p-0.5 justify-start items-start inline-flex">
-          <div
-            class="Text grow shrink basis-0 text-center text-white text-xs font-semibold font-['Inter'] leading-none">
-            Days</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-[#7e44eb] border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch p-0.5 justify-start items-start inline-flex">
-          <div
-            class="Text grow shrink basis-0 text-center text-white text-xs font-semibold font-['Inter'] leading-none">
-            Budget</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-[#7e44eb] border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch p-0.5 justify-start items-start inline-flex">
-          <div
-            class="Text grow shrink basis-0 text-center text-white text-xs font-semibold font-['Inter'] leading-none">
-            Actual</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-[#7e44eb] border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch p-0.5 justify-start items-start inline-flex">
-          <div
-            class="Text grow shrink basis-0 text-center text-white text-xs font-semibold font-['Inter'] leading-none">
-            Cost/day</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-[#7e44eb] border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch p-0.5 justify-start items-start inline-flex">
-          <div
-            class="Text grow shrink basis-0 text-center text-white text-xs font-semibold font-['Inter'] leading-none">
-            Delay/day</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-[#7e44eb] border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch p-0.5 justify-start items-start inline-flex">
-          <div
-            class="Text grow shrink basis-0 text-center text-white text-xs font-semibold font-['Inter'] leading-none">
-            Epics</div>
-        </div>
-      </div>
-    </div>
-    @foreach (var result in simulationResults)
-    {
-    <div class="Row self-stretch justify-start items-start inline-flex">
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text text-black text-xs font-normal font-['Inter'] leading-none">@result.SimulationName</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text text-center text-black text-xs font-normal font-['Inter'] leading-none">
-            @result.SimulationDate</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text text-center text-black text-xs font-normal font-['Inter'] leading-none">@result.TargetDate
-          </div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-            @result.Days</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text grow shrink basis-0 text-right text-black text-xs font-normal font-['Inter'] leading-none">
-            @result.Budget</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text grow shrink basis-0 text-right text-black text-xs font-normal font-['Inter'] leading-none">
-            @result.ActualCost</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text grow shrink basis-0 text-right text-black text-xs font-normal font-['Inter'] leading-none">
-            @result.CostPerDay</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text grow shrink basis-0 text-right text-black text-xs font-normal font-['Inter'] leading-none">
-            @result.DelayPerDay</div>
-        </div>
-      </div>
-      <div
-        class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-        <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-          <div class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-            @result.Epics</div>
-        </div>
-      </div>
-    </div>
-    }
-  </div>
+  <table class="Table self-stretch grow shrink basis-0 bg-white rounded border border-[#b9b9b9]">
+    <!-- Table Header -->
+    <thead class="TableHeader sticky top-0 z-10 cell-header-bg">
+      <tr>
+        <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
+          Simulations</th>
+        <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
+          Sim. Date</th>
+        <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
+          Target Date</th>
+        <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
+          Days</th>
+        <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
+          Budget</th>
+        <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
+          Actual</th>
+        <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
+          Cost/day</th>
+        <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
+          Delay/day</th>
+        <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
+          Epics</th>
+      </tr>
+    </thead>
+    <!-- Table Body -->
+    <tbody class="TableBody overflow-y-auto max-h-[500px]"> <!-- Set max-height to control body scrolling -->
+      @foreach (var result in simulationResults)
+      {
+      <tr class="Row">
+        <td class="cell-content-border p-3 cell-text">
+          @result.SimulationName</td>
+        <td class="cell-content-border p-3 text-center cell-text">
+          @result.SimulationDate</td>
+        <td class="cell-content-border p-3 text-center cell-text">
+          @result.TargetDate</td>
+        <td class="cell-content-border p-3 text-center cell-text">
+          @result.Days</td>
+        <td class="cell-content-border p-3 text-right cell-text">
+          @result.Budget</td>
+        <td class="cell-content-border p-3 text-right cell-text">
+          @result.ActualCost</td>
+        <td class="cell-content-border p-3 text-right cell-text">
+          @result.CostPerDay</td>
+        <td class="cell-content-border p-3 text-right cell-text">
+          @result.DelayPerDay</td>
+        <td class="cell-content-border p-3 text-center cell-text">
+          @result.Epics</td>
+      </tr>
+      }
+    </tbody>
+  </table>
 </div>
 
 @code {
