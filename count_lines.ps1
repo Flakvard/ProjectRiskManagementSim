@@ -7,7 +7,7 @@ $folders = Get-ChildItem -Path $rootDir -Directory
 # Initialize total line count and folder-based summary
 $totalLines = 0
 $folderLineCounts = @{}
-$fileTypes = @("cs", "razor", "css", "js", "py")
+$fileTypes = @("cs", "razor")
 $fileTypeLineCounts = @{}
 
 # Initialize line counts for each file type
