@@ -7,6 +7,13 @@ $folders = Get-ChildItem -Path $rootDir -Directory
 # Initialize total line count and folder-based summary
 $totalLines = 0
 $folderLineCounts = @{}
+$fileTypes = @("cs", "razor", "css", "js", "py")
+$fileTypeLineCounts = @{}
+
+# Initialize line counts for each file type
+foreach ($fileType in $fileTypes) {
+    $fileTypeLineCounts[$fileType] = 0
+}
 
 # Function to count lines in a collection of files
 function Count-LinesInFiles($files) {
@@ -18,24 +25,45 @@ function Count-LinesInFiles($files) {
     return $lineCount
 }
 
-# Count lines in .cs files in the root directory (direct files not in subfolders)
-$csFilesRoot = Get-ChildItem -Path $rootDir -Filter *.cs
-if ($csFilesRoot) {
-    $linesRoot = Count-LinesInFiles $csFilesRoot
-    $folderLineCounts["Root"] = $linesRoot
-    $totalLines += $linesRoot
+# Count lines in specified file types in the root directory (direct files not in subfolders)
+foreach ($fileType in $fileTypes) {
+    $filesRoot = Get-ChildItem -Path $rootDir -Filter *.$fileType
+    if ($filesRoot) {
+        $linesRoot = Count-LinesInFiles($filesRoot)
+        if ($folderLineCounts["Root"]) {
+            $folderLineCounts["Root"] += $linesRoot
+        } else {
+            $folderLineCounts["Root"] = $linesRoot
+        }
+        $fileTypeLineCounts[$fileType] += $linesRoot
+        $totalLines += $linesRoot
+    }
 }
 
 # Loop through each first-level folder
 foreach ($folder in $folders) {
-    # Recursively get all .cs files within the folder and all its subdirectories
-    $csFiles = Get-ChildItem -Path $folder.FullName -Recurse -Filter *.cs
-    
-    # If the folder contains .cs files, count the lines
-    if ($csFiles) {
-        $folderLines = Count-LinesInFiles $csFiles
-        $folderLineCounts[$folder.Name] = $folderLines
-        $totalLines += $folderLines
+    # Skip bin, obj, and node_modules folders
+    if ($folder.Name -in @("bin", "obj", "node_modules")) {
+        continue
+    }
+
+    foreach ($fileType in $fileTypes) {
+        # Recursively get all files of the current type within the folder and all its subdirectories
+        $files = Get-ChildItem -Path $folder.FullName -Recurse -Include *.$fileType | Where-Object { 
+            $_.FullName -notmatch '\\bin\\|\\obj\\|\\node_modules\\'
+        }
+        
+        # If the folder contains files of the current type, count the lines
+        if ($files) {
+            $folderLines = Count-LinesInFiles($files)
+            if ($folderLineCounts[$folder.Name]) {
+                $folderLineCounts[$folder.Name] += $folderLines
+            } else {
+                $folderLineCounts[$folder.Name] = $folderLines
+            }
+            $fileTypeLineCounts[$fileType] += $folderLines
+            $totalLines += $folderLines
+        }
     }
 }
 
@@ -65,6 +93,10 @@ foreach ($entry in $sortedFolders) {
     Write-Host -NoNewline ("{0,-20}" -f $folderLines)
     Write-Host ("{0,-5}%" -f $percentage)
 }
-# Output the total number of lines
+
+# Output the total number of lines for each file type
 Write-Host "`n--------------------------------------------------------------------------------------------------------------------------------------"
-Write-Host "`tTotal lines of code in all .cs files: $totalLines" -ForegroundColor Yellow
+foreach ($fileType in $fileTypes) {
+    Write-Host "`tTotal lines of code in .$fileType files: $($fileTypeLineCounts[$fileType])" -ForegroundColor Yellow
+}
+Write-Host "`tTotal lines of code in all files: $totalLines" -ForegroundColor Yellow
