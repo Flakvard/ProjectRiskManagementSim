@@ -572,7 +572,7 @@ video {
 }
 
 .cell-header-text {
-  font-family: 'Inter';
+  font-family: 'Outfit';
   font-size: 0.75rem;
   line-height: 1rem;
   font-weight: 600;
@@ -1099,10 +1099,6 @@ video {
 
 .bg-\[\#ffb4ba\]\/25 {
   background-color: rgb(255 180 186 / 0.25);
-}
-
-.bg-\[\#ffb4ba\]\/50 {
-  background-color: rgb(255 180 186 / 0.5);
 }
 
 .bg-violet-600\/40 {

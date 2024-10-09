@@ -13,7 +13,7 @@
     @apply text-black text-xs font-normal font-['Inter'] leading-none;
   }
   .cell-header-text {
-    @apply text-white text-xs font-semibold font-['Inter'] leading-none;
+    @apply text-white text-xs font-semibold font-['Outfit'] leading-none;
   }
   .cell-header-bg{
     @apply bg-[#7e44eb];
