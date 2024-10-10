@@ -1,0 +1,74 @@
+<!-- Button trigger modal -->
+<button id="openModal" class="bg-[#7e44eb] text-white px-4 py-2 rounded hover:bg-blue-600">
+  Launch demo modal
+</button>
+
+<!-- Modal (Full-screen) -->
+<div id="modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+  <div class="bg-white rounded-lg shadow-lg w-1/3">
+    <!-- Modal Header -->
+    <div class="px-4 py-2 flex justify-between items-center border-b">
+      <h2 class="text-black text-lg font-semibold">Modal title</h2>
+      <button id="closeModal" class="text-gray-500 hover:text-black">&times;</button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="p-4">
+      <p class="text-black">Modal content goes here...</p>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-4 py-2 border-t flex justify-end">
+      <button id="closeModalFooter" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 mr-2">
+        Close
+      </button>
+      <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        Save changes
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Script to handle modal open/close functionality -->
+<script>
+  const openModal = document.getElementById('openModal');
+  const modal = document.getElementById('modal');
+  const closeModal = document.getElementById('closeModal');
+  const closeModalFooter = document.getElementById('closeModalFooter');
+
+  openModal.addEventListener('click', () => {
+    modal.classList.remove('hidden');
+    document.body.classList.add('overflow-hidden'); // Prevent scrolling on body
+  });
+
+  closeModal.addEventListener('click', () => {
+    modal.classList.add('hidden');
+    document.body.classList.remove('overflow-hidden'); // Re-enable scrolling
+  });
+
+  closeModalFooter.addEventListener('click', () => {
+    modal.classList.add('hidden');
+    document.body.classList.remove('overflow-hidden'); // Re-enable scrolling
+  });
+
+  // Close modal if clicking outside of the modal content
+  window.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden'); // Re-enable scrolling
+    }
+  });
+</script>
+
+<style>
+  /* Optional: Disable pointer events behind modal when modal is open */
+  #modal {
+    pointer-events: auto;
+    /* Allow clicking on the modal itself */
+  }
+
+  #modal.hidden~* {
+    pointer-events: none;
+    /* Disable clicking on background elements */
+  }
+</style>
