@@ -2,7 +2,6 @@
 @layout DashboardLayout
 @page "/dashboard"
 @rendermode InteractiveServer
-
 <PageTitle>Dashboard</PageTitle>
 <!-- Dashboard -->
 <div class="flex flex-row">
@@ -50,6 +49,21 @@
         <div class="overflow-auto h-full w-full">
           <SimulationsResultTable />
         </div>
+      </div>
+    </div>
+  </div>
+  <div class="w-full h-full flex-col">
+
+    <div class="p-4">
+      <div class="p-4 bg-[#ffb4ba]/25 rounded-2xl justify-center items-center gap-2.5 flex">
+
+        <div class="bg-white rounded-2xl" id="chart"></div>
+      </div>
+    </div>
+    <div class="p-4">
+      <div class="p-4 bg-[#ffb4ba]/25 rounded-2xl justify-center items-center gap-2.5 flex">
+
+        <img class="Image4 grow shrink basis-0 self-stretch rounded-md" src="https://via.placeholder.com/575x350" />
       </div>
     </div>
   </div>
