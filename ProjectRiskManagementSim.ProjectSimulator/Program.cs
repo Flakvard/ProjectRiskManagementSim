@@ -15,6 +15,9 @@ var backLogModel = new BacklogModel
     PercentageHighBound = 0.8
 };
 
+var wip = 30;
+var wip10 = 10;
+var wip5 = 5;
 var projectSimModel = new ProjectSimulationModel
 {
     Name = "Baseline",
@@ -35,17 +38,28 @@ var projectSimModel = new ProjectSimulationModel
     // Bech Bruun model
     Columns = new List<ColumnModel>
     {
-        new ColumnModel { Name = "Backlog", IsBuffer=true, WIP = backLogModel.Deliverables.Count, EstimatedLowBound = 1, EstimatedHighBound = 54 },
-        new ColumnModel { Name = "Open", IsBuffer=true, WIP = 7, EstimatedLowBound = 1, EstimatedHighBound = 54 },
-        new ColumnModel { Name = "In Progress", WIP = 3, EstimatedLowBound = 1, EstimatedHighBound = 47 },
-        new ColumnModel { Name = "Stuck", IsBuffer=true, WIP = 12, EstimatedLowBound = 1, EstimatedHighBound = 24.79 },
-        new ColumnModel { Name = "Finished", IsBuffer=true, WIP = 35, EstimatedLowBound = 1, EstimatedHighBound = 65 },
-        new ColumnModel { Name = "Rdy For Test on Stage", IsBuffer=true, WIP = 21, EstimatedLowBound = 1, EstimatedHighBound = 50 },
-        new ColumnModel { Name = "Test on Stage", WIP = 2, EstimatedLowBound = 1, EstimatedHighBound = 11 },
-        new ColumnModel { Name = "Await Dply on Prod", IsBuffer=true, WIP = 21, EstimatedLowBound = 1, EstimatedHighBound = 22 },
-        new ColumnModel { Name = "Rdy For Test on Prod", WIP = 2, EstimatedLowBound = 1, EstimatedHighBound = 54 },
-        new ColumnModel { Name = "Done", IsBuffer=true, WIP = backLogModel.Deliverables.Count, EstimatedLowBound = 1, EstimatedHighBound = 54 }
+        new ColumnModel(wip: backLogModel.Deliverables.Count) { Name = "Backlog", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 54 },
+        new ColumnModel(wip: wip5, wipMax: wip5) { Name = "Open", IsBuffer=true,  EstimatedLowBound = 1, EstimatedHighBound = 54 },
+        new ColumnModel(wip: 5, wipMax: 5) { Name = "In Progress", EstimatedLowBound = 1, EstimatedHighBound = 47 },
+        new ColumnModel(wip: wip10, wipMax: wip10) { Name = "Rdy4Test", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 50 },
+        new ColumnModel(wip: 0, wipMax: 2) { Name = "Test Stage", EstimatedLowBound = 1, EstimatedHighBound = 11 },
+        new ColumnModel(wip: wip10, wipMax: wip10) { Name = "Await Dply Prod", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 22 },
+        new ColumnModel(wip: 0, wipMax: 2) { Name = "Rdy4TestProd", EstimatedLowBound = 1, EstimatedHighBound = 54 },
+        new ColumnModel(wip: backLogModel.Deliverables.Count) { Name = "Done", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 54 }
     },
+    // Columns = new List<ColumnModel>
+    // {
+    //     new ColumnModel(wip: backLogModel.Deliverables.Count) { Name = "Backlog", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 54 },
+    //     new ColumnModel(wip: wip, wipMax: wip) { Name = "Open", IsBuffer=true,  EstimatedLowBound = 1, EstimatedHighBound = 54 },
+    //     new ColumnModel(wip: 5, wipMax: 5) { Name = "In Progress", EstimatedLowBound = 1, EstimatedHighBound = 47 },
+    //     new ColumnModel(wip: wip, wipMax: wip) { Name = "Stuck", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 24.79 },
+    //     new ColumnModel(wip: wip, wipMax: wip) { Name = "Finished", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 65 },
+    //     new ColumnModel(wip: wip, wipMax: wip) { Name = "Rdy4Test", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 50 },
+    //     new ColumnModel(wip: 0, wipMax: 2) { Name = "Test Stage", EstimatedLowBound = 1, EstimatedHighBound = 11 },
+    //     new ColumnModel(wip: wip, wipMax: wip) { Name = "Await Dply Prod", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 22 },
+    //     new ColumnModel(wip: 0, wipMax: 2) { Name = "Rdy4TestProd", EstimatedLowBound = 1, EstimatedHighBound = 54 },
+    //     new ColumnModel(wip: backLogModel.Deliverables.Count) { Name = "Done", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 54 }
+    // },
 };
 
 // setting constant for the estimate multiplier

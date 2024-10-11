@@ -9,6 +9,7 @@ internal class DeliverableModel : IComparer<DeliverableModel>
     public int ColumnIndex { get; set; } = 0;
     public bool IsCalculated { get; set; } = false;
     public double WaitTime { get; set; } = 0;
+    public double StoppedWorkingTime { get; set; } = 0;
 
     public DeliverableModel()
     {

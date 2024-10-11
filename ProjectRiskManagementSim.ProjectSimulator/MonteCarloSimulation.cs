@@ -281,6 +281,10 @@ internal class MonteCarloSimulation
 
 
         double currentDay = 0;
+        const int developersHelping = 1;
+        int originalTestingProdWIP = columns.First(c => c.Name == "Rdy4TestProd").WIP;
+        int originalTestingDevWIP = columns.First(c => c.Name == "Test Stage").WIP;
+        int originalDevelopersWIP = columns.First(c => c.Name == "In Progress").WIP;
 
         // While there are deliverables in the system
         while (columnDeliverables.Any(kvp => kvp.Value.Count > 0))
@@ -293,82 +297,221 @@ internal class MonteCarloSimulation
                 var wipQueue = columnDeliverables[column];
                 var wipStack = new List<DeliverableModel>();
 
+                var backlogColumn = columns.FirstOrDefault(c => c.Name == "Backlog");
+                var openColumn = columns.FirstOrDefault(c => c.Name == "Open");
+                var testingProdColumn = columns.FirstOrDefault(c => c.Name == "Rdy4TestProd");
+                var testingDevColumn = columns.FirstOrDefault(c => c.Name == "Test Stage");
+                var developerColumn = columns.FirstOrDefault(c => c.Name == "In Progress");
+
+                // Check if the "Ready for Test Stage" column is full
+                // if so allocate developers to help testing
+                var readyForTestDevColumn = columns.FirstOrDefault(c => c.Name == "Rdy4Test");
+                if (readyForTestDevColumn != null
+                    && IsBottleneck(readyForTestDevColumn, columnDeliverables[readyForTestDevColumn])
+                    && testingDevColumn?.WIP <= testingDevColumn?.WIPMax
+                    )
+                {
+                    ReallocateWIP(developersHelping, testingDevColumn, developerColumn);
+                }
+
+
+                // Check if the "Ready for Test on Prod" column is full
+                // if so allocate developers to help testing
+                var readyForTestProdColumn = columns.FirstOrDefault(c => c.Name == "Await Dply Prod");
+                if (readyForTestProdColumn != null
+                    && IsBottleneck(readyForTestProdColumn, columnDeliverables[readyForTestProdColumn])
+                    && testingProdColumn?.WIP <= testingProdColumn?.WIPMax
+                    )
+                {
+                    ReallocateWIP(developersHelping, testingProdColumn, developerColumn);
+                }
+
                 // We use a new list to keep track of deliverables to move to next column
                 var deliverablesToMove = new List<DeliverableModel>();
 
-                foreach (var deliverable in wipQueue.ToList()) // iterate over a copy of the list
+                // Calculate the deliverable completion day and add to list 
+                CalculateDeliverableCompletionDayANDAddToList(backlog, currentDay, column, wipQueue, wipStack, deliverablesToMove);
+
+                // Check how many are working on the deliverable in columns and add a day to the ones that are postponed for the next day.
+                if (column.WIP < wipQueue.Count)
                 {
-                    if (!deliverable.IsCalculated && column.IsBuffer == false)
+                    for (var i = 0; i < column.WIP; ++i)
                     {
-                        // Probability is always a random % between the low and high bounds
-                        var probability = backlog.PercentageLowBound
-                                          + (backlog.PercentageHighBound - backlog.PercentageLowBound)
-                                          * ThreadSafeRandom.ThisThreadsRandom.NextDouble();
-
-                        // CompletionDays is always a random day between the low and high bounds for the column
-                        var completionDays = column.EstimatedLowBound
-                                             + (column.EstimatedHighBound - column.EstimatedLowBound)
-                                             * ThreadSafeRandom.ThisThreadsRandom.NextDouble();
-
-                        // Random generated completionDay for deliverable
-                        deliverable!.CompletionDays = currentDay + (completionDays * probability);
-                        deliverable.IsCalculated = true;
-                    }
-                    if (column.IsBuffer == true)
-                    {
-                        deliverable.CompletionDays = 0.0 + currentDay;
-                    }
-
-                    // Check if deliverable is done with this column
-                    if (deliverable.CompletionDays <= currentDay)
-                    {
-                        // Deliverable is ready to move
-                        deliverablesToMove.Add(deliverable);
-                    }
-                    else
-                    {
-                        // Deliverable is still in progress, add to WIP stack if there's space
-                        if (wipStack.Count < column.WIP)
-                        {
-                            wipStack.Add(deliverable);
-                        }
+                        wipQueue[i].CompletionDays += 1;
+                        wipQueue[i].StoppedWorkingTime += 1;
                     }
                 }
+
                 // Move deliverables to the next column if possible
-                foreach (var deliverable in deliverablesToMove)
+                MoveDeliverablesToNextColumnIfPossible(columns, columnDeliverables, currentDay, column, wipQueue, wipStack, deliverablesToMove);
+
+                var devStack = columnDeliverables[developerColumn].Count;
+
+                // Check if the "Ready for Test Stage" column is NOT full anymore and give back WIP
+                if (readyForTestDevColumn != null
+                    && !IsBottleneck(readyForTestDevColumn, columnDeliverables[readyForTestDevColumn])
+                    && testingDevColumn?.WIP <= testingDevColumn?.WIPMax
+                    && devStack != 0
+                    )
                 {
-                    wipQueue.Remove(deliverable); // remove from current column
+                    ReallocateWIP(developersHelping, developerColumn, testingDevColumn);
+                }
 
-                    var nextColumnIndex = columns.IndexOf(column) + 1;
+                // Check if the "Ready for Test on Prod" column is NOT full anymore and give back WIP
+                if (readyForTestProdColumn != null
+                    && !IsBottleneck(readyForTestProdColumn, columnDeliverables[readyForTestProdColumn])
+                    && testingProdColumn?.WIP <= testingProdColumn?.WIPMax
+                    && devStack != 0
+                    )
+                {
+                    ReallocateWIP(developersHelping, developerColumn, testingProdColumn);
+                }
 
-                    // If there's a next column
-                    if (nextColumnIndex < columns.Count)
-                    {
-                        var nextColumn = columns[nextColumnIndex];
+                var testDevStack = columnDeliverables[testingDevColumn].Count;
+                var rdyForTestDevStack = columnDeliverables[readyForTestDevColumn].Count;
+                var backlogStack = columnDeliverables[backlogColumn].Count;
+                var openStack = columnDeliverables[openColumn].Count;
+                var testProdStack = columnDeliverables[testingProdColumn].Count;
 
-                        // Check if next column's WIP limit is not exceeded
-                        if (columnDeliverables[nextColumn].Count < nextColumn.WIP)
-                        {
-                            deliverable.AccumulatedDays = currentDay; // += deliverable.CompletionDays;
-                            deliverable.ColumnIndex = nextColumnIndex;
-                            deliverable.IsCalculated = false;
-                            columnDeliverables[nextColumn].Add(deliverable);
-                            wipStack.Remove(deliverable);
-                        }
-                        else
-                        {
-                            // If next column WIP is full, hold the deliverable here
-                            wipQueue.Add(deliverable);
-                            // If deliverable is still in wipStack add WaitTime
-                            deliverable.WaitTime += 1;
-                        }
-                    }
+                // if Testing on Stage is not doing any work, reallocate back
+                if (testDevStack < testingDevColumn.WIP && devStack != 0)
+                {
+                    ReallocateWIP(developersHelping, developerColumn, testingDevColumn);
+                }
+
+                // if Testing on Prod is not doing any work, reallocate back
+                if (testProdStack < testingProdColumn.WIP && devStack != 0)
+                {
+                    ReallocateWIP(developersHelping, developerColumn, testingProdColumn);
+                }
+
+                // if Testing on Stage is not doing any work, reallocate back
+                if (testDevStack < testingDevColumn.WIP && devStack == 0 && openStack > 0)
+                {
+                    ReallocateWIP(developersHelping, developerColumn, testingDevColumn);
+                }
+
+                // if Testing on Prod is not doing any work, reallocate back
+                if (testProdStack < testingProdColumn.WIP && devStack == 0 && openStack > 0)
+                {
+                    ReallocateWIP(developersHelping, developerColumn, testingProdColumn);
+                }
+
+                // if there is no work "In Progress" reallocate to test on stage
+                if (devStack == 0 && rdyForTestDevStack > 0 && backlogStack == 0 && currentDay > 20)
+                {
+                    ReallocateWIP(developersHelping, testingDevColumn, developerColumn);
+                }
+
+                // if there is no work "In Progress" and no work in "Test Stage" reallocate to test prod
+                if (devStack == 0 && testDevStack == 0 && rdyForTestDevStack == 0 && backlogStack == 0 && currentDay > 20)
+                {
+                    ReallocateWIP(developersHelping, testingProdColumn, testingDevColumn);
                 }
             }
             PrintEachIteration(columns, deliverablesCopy, currentDay, columnDeliverables);
         }
         var orderdedByAccumulated = deliverablesCopy.OrderBy(d => d.AccumulatedDays).ToList();
         return orderdedByAccumulated;
+    }
+
+    private static void CalculateDeliverableCompletionDayANDAddToList(BacklogModel backlog, double currentDay, ColumnModel column, List<DeliverableModel> wipQueue, List<DeliverableModel> wipStack, List<DeliverableModel> deliverablesToMove)
+    {
+        foreach (var deliverable in wipQueue.ToList()) // iterate over a copy of the list
+        {
+            if (!deliverable.IsCalculated && column.IsBuffer == false)
+            {
+                // Probability is always a random % between the low and high bounds
+                var probability = backlog.PercentageLowBound
+                                  + (backlog.PercentageHighBound - backlog.PercentageLowBound)
+                                  * ThreadSafeRandom.ThisThreadsRandom.NextDouble();
+
+                // CompletionDays is always a random day between the low and high bounds for the column
+                var completionDays = column.EstimatedLowBound
+                                     + (column.EstimatedHighBound - column.EstimatedLowBound)
+                                     * ThreadSafeRandom.ThisThreadsRandom.NextDouble();
+
+                // Random generated completionDay for deliverable
+                deliverable!.CompletionDays = currentDay + (completionDays * probability);
+                deliverable.IsCalculated = true;
+            }
+            // No calucaltion for buffer coulmns, because they only function as buffers
+            if (column.IsBuffer == true)
+            {
+                deliverable.CompletionDays = 0.0 + currentDay;
+            }
+
+            // Check if someone is working on the deliverables, if not add a new day
+            if (column.WIP == 0)
+            {
+                deliverable.CompletionDays += 1;
+                deliverable.StoppedWorkingTime += 1;
+            }
+
+            // Check if deliverable is done with this column
+            if (deliverable.CompletionDays <= currentDay)
+            {
+                // Deliverable is ready to move
+                deliverablesToMove.Add(deliverable);
+            }
+            else
+            {
+                // Deliverable is still in progress, add to WIP stack if there's space
+                if (wipStack.Count < column.WIPMax)
+                {
+                    wipStack.Add(deliverable);
+                }
+            }
+        }
+    }
+
+    private static void MoveDeliverablesToNextColumnIfPossible(List<ColumnModel> columns, Dictionary<ColumnModel, List<DeliverableModel>> columnDeliverables, double currentDay, ColumnModel column, List<DeliverableModel> wipQueue, List<DeliverableModel> wipStack, List<DeliverableModel> deliverablesToMove)
+    {
+        foreach (var deliverable in deliverablesToMove)
+        {
+            wipQueue.Remove(deliverable); // remove from current column
+
+            var nextColumnIndex = columns.IndexOf(column) + 1;
+
+            // If there's a next column
+            if (nextColumnIndex < columns.Count)
+            {
+                var nextColumn = columns[nextColumnIndex];
+
+                // Check if next column's WIP limit is not exceeded
+                if (columnDeliverables[nextColumn].Count < nextColumn.WIP)
+                {
+                    deliverable.AccumulatedDays = currentDay; // += deliverable.CompletionDays;
+                    deliverable.ColumnIndex = nextColumnIndex;
+                    deliverable.IsCalculated = false;
+                    columnDeliverables[nextColumn].Add(deliverable);
+                    wipStack.Remove(deliverable);
+                }
+                else
+                {
+                    // If next column WIP is full, hold the deliverable here
+                    wipQueue.Add(deliverable);
+                    // If deliverable is still in wipStack add WaitTime
+                    deliverable.WaitTime += 1;
+                }
+            }
+        }
+    }
+
+    private static void ReallocateWIP(int allocationCount, ColumnModel? allocateToColumn, ColumnModel? allocateFromColumn)
+    {
+        // If the buffer is full, allocate developers to help testing
+        if (allocateToColumn != null && allocateFromColumn != null)
+        {
+            // Temporarily increase the WIP limit of the "Testing" column
+            // Ensure testing does not go over DeveloperColumn WIP
+            if (allocateToColumn.WIP <= allocateFromColumn.WIP && allocateFromColumn.WIP > 0)
+            {
+                allocateToColumn.WIP += allocationCount; // e.g., developersHelping could be a constant or dynamic value
+                allocateFromColumn.WIP -= allocationCount; // e.g., developersHelping could be a constant or dynamic value
+
+            }
+        }
     }
 
     private static void PrintEachIteration(List<ColumnModel> columns, List<DeliverableModel> deliverablesCopy, double currentDay, Dictionary<ColumnModel, List<DeliverableModel>> columnDeliverables)
@@ -380,9 +523,9 @@ internal class MonteCarloSimulation
                     { 1, 20 },
                     { 2, 40 },
                     { 3, 60 },
-                    { 4, 90 },
-                    { 5, 100 },
-                    { 6, 120 },
+                    { 4, 80 },
+                    { 5, 110 },
+                    { 6, 135 },
                     { 7, 160 }
                 };
 
@@ -391,7 +534,7 @@ internal class MonteCarloSimulation
         {
             // Printing each header position
             Console.SetCursorPosition(columnsToPrint[i], 1);
-            Console.WriteLine(columns[i].Name);
+            Console.WriteLine($"{columns[i].Name} WIP: {columns[i].WIP}");
 
         }
         foreach (var printColumn in columns)
@@ -411,13 +554,13 @@ internal class MonteCarloSimulation
                 {
                     Console.SetCursorPosition(columnsToPrint[deliverableToPrint.ColumnIndex], index + 2);
                     // T=Task, D=Days, W=WaitTime
-                    Console.WriteLine($"T:{deliverableToPrint.Nr} D: {double.Round(deliverableToPrint.CompletionDays)}, W: {double.Round(deliverableToPrint.WaitTime)}");
+                    Console.WriteLine($"T:{deliverableToPrint.Nr} D: {double.Round(deliverableToPrint.CompletionDays)}, W: {double.Round(deliverableToPrint.WaitTime)}, S: {double.Round(deliverableToPrint.StoppedWorkingTime)}");
                     index++;
                 }
             }
         }
         // Pause every print
-        System.Threading.Thread.Sleep(TimeSpan.FromSeconds(0.3));
+        System.Threading.Thread.Sleep(TimeSpan.FromSeconds(0.03));
     }
 
     public static async Task ColumnEstimateAnalysis(ProjectSimulationModel projectSimModel, int projectSimulationsCount)
@@ -539,6 +682,11 @@ internal class MonteCarloSimulation
         // Order the results by the average total days
         var orderedByTotalDays = results.OrderBy(r => r.SimTotalDaysResult!.Percentile(0.9)).ToArray();
         return orderedByTotalDays;
+    }
+
+    private static bool IsBottleneck(ColumnModel bufferColumn, List<DeliverableModel> deliverablesInBuffer)
+    {
+        return deliverablesInBuffer.Count >= bufferColumn.WIP;
     }
 }
 public static class ThreadSafeRandom
