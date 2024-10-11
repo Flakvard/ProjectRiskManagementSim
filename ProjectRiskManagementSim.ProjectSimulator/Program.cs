@@ -67,13 +67,14 @@ var projectSimModel = new ProjectSimulationModel
 // getting all the projects with modified estimates
 
 //int projectsCount = projectWithModifiedEstimates.Count;
-const int projectSimulationsCount = 1000;
+const int projectSimulationsCount = 100;
 
 // Start timing the simulations
 var stopwatch = Stopwatch.StartNew();
 // SensitiveAnalysis
-await MonteCarloSimulation.ColumnEstimateAnalysis(projectSimModel, projectSimulationsCount);
-//await MonteCarloSimulation.WIPAnalysis(projectSimModel, projectSimulationsCount);
+// await MonteCarloSimulation.ColumnEstimateAnalysis(projectSimModel, projectSimulationsCount);
+// await MonteCarloSimulation.WIPAnalysis(projectSimModel, projectSimulationsCount);
+// await MonteCarloSimulation.BlockWIPAnalysis(projectSimModel, projectSimulationsCount);
 // Stop timing
 stopwatch.Stop();
 
@@ -81,8 +82,8 @@ stopwatch.Stop();
 Console.WriteLine();
 Console.WriteLine($"Total time for all multi-threaded simulations: {stopwatch.ElapsedMilliseconds} ms");
 
-// var MCS = new MonteCarloSimulation(projectSimModel, projectSimulationsCount);
-// MCS.PrintSimulationResults();
+var MCS = new MonteCarloSimulation(projectSimModel, projectSimulationsCount);
+MCS.PrintSimulationResults();
 //
 // PrintResults(orderedByTotalDays, projectSimModel);
 

@@ -96,18 +96,26 @@ internal class MonteCarloSimulation
             AccumulatedDays = d.AccumulatedDays
         }).ToList();
 
+        // Initialize deliverables
+        deliverablesCopy.Shuffle();
+
         // List of deliverables in each column
         var columnDeliverables = columns.ToDictionary(c => c, c => new List<DeliverableModel>());
 
         // Initialize deliverables
-        deliverablesCopy.Shuffle();
+        //deliverablesCopy.Shuffle();
         foreach (var deliverable in deliverablesCopy)
         {
             var firstColumn = columns.First();
             columnDeliverables[firstColumn].Add(deliverable);
         }
 
+
         double currentDay = 0;
+        const int developersHelping = 1;
+        int originalTestingProdWIP = columns.First(c => c.Name == "Rdy4TestProd").WIP;
+        int originalTestingDevWIP = columns.First(c => c.Name == "Test Stage").WIP;
+        int originalDevelopersWIP = columns.First(c => c.Name == "In Progress").WIP;
 
         // While there are deliverables in the system
         while (columnDeliverables.Any(kvp => kvp.Value.Count > 0))
@@ -120,76 +128,116 @@ internal class MonteCarloSimulation
                 var wipQueue = columnDeliverables[column];
                 var wipStack = new List<DeliverableModel>();
 
+                var backlogColumn = columns.FirstOrDefault(c => c.Name == "Backlog");
+                var openColumn = columns.FirstOrDefault(c => c.Name == "Open");
+                var testingProdColumn = columns.FirstOrDefault(c => c.Name == "Rdy4TestProd");
+                var testingDevColumn = columns.FirstOrDefault(c => c.Name == "Test Stage");
+                var developerColumn = columns.FirstOrDefault(c => c.Name == "In Progress");
+
+                // Check if the "Ready for Test Stage" column is full
+                // if so allocate developers to help testing
+                var readyForTestDevColumn = columns.FirstOrDefault(c => c.Name == "Rdy4Test");
+                if (readyForTestDevColumn != null
+                    && IsBottleneck(readyForTestDevColumn, columnDeliverables[readyForTestDevColumn])
+                    && testingDevColumn?.WIP <= testingDevColumn?.WIPMax
+                    )
+                {
+                    ReallocateWIP(developersHelping, testingDevColumn, developerColumn);
+                }
+
+
+                // Check if the "Ready for Test on Prod" column is full
+                // if so allocate developers to help testing
+                var readyForTestProdColumn = columns.FirstOrDefault(c => c.Name == "Await Dply Prod");
+                if (readyForTestProdColumn != null
+                    && IsBottleneck(readyForTestProdColumn, columnDeliverables[readyForTestProdColumn])
+                    && testingProdColumn?.WIP <= testingProdColumn?.WIPMax
+                    )
+                {
+                    ReallocateWIP(developersHelping, testingProdColumn, developerColumn);
+                }
+
                 // We use a new list to keep track of deliverables to move to next column
                 var deliverablesToMove = new List<DeliverableModel>();
 
-                foreach (var deliverable in wipQueue.ToList()) // iterate over a copy of the list
+                // Calculate the deliverable completion day and add to list 
+                CalculateDeliverableCompletionDayANDAddToList(backlog, currentDay, column, wipQueue, wipStack, deliverablesToMove);
+
+                // Check how many are working on the deliverable in columns and add a day to the ones that are postponed for the next day.
+                if (column.WIP < wipQueue.Count)
                 {
-                    if (!deliverable.IsCalculated && column.IsBuffer == false)
+                    for (var i = 0; i < column.WIP; ++i)
                     {
-                        // Probability is always a random % between the low and high bounds
-                        var probability = backlog.PercentageLowBound
-                                          + (backlog.PercentageHighBound - backlog.PercentageLowBound)
-                                          * ThreadSafeRandom.ThisThreadsRandom.NextDouble();
-
-                        // CompletionDays is always a random day between the low and high bounds for the column
-                        var completionDays = column.EstimatedLowBound
-                                             + (column.EstimatedHighBound - column.EstimatedLowBound)
-                                             * ThreadSafeRandom.ThisThreadsRandom.NextDouble();
-
-                        // Random generated completionDay for deliverable
-                        deliverable!.CompletionDays = currentDay + (completionDays * probability);
-                        deliverable.IsCalculated = true;
-                    }
-                    if (column.IsBuffer == true)
-                    {
-                        deliverable.CompletionDays = 0.0 + currentDay;
-                    }
-
-                    // Check if deliverable is done with this column
-                    if (deliverable.CompletionDays <= currentDay)
-                    {
-                        // Deliverable is ready to move
-                        deliverablesToMove.Add(deliverable);
-                    }
-                    else
-                    {
-                        // Deliverable is still in progress, add to WIP stack if there's space
-                        if (wipStack.Count < column.WIP)
-                        {
-                            wipStack.Add(deliverable);
-                        }
+                        wipQueue[i].CompletionDays += 1;
+                        wipQueue[i].StoppedWorkingTime += 1;
                     }
                 }
+
                 // Move deliverables to the next column if possible
-                foreach (var deliverable in deliverablesToMove)
+                MoveDeliverablesToNextColumnIfPossible(columns, columnDeliverables, currentDay, column, wipQueue, wipStack, deliverablesToMove);
+
+                var devStack = columnDeliverables[developerColumn].Count;
+
+                // Check if the "Ready for Test Stage" column is NOT full anymore and give back WIP
+                if (readyForTestDevColumn != null
+                    && !IsBottleneck(readyForTestDevColumn, columnDeliverables[readyForTestDevColumn])
+                    && testingDevColumn?.WIP <= testingDevColumn?.WIPMax
+                    && devStack != 0
+                    )
                 {
-                    wipQueue.Remove(deliverable); // remove from current column
+                    ReallocateWIP(developersHelping, developerColumn, testingDevColumn);
+                }
 
-                    var nextColumnIndex = columns.IndexOf(column) + 1;
+                // Check if the "Ready for Test on Prod" column is NOT full anymore and give back WIP
+                if (readyForTestProdColumn != null
+                    && !IsBottleneck(readyForTestProdColumn, columnDeliverables[readyForTestProdColumn])
+                    && testingProdColumn?.WIP <= testingProdColumn?.WIPMax
+                    && devStack != 0
+                    )
+                {
+                    ReallocateWIP(developersHelping, developerColumn, testingProdColumn);
+                }
 
-                    // If there's a next column
-                    if (nextColumnIndex < columns.Count)
-                    {
-                        var nextColumn = columns[nextColumnIndex];
+                var testDevStack = columnDeliverables[testingDevColumn].Count;
+                var rdyForTestDevStack = columnDeliverables[readyForTestDevColumn].Count;
+                var backlogStack = columnDeliverables[backlogColumn].Count;
+                var openStack = columnDeliverables[openColumn].Count;
+                var testProdStack = columnDeliverables[testingProdColumn].Count;
 
-                        // Check if next column's WIP limit is not exceeded
-                        if (columnDeliverables[nextColumn].Count < nextColumn.WIP)
-                        {
-                            deliverable.AccumulatedDays = currentDay; // += deliverable.CompletionDays;
-                            deliverable.ColumnIndex = nextColumnIndex;
-                            deliverable.IsCalculated = false;
-                            columnDeliverables[nextColumn].Add(deliverable);
-                            wipStack.Remove(deliverable);
-                        }
-                        else
-                        {
-                            // If next column WIP is full, hold the deliverable here
-                            wipQueue.Add(deliverable);
-                            // If deliverable is still in wipStack add WaitTime
-                            deliverable.WaitTime += 1;
-                        }
-                    }
+                // if Testing on Stage is not doing any work, reallocate back
+                if (testDevStack < testingDevColumn.WIP && devStack != 0)
+                {
+                    ReallocateWIP(developersHelping, developerColumn, testingDevColumn);
+                }
+
+                // if Testing on Prod is not doing any work, reallocate back
+                if (testProdStack < testingProdColumn.WIP && devStack != 0)
+                {
+                    ReallocateWIP(developersHelping, developerColumn, testingProdColumn);
+                }
+
+                // if Testing on Stage is not doing any work, reallocate back
+                if (testDevStack < testingDevColumn.WIP && devStack == 0 && openStack > 0)
+                {
+                    ReallocateWIP(developersHelping, developerColumn, testingDevColumn);
+                }
+
+                // if Testing on Prod is not doing any work, reallocate back
+                if (testProdStack < testingProdColumn.WIP && devStack == 0 && openStack > 0)
+                {
+                    ReallocateWIP(developersHelping, developerColumn, testingProdColumn);
+                }
+
+                // if there is no work "In Progress" reallocate to test on stage
+                if (devStack == 0 && rdyForTestDevStack > 0 && backlogStack == 0 && currentDay > 20)
+                {
+                    ReallocateWIP(developersHelping, testingDevColumn, developerColumn);
+                }
+
+                // if there is no work "In Progress" and no work in "Test Stage" reallocate to test prod
+                if (devStack == 0 && testDevStack == 0 && rdyForTestDevStack == 0 && backlogStack == 0 && currentDay > 20)
+                {
+                    ReallocateWIP(developersHelping, testingProdColumn, testingDevColumn);
                 }
             }
         }
@@ -610,7 +658,7 @@ internal class MonteCarloSimulation
 
             // getting all the projects with modified estimates
             var projectWithModifiedWIP = new List<ProjectSimulationModel> { projectSimModel };
-            ProjectWIPMultiplier(projectSimModel, projectWithModifiedWIP, wipMultiplier);
+            ProjectWIPMultiplier(projectSimModel, projectWithModifiedWIP, wipMultiplier, "WIP");
 
             int projectsCount = projectWithModifiedWIP.Count;
 
@@ -641,25 +689,97 @@ internal class MonteCarloSimulation
                 }
             }
             // print the simulation with the lowest total Days
-            Console.WriteLine($"Simulation with the lowest total days: {simulationWithLowestTotalDaysIndex.ProjectSimulationModel.Name} is {simulationWithLowestTotalDays} days from {baselineProject.ProjectSimulationModel.Name} {baselineTotalDays}");
+            Console.WriteLine($"Simulation with the lowest total days: {simulationWithLowestTotalDaysIndex.ProjectSimulationModel.Name} is {double.Round(simulationWithLowestTotalDays, 0)} days from {baselineProject.ProjectSimulationModel.Name} {double.Round(baselineTotalDays, 0)}");
             projectSimModel = simulationWithLowestTotalDaysIndex.ProjectSimulationModel;
             wipMultiplier += 1;
 
         }
     }
 
-    private static void ProjectWIPMultiplier(ProjectSimulationModel projectSimModel, List<ProjectSimulationModel> projectWithModifiedEstimates, int multiplier)
+    public static async Task BlockWIPAnalysis(ProjectSimulationModel projectSimModel, int projectSimulationsCount)
     {
-        // Loop through each column and modify WIP
-        for (int i = 0; i < projectSimModel.Columns.Count; i++)
+
+        // Rerun the simulation with the modified WIP and get the Results
+        for (int k = 1; k <= 5; k++)
         {
-            var columnName = projectSimModel.Columns[i].Name! + " WIP";
-            // Clone the original model
-            var newProjectSimModel = projectSimModel.CloneProjectSimModel(projectSimModel, columnName);
-            // Modify the estimated bounds of the specific column
-            var columnToModify = newProjectSimModel.Columns[i];
-            columnToModify.WIP += multiplier;
-            projectWithModifiedEstimates.Add(newProjectSimModel);
+            // setting constant for the estimate multiplier
+            int wipMultiplier = 5;
+
+            // getting all the projects with modified estimates
+            var projectWithModifiedWIP = new List<ProjectSimulationModel> { projectSimModel };
+            ProjectWIPMultiplier(projectSimModel, projectWithModifiedWIP, wipMultiplier, $"WIP-{wipMultiplier}", true);
+
+            int projectsCount = projectWithModifiedWIP.Count;
+
+            //var orderedByTotalDays = await RunSimulationAsync(projectWithModifiedEstimates, projectSimulationsCount);
+            var orderedByTotalDays = await RunSimulationAsync(projectWithModifiedWIP, projectSimulationsCount);
+
+            var baselineProject = orderedByTotalDays.FirstOrDefault(mcs => mcs.ProjectSimulationModel.Name == projectSimModel.Name);
+            if (baselineProject == null)
+            {
+                Console.WriteLine("Baseline project not found.");
+                continue;
+            }
+            var baselineTotalDays = baselineProject!.SimTotalDaysResult!.Percentile(0.9);
+            var simulationWithLowestTotalDays = baselineTotalDays;
+            var simulationWithLowestTotalDaysIndex = baselineProject;
+
+            // Column with most impact on the project duration
+            foreach (var MCS in orderedByTotalDays)
+            {
+                var name = MCS.ProjectSimulationModel.Name;
+                var totalDays = MCS.SimTotalDaysResult != null && MCS.SimTotalDaysResult.Any()
+                    ? MCS.SimTotalDaysResult.Percentile(0.9)
+                    : 0.0;
+                if (totalDays < simulationWithLowestTotalDays)
+                {
+                    simulationWithLowestTotalDays = totalDays;
+                    simulationWithLowestTotalDaysIndex = MCS;
+                }
+            }
+            // print the simulation with the lowest total Days
+            Console.WriteLine($"Simulation with the lowest total days: {simulationWithLowestTotalDaysIndex.ProjectSimulationModel.Name} is {double.Round(simulationWithLowestTotalDays, 0)} days from {baselineProject.ProjectSimulationModel.Name} {double.Round(baselineTotalDays, 0)}");
+            projectSimModel = simulationWithLowestTotalDaysIndex.ProjectSimulationModel;
+            wipMultiplier += 1;
+
+        }
+    }
+    private static void ProjectWIPMultiplier(ProjectSimulationModel projectSimModel, List<ProjectSimulationModel> projectWithModifiedEstimates, int multiplier, string name, bool? BlockWIPAnalysis = false)
+    {
+        if (BlockWIPAnalysis == true)
+        {
+
+            // Loop through each column and modify WIP
+            for (int i = 0; i < projectSimModel.Columns.Count; i++)
+            {
+                var columnName = projectSimModel.Columns[i].Name! + name;
+                var column = projectSimModel.Columns[i];
+                // Clone the original model
+                if (column.IsBuffer == true)
+                {
+                    var newProjectSimModel = projectSimModel.CloneProjectSimModel(projectSimModel, columnName);
+                    // Modify the estimated bounds of the specific column
+                    var columnToModify = newProjectSimModel.Columns[i];
+                    columnToModify.WIP = columnToModify.WIP - multiplier <= 0 ? 1 : columnToModify.WIP - multiplier;
+                    columnToModify.WIPMax = columnToModify.WIPMax - multiplier <= 0 ? 1 : columnToModify.WIPMax - multiplier;
+                    projectWithModifiedEstimates.Add(newProjectSimModel);
+                }
+            }
+        }
+        else
+        {
+            // Loop through each column and modify WIP
+            for (int i = 0; i < projectSimModel.Columns.Count; i++)
+            {
+                var columnName = projectSimModel.Columns[i].Name! + name;
+                // Clone the original model
+                var newProjectSimModel = projectSimModel.CloneProjectSimModel(projectSimModel, columnName);
+                // Modify the estimated bounds of the specific column
+                var columnToModify = newProjectSimModel.Columns[i];
+                columnToModify.WIP += multiplier;
+                columnToModify.WIPMax += multiplier;
+                projectWithModifiedEstimates.Add(newProjectSimModel);
+            }
         }
     }
 
