@@ -8,5 +8,6 @@ public interface IMonteCarloSimulation
     public Task WIPAnalysis(ProjectSimulationModel projectSimModel, int projectSimulationsCount);
     public Task BlockWIPAnalysis(ProjectSimulationModel projectSimModel, int projectSimulationsCount);
     public void PrintSimulationResults(ProjectSimulationModel projectSimulationModel, int simulationCount);
+    public bool IsCompleted { get; }
 
 }

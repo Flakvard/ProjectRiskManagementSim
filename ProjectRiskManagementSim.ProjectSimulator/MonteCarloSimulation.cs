@@ -15,6 +15,8 @@ internal class MonteCarloSimulation : IMonteCarloSimulation
     public List<double>? SimTotalSalesResult { get; set; }
     public List<List<DeliverableModel>>? Simulations { get; set; }
     public DateTime NewDate { get; set; }
+    public bool IsCompleted { get; set; }
+
     private readonly int _simulationCount;
 
     public MonteCarloSimulation(ProjectSimulationModel projectSimulationModel,
@@ -251,6 +253,7 @@ internal class MonteCarloSimulation : IMonteCarloSimulation
     public void PrintSimulationResults(ProjectSimulationModel projectSimulationModel,
                                 int simulationCount)
     {
+        IsCompleted = false;
         var staff = projectSimulationModel.Staff;
         var startDate = projectSimulationModel.StartDate;
         var targetDate = projectSimulationModel.TargetDate;
@@ -283,6 +286,7 @@ internal class MonteCarloSimulation : IMonteCarloSimulation
         {
             simulationList = MonteCarloSimulation.RunSlowSimulation(backlog, columns, totalDays, estimatedRevenuePerDay, estimatedCostPerDay);
         }
+        IsCompleted = true;
     }
 
     private static void PrintDeliverable(List<ColumnModel> columns, ColumnModel column, int interval, DeliverableModel moveDeliverable, int nextColumnIndex)
@@ -617,6 +621,7 @@ internal class MonteCarloSimulation : IMonteCarloSimulation
 
     public async Task ColumnEstimateAnalysis(ProjectSimulationModel projectSimModel, int projectSimulationsCount)
     {
+        IsCompleted = false;
         const double estimateMultiplier = 0.5;
         var projectWithModifiedEstimates = new List<ProjectSimulationModel> { projectSimModel };
         // Loop through each column and modify EstimatedLowBound and EstimatedHighBound
@@ -648,11 +653,13 @@ internal class MonteCarloSimulation : IMonteCarloSimulation
                 Console.WriteLine($"Simulation {name} is {totalDays}\t\t\t\tdays from {baselineProject.ProjectSimulationModel.Name} {baselineTotalDays}\t\t\tDifference {baselineTotalDays - totalDays}");
             }
         }
+        IsCompleted = true;
     }
 
 
     public async Task WIPAnalysis(ProjectSimulationModel projectSimModel, int projectSimulationsCount)
     {
+        IsCompleted = false;
 
         // Rerun the simulation with the modified WIP and get the Results
         for (int k = 1; k <= 5; k++)
@@ -698,10 +705,12 @@ internal class MonteCarloSimulation : IMonteCarloSimulation
             wipMultiplier += 1;
 
         }
+        IsCompleted = true;
     }
 
     public async Task BlockWIPAnalysis(ProjectSimulationModel projectSimModel, int projectSimulationsCount)
     {
+        IsCompleted = false;
 
         // Rerun the simulation with the modified WIP and get the Results
         for (int k = 1; k <= 5; k++)
@@ -747,6 +756,7 @@ internal class MonteCarloSimulation : IMonteCarloSimulation
             wipMultiplier += 1;
 
         }
+        IsCompleted = true;
     }
     private static void ProjectWIPMultiplier(ProjectSimulationModel projectSimModel, List<ProjectSimulationModel> projectWithModifiedEstimates, int multiplier, string name, bool? BlockWIPAnalysis = false)
     {
