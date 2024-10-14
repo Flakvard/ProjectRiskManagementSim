@@ -8,7 +8,7 @@ namespace ProjectRiskManagementSim.ProjectSimulation;
 
 public class MonteCarloSimulation : IMonteCarloSimulation
 {
-    public ProjectSimulationModel ProjectSimulationModel;
+    public ProjectSimulationModel ProjectSimulationModel { get; set; }
     private readonly Random _random = new Random();
     public List<double>? SimTotalDaysResult { get; set; }
     public List<double>? SimTotalCostsResult { get; set; }
@@ -16,13 +16,15 @@ public class MonteCarloSimulation : IMonteCarloSimulation
     public List<List<DeliverableModel>>? Simulations { get; set; }
     public DateTime NewDate { get; set; }
     public bool IsCompleted { get; set; }
+    public Guid SimulationId { get; set; }
 
     private int _simulationCount;
 
 
     public void InitiateAndRunSimulation(ProjectSimulationModel projectSimulationModel,
-                                int simulationCount)
+                                int simulationCount, Guid simulationId)
     {
+        SimulationId = simulationId;
         ProjectSimulationModel = projectSimulationModel;
         _simulationCount = simulationCount;
         var staff = projectSimulationModel.Staff;
@@ -802,7 +804,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
             tasks.Add(Task.Run(() =>
             {
                 var MCS = new MonteCarloSimulation();
-                MCS.InitiateAndRunSimulation(projectSimModels, projectSimulationsCount);
+                MCS.InitiateAndRunSimulation(projectSimModels, projectSimulationsCount, new Guid());
                 return MCS;
             }));
         };
@@ -817,11 +819,6 @@ public class MonteCarloSimulation : IMonteCarloSimulation
     private static bool IsBottleneck(ColumnModel bufferColumn, List<DeliverableModel> deliverablesInBuffer)
     {
         return deliverablesInBuffer.Count >= bufferColumn.WIP;
-    }
-
-    public void InitiateAndRunSimulation(ProjectSimulationModel projectSimulationModel)
-    {
-        throw new NotImplementedException();
     }
 
     public IMonteCarloSimulation GetSimulationInstance()
