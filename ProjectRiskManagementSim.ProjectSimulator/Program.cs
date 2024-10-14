@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using System.Diagnostics;
+using ProjectRiskManagementSim.ProjectSimulation.Models;
 using ProjectRiskManagementSim.ProjectSimulation;
 using Dumpify;
 
@@ -39,11 +40,11 @@ var projectSimModel = new ProjectSimulationModel
     Columns = new List<ColumnModel>
     {
         new ColumnModel(wip: backLogModel.Deliverables.Count) { Name = "Backlog", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 54 },
-        new ColumnModel(wip: wip5, wipMax: wip5) { Name = "Open", IsBuffer=true,  EstimatedLowBound = 1, EstimatedHighBound = 54 },
+        new ColumnModel(wip: wip, wipMax: wip) { Name = "Open", IsBuffer=true,  EstimatedLowBound = 1, EstimatedHighBound = 54 },
         new ColumnModel(wip: 5, wipMax: 5) { Name = "In Progress", EstimatedLowBound = 1, EstimatedHighBound = 47 },
-        new ColumnModel(wip: wip10, wipMax: wip10) { Name = "Rdy4Test", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 50 },
+        new ColumnModel(wip: wip, wipMax: wip) { Name = "Rdy4Test", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 50 },
         new ColumnModel(wip: 0, wipMax: 2) { Name = "Test Stage", EstimatedLowBound = 1, EstimatedHighBound = 11 },
-        new ColumnModel(wip: wip10, wipMax: wip10) { Name = "Await Dply Prod", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 22 },
+        new ColumnModel(wip: wip, wipMax: wip) { Name = "Await Dply Prod", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 22 },
         new ColumnModel(wip: 0, wipMax: 2) { Name = "Rdy4TestProd", EstimatedLowBound = 1, EstimatedHighBound = 54 },
         new ColumnModel(wip: backLogModel.Deliverables.Count) { Name = "Done", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 54 }
     },
@@ -72,9 +73,16 @@ const int projectSimulationsCount = 100;
 // Start timing the simulations
 var stopwatch = Stopwatch.StartNew();
 // SensitiveAnalysis
-// await MonteCarloSimulation.ColumnEstimateAnalysis(projectSimModel, projectSimulationsCount);
-// await MonteCarloSimulation.WIPAnalysis(projectSimModel, projectSimulationsCount);
-// await MonteCarloSimulation.BlockWIPAnalysis(projectSimModel, projectSimulationsCount);
+var MCS = new MonteCarloSimulation(projectSimModel, projectSimulationsCount);
+await MCS.ColumnEstimateAnalysis(projectSimModel, projectSimulationsCount);
+Console.WriteLine();
+Console.WriteLine();
+await MCS.WIPAnalysis(projectSimModel, projectSimulationsCount);
+Console.WriteLine();
+Console.WriteLine();
+await MCS.BlockWIPAnalysis(projectSimModel, projectSimulationsCount);
+Console.WriteLine();
+Console.WriteLine();
 // Stop timing
 stopwatch.Stop();
 
@@ -82,8 +90,8 @@ stopwatch.Stop();
 Console.WriteLine();
 Console.WriteLine($"Total time for all multi-threaded simulations: {stopwatch.ElapsedMilliseconds} ms");
 
-var MCS = new MonteCarloSimulation(projectSimModel, projectSimulationsCount);
-MCS.PrintSimulationResults();
+// var MCS = new MonteCarloSimulation(projectSimModel, projectSimulationsCount);
+// MCS.PrintSimulationResults(projectSimModel, projectSimulationsCount);
 //
 // PrintResults(orderedByTotalDays, projectSimModel);
 

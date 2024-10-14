@@ -1,9 +1,12 @@
 using System.Linq;
 using Dumpify;
+using ProjectRiskManagementSim.ProjectSimulation.Utilities;
+using ProjectRiskManagementSim.ProjectSimulation.Models;
+using ProjectRiskManagementSim.ProjectSimulation.Interfaces;
 
 namespace ProjectRiskManagementSim.ProjectSimulation;
 
-public class MonteCarloSimulation
+internal class MonteCarloSimulation : IMonteCarloSimulation
 {
     public readonly ProjectSimulationModel ProjectSimulationModel;
     private readonly Random _random = new Random();
@@ -245,15 +248,16 @@ public class MonteCarloSimulation
         return orderdedByAccumulated;
     }
 
-    public void PrintSimulationResults()
+    public void PrintSimulationResults(ProjectSimulationModel projectSimulationModel,
+                                int simulationCount)
     {
-        var staff = ProjectSimulationModel.Staff;
-        var startDate = ProjectSimulationModel.StartDate;
-        var targetDate = ProjectSimulationModel.TargetDate;
-        var revenue = ProjectSimulationModel.Revenue;
-        var cost = ProjectSimulationModel.Costs;
-        var backlog = ProjectSimulationModel.Backlog;
-        var columns = ProjectSimulationModel.Columns;
+        var staff = projectSimulationModel.Staff;
+        var startDate = projectSimulationModel.StartDate;
+        var targetDate = projectSimulationModel.TargetDate;
+        var revenue = projectSimulationModel.Revenue;
+        var cost = projectSimulationModel.Costs;
+        var backlog = projectSimulationModel.Backlog;
+        var columns = projectSimulationModel.Columns;
 
         ValidateProps(staff, revenue, cost, backlog);
 
@@ -275,7 +279,7 @@ public class MonteCarloSimulation
 
 
         var simulationList = new List<DeliverableModel>();
-        for (int i = 0; i < _simulationCount; ++i)
+        for (int i = 0; i < simulationCount; ++i)
         {
             simulationList = MonteCarloSimulation.RunSlowSimulation(backlog, columns, totalDays, estimatedRevenuePerDay, estimatedCostPerDay);
         }
@@ -611,7 +615,7 @@ public class MonteCarloSimulation
         System.Threading.Thread.Sleep(TimeSpan.FromSeconds(0.03));
     }
 
-    public static async Task ColumnEstimateAnalysis(ProjectSimulationModel projectSimModel, int projectSimulationsCount)
+    public async Task ColumnEstimateAnalysis(ProjectSimulationModel projectSimModel, int projectSimulationsCount)
     {
         const double estimateMultiplier = 0.5;
         var projectWithModifiedEstimates = new List<ProjectSimulationModel> { projectSimModel };
@@ -647,7 +651,7 @@ public class MonteCarloSimulation
     }
 
 
-    public static async Task WIPAnalysis(ProjectSimulationModel projectSimModel, int projectSimulationsCount)
+    public async Task WIPAnalysis(ProjectSimulationModel projectSimModel, int projectSimulationsCount)
     {
 
         // Rerun the simulation with the modified WIP and get the Results
@@ -696,7 +700,7 @@ public class MonteCarloSimulation
         }
     }
 
-    public static async Task BlockWIPAnalysis(ProjectSimulationModel projectSimModel, int projectSimulationsCount)
+    public async Task BlockWIPAnalysis(ProjectSimulationModel projectSimModel, int projectSimulationsCount)
     {
 
         // Rerun the simulation with the modified WIP and get the Results
