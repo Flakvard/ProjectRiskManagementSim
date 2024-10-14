@@ -1,0 +1,11 @@
+@page "/simulation-progress"
+@inject HttpClient Http
+
+<div id="simulation-results" hx-get="@($" /simulation-progress/{simulationId}")" hx-trigger="every 1s"
+  hx-swap="innerHTML">
+  <!-- Simulation progress will be dynamically inserted here by HTMX -->
+</div>
+
+@code {
+[Parameter] public string simulationId { get; set; }
+}

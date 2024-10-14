@@ -1,0 +1,18 @@
+@page "/start-simulation"
+@inject HttpClient Http
+@code {
+private ProjectSimulationModel projectData = new();
+private string simulationId;
+
+private async Task StartSimulation()
+{
+var response = await Http.PostAsJsonAsync("/start-simulation", projectData);
+var result = await response.Content.ReadFromJsonAsync<SimulationResponse>();
+  simulationId = result.SimulationId;
+  }
+  }
+
+  <form>
+    <!-- Inputs for the user to enter the project data -->
+    <button @onclick="StartSimulation">Start Simulation</button>
+  </form>
