@@ -115,6 +115,7 @@ public static class PageRoutes
                 <h2>Simulation Progress</h2>
                 <p>Simulation ID: {simulationId}</p>
                 <p>Is simulation complete? {simulation.IsCompleted}</p>
+                <p>Days : {simulation.SimTotalDaysResult.Percentile(0.9)}</p>
                 <!-- Add more fields as necessary -->
             </div>";
 
@@ -141,6 +142,7 @@ public static class PageRoutes
                         <p>Is Completed: {sim.IsCompleted}</p>
                         <p>Start Date: {sim.ProjectSimulationModel.StartDate}</p>
                         <p>Target Date: {sim.ProjectSimulationModel.TargetDate}</p>
+                        <p>Days : {sim.SimTotalDaysResult.Percentile(0.9)}</p>
                         <a href='/simulation-progress/{sim.SimulationId}'>View Progress</a>
                     </li>";
             }
