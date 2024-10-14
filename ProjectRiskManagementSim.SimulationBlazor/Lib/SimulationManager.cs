@@ -21,4 +21,8 @@ public static class SimulationManager
     {
         return !Simulations.ContainsKey(simulationId) || Simulations[simulationId].IsCompleted;
     }
+    public static List<IMonteCarloSimulation> GetAllSimulations()
+    {
+        return Simulations.Values.ToList();
+    }
 }
