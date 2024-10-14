@@ -9,8 +9,10 @@ using ProjectRiskManagementSim.SimulationBlazor.Lib;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+builder.Services
+    .AddRazorComponents()
+    //.AddInteractiveServerComponents()
+    .AddHtmx();
 
 var app = builder.Build();
 
@@ -26,19 +28,11 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
+app.UseHtmxAntiforgery();
 
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
-
-app.MapGet("/htmx-test",
-    () => new RazorComponentResult<HtmxTest>());
-
-app.MapGet("/simulations",
-    () => new RazorComponentResult<Simulations>());
-
-app.MapPost("/start-simulation", (ProjectSimulationModel projectData) =>
-{
-    var simulationId = Guid.NewGuid(); // Create a unique ID for this simulation session
+    //.AddInteractiveServerRenderMode()
+    .AddHtmxorComponentEndpoints(app);
 
     // Initialize and run the simulation (in the background or with some state tracking)
     var simulation = new MonteCarloSimulation(projectData, 100);
