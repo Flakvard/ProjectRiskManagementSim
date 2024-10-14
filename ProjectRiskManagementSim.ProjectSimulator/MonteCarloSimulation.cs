@@ -6,9 +6,9 @@ using ProjectRiskManagementSim.ProjectSimulation.Interfaces;
 
 namespace ProjectRiskManagementSim.ProjectSimulation;
 
-internal class MonteCarloSimulation : IMonteCarloSimulation
+public class MonteCarloSimulation : IMonteCarloSimulation
 {
-    public readonly ProjectSimulationModel ProjectSimulationModel;
+    public ProjectSimulationModel ProjectSimulationModel;
     private readonly Random _random = new Random();
     public List<double>? SimTotalDaysResult { get; set; }
     public List<double>? SimTotalCostsResult { get; set; }
@@ -17,24 +17,21 @@ internal class MonteCarloSimulation : IMonteCarloSimulation
     public DateTime NewDate { get; set; }
     public bool IsCompleted { get; set; }
 
-    private readonly int _simulationCount;
+    private int _simulationCount;
 
-    public MonteCarloSimulation(ProjectSimulationModel projectSimulationModel,
+
+    public void InitiateAndRunSimulation(ProjectSimulationModel projectSimulationModel,
                                 int simulationCount)
     {
         ProjectSimulationModel = projectSimulationModel;
         _simulationCount = simulationCount;
-    }
-
-    public void InitiateAndRunSimulation()
-    {
-        var staff = ProjectSimulationModel.Staff;
-        var startDate = ProjectSimulationModel.StartDate;
-        var targetDate = ProjectSimulationModel.TargetDate;
-        var revenue = ProjectSimulationModel.Revenue;
-        var cost = ProjectSimulationModel.Costs;
-        var backlog = ProjectSimulationModel.Backlog;
-        var columns = ProjectSimulationModel.Columns;
+        var staff = projectSimulationModel.Staff;
+        var startDate = projectSimulationModel.StartDate;
+        var targetDate = projectSimulationModel.TargetDate;
+        var revenue = projectSimulationModel.Revenue;
+        var cost = projectSimulationModel.Costs;
+        var backlog = projectSimulationModel.Backlog;
+        var columns = projectSimulationModel.Columns;
 
         ValidateProps(staff, revenue, cost, backlog);
 
@@ -78,7 +75,6 @@ internal class MonteCarloSimulation : IMonteCarloSimulation
         Simulations = simulationListofList;
         var averageTotalDays = simulationDays.Average();
         NewDate = startDate.AddDays(averageTotalDays);
-
     }
 
     private static List<DeliverableModel> RunSimulation(BacklogModel backlog,
@@ -805,8 +801,8 @@ internal class MonteCarloSimulation : IMonteCarloSimulation
         {
             tasks.Add(Task.Run(() =>
             {
-                var MCS = new MonteCarloSimulation(projectSimModels, projectSimulationsCount);
-                MCS.InitiateAndRunSimulation();
+                var MCS = new MonteCarloSimulation();
+                MCS.InitiateAndRunSimulation(projectSimModels, projectSimulationsCount);
                 return MCS;
             }));
         };
@@ -821,5 +817,15 @@ internal class MonteCarloSimulation : IMonteCarloSimulation
     private static bool IsBottleneck(ColumnModel bufferColumn, List<DeliverableModel> deliverablesInBuffer)
     {
         return deliverablesInBuffer.Count >= bufferColumn.WIP;
+    }
+
+    public void InitiateAndRunSimulation(ProjectSimulationModel projectSimulationModel)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IMonteCarloSimulation GetSimulationInstance()
+    {
+        return new MonteCarloSimulation();
     }
 }

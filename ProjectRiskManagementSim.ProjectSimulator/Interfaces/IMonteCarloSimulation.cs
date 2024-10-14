@@ -9,5 +9,6 @@ public interface IMonteCarloSimulation
     public Task BlockWIPAnalysis(ProjectSimulationModel projectSimModel, int projectSimulationsCount);
     public void PrintSimulationResults(ProjectSimulationModel projectSimulationModel, int simulationCount);
     public bool IsCompleted { get; }
-
+    public void InitiateAndRunSimulation(ProjectSimulationModel projectSimulationModel);
+    public IMonteCarloSimulation GetSimulationInstance();
 }

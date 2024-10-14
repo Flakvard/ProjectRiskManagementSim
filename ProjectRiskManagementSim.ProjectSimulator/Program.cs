@@ -73,7 +73,7 @@ const int projectSimulationsCount = 100;
 // Start timing the simulations
 var stopwatch = Stopwatch.StartNew();
 // SensitiveAnalysis
-var MCS = new MonteCarloSimulation(projectSimModel, projectSimulationsCount);
+var MCS = new MonteCarloSimulation();
 await MCS.ColumnEstimateAnalysis(projectSimModel, projectSimulationsCount);
 Console.WriteLine();
 Console.WriteLine();
