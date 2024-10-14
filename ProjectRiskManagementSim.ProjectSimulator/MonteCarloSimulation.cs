@@ -3,7 +3,7 @@ using Dumpify;
 
 namespace ProjectRiskManagementSim.ProjectSimulation;
 
-internal class MonteCarloSimulation
+public class MonteCarloSimulation
 {
     public readonly ProjectSimulationModel ProjectSimulationModel;
     private readonly Random _random = new Random();
