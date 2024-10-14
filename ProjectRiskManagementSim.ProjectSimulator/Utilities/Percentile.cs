@@ -1,5 +1,4 @@
-using ProjectRiskManagementSim.ProjectSimulation.Models;
-using ProjectRiskManagementSim.ProjectSimulation.Utilities;
+namespace ProjectRiskManagementSim.ProjectSimulation.Utilities;
 
 public static class EnumerableExtensions
 {
