@@ -1,18 +1,64 @@
 @page "/start-simulation"
-@inject HttpClient Http
+@using ProjectRiskManagementSim.SimulationBlazor.Models
+@using ProjectRiskManagementSim.SimulationBlazor.Components.Pages.Simulations;
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+
+<h3>Start Simulation</h3>
+
+<form class="text-red-400" id="start-simulation-form" hx-post="/create-simulation" hx-target="#simulation-result"
+  hx-swap="innerHTML">
+
+  <div>
+    <label>Name:</label>
+    <input type="text" name="Name" required />
+  </div>
+
+  <div>
+    <label>Start Date:</label>
+    <input type="date" name="StartDate" required />
+  </div>
+
+  <div>
+    <label>Target Date:</label>
+    <input type="date" name="TargetDate" required />
+  </div>
+
+  <div>
+    <label>Revenue Amount:</label>
+    <input type="number" name="RevenueAmount" required />
+  </div>
+
+  <div>
+    <label>Cost:</label>
+    <input type="number" name="Cost" required />
+  </div>
+
+  <div>
+    <label>Cost Days:</label>
+    <input type="number" name="CostDays" required />
+  </div>
+
+  <div>
+    <label>Percentage Low Bound:</label>
+    <input type="number" step="0.01" name="PercentageLowBound" required />
+  </div>
+
+  <div>
+    <label>Percentage High Bound:</label>
+    <input type="number" step="0.01" name="PercentageHighBound" required />
+  </div>
+
+  <div>
+    <label>Work In Progress (WIP):</label>
+    <input type="number" name="WIP" required />
+  </div>
+
+  <button type="submit">Start Simulation</button>
+</form>
+
+<div id="simulation-result"></div>
+
 @code {
-private ProjectSimulationModel projectData = new();
-private string simulationId;
-
-private async Task StartSimulation()
-{
-var response = await Http.PostAsJsonAsync("/start-simulation", projectData);
-var result = await response.Content.ReadFromJsonAsync<SimulationResponse>();
-  simulationId = result.SimulationId;
-  }
-  }
-
-  <form>
-    <!-- Inputs for the user to enter the project data -->
-    <button @onclick="StartSimulation">Start Simulation</button>
-  </form>
+[Parameter]
+public SimulationResponse projectData { get; set; } = new();
+}

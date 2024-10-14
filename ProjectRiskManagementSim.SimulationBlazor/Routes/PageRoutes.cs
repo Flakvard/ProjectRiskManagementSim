@@ -20,25 +20,83 @@ public static class PageRoutes
         app.MapGet("/simulations",
             () => new RazorComponentResult<Simulations>());
 
-        app.MapPost("/start-simulation", (ProjectSimulationModel projectData, IMonteCarloSimulation MCS) =>
+        app.MapPost("/create-simulation", async (HttpRequest request, IMonteCarloSimulation MCS) =>
         {
+            var form = await request.ReadFormAsync();
+
+#nullable disable
+            // Extract and parse form data
+            var name = form["Name"];
+            var startDate = DateTime.Parse(form["StartDate"]);
+            var targetDate = DateTime.Parse(form["TargetDate"]);
+            var revenueAmount = double.Parse(form["RevenueAmount"]);
+            var cost = double.Parse(form["Cost"]);
+            var costDays = double.Parse(form["CostDays"]);
+            var percentageLowBound = double.Parse(form["PercentageLowBound"]);
+            var percentageHighBound = double.Parse(form["PercentageHighBound"]);
+            var wip = int.Parse(form["WIP"]);
+
+
+            // Initialize the ProjectSimulationModel
+            var projectData = new ProjectSimulationModel
+            {
+                Name = name,
+                StartDate = startDate,
+                TargetDate = targetDate,
+                Revenue = new RevenueModel { Amount = revenueAmount },
+                Costs = new CostModel { Cost = cost, Days = costDays },
+                // Initialize the staff list
+                Staff = new List<StaffModel>
+                {
+                    new StaffModel { Name = "John Doe", Role = Role.ProjectManager, Sale = 1000, Cost = 370, Days = 20 },
+                    new StaffModel { Name = "Jane Doe", Role = Role.FrontendDeveloper, Sale = 1000, Cost = 370, Days = 20 },
+                    new StaffModel { Name = "Jack Doe", Role = Role.BackendDeveloper, Sale = 1000, Cost = 370, Days = 20 }
+                },
+                Backlog = new BacklogModel
+                {
+                    Deliverables = new List<DeliverableModel>
+                    {
+                      new DeliverableModel { Id = Guid.NewGuid(), Nr = 1 },
+                      new DeliverableModel { Id = Guid.NewGuid(), Nr = 2 },
+                    }, // You can add logic to populate this if needed
+                    PercentageLowBound = percentageLowBound,
+                    PercentageHighBound = percentageHighBound
+                },
+                Columns = new List<ColumnModel>
+                {
+                  new ColumnModel(wip: wip) { Name = "Backlog", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 54 },
+                  new ColumnModel(wip: wip) { Name = "Open", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 54 },
+                  new ColumnModel(wip: 5) { Name = "In Progress", EstimatedLowBound = 1, EstimatedHighBound = 47 },
+                  new ColumnModel(wip: wip) { Name = "Rdy4Test", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 50 },
+                  new ColumnModel(wip: 0) { Name = "Test Stage", EstimatedLowBound = 1, EstimatedHighBound = 11 },
+                  new ColumnModel(wip: wip) { Name = "Await Dply Prod", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 22 },
+                  new ColumnModel(wip: 0) { Name = "Rdy4TestProd", EstimatedLowBound = 1, EstimatedHighBound = 54 },
+                  new ColumnModel(wip: wip) { Name = "Done", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 54 }
+                }
+            };
+
             var simulationId = Guid.NewGuid(); // Create a unique ID for this simulation session
             var mappedProjectData = ModelMapper.MapToProjectSimulationModel(projectData);
 
             // Use the injected IMonteCarloSimulation instance to get a new simulation instance
             var simulation = MCS.GetSimulationInstance();
-            simulation.InitiateAndRunSimulation(mappedProjectData);
+            simulation.InitiateAndRunSimulation(mappedProjectData, 100, simulationId);
 
             // Store the simulation instance with the simulationId for later retrieval
             SimulationManager.StartSimulation(simulationId, simulation);
 
-            // Generate HTML content to return
+            // Prepare simulation result HTML to return
             var htmlContent = $@"
-        <div>
-            <h2>Simulation Started</h2>
-            <p>Simulation ID: {simulationId}</p>
-        </div>";
-
+                <div>
+                    <h2>Simulation Started</h2>
+                    <p>Simulation ID: {simulationId}, is simulation complete? {simulation.IsCompleted}</p>
+                    <p>Project Name: {projectData.Name}</p>
+                    <p>Start Date: {projectData.StartDate.ToShortDateString()}</p>
+                    <p>Target Date: {projectData.TargetDate.ToShortDateString()}</p>
+                    <p>Revenue: {projectData.Revenue.Amount}</p>
+                    <p>Cost: {projectData.Costs.Cost}</p>
+                    <button onclick=""window.location.href='/simulation-progress/{simulationId}'"">View Progress</button>
+                </div>";
             return Results.Content(htmlContent, "text/html");
         });
 
@@ -51,11 +109,46 @@ public static class PageRoutes
                 return Results.NotFound("Simulation not found.");
             }
 
-            // Return current state (e.g., current day, deliverables, column states)
-            //var currentState = simulation.GetCurrentState();  // You'd define this method to get current simulation data
-            //return Results.Ok(currentState);
-            return Results.Ok();
+            // Assuming the simulation object has fields like "IsCompleted" and progress metrics
+            var response = $@"
+            <div>
+                <h2>Simulation Progress</h2>
+                <p>Simulation ID: {simulationId}</p>
+                <p>Is simulation complete? {simulation.IsCompleted}</p>
+                <!-- Add more fields as necessary -->
+            </div>";
+
+            return Results.Content(response, "text/html");
         });
+
+        app.MapGet("/get-simulations", () =>
+        {
+            var allSimulations = SimulationManager.GetAllSimulations(); // Assuming this method exists
+
+            if (!allSimulations.Any())
+            {
+                return Results.Content("<p>No simulations found.</p>", "text/html");
+            }
+
+            // Build a response that lists all simulations
+            var simulationsListHtml = "<h2>All Simulations</h2><ul>";
+            foreach (var sim in allSimulations)
+            {
+                simulationsListHtml += $@"
+                    <li>
+                        <p>Simulation ID: {sim.SimulationId}</p>
+                        <p>Project Name: {sim.ProjectSimulationModel.Name}</p>
+                        <p>Is Completed: {sim.IsCompleted}</p>
+                        <p>Start Date: {sim.ProjectSimulationModel.StartDate}</p>
+                        <p>Target Date: {sim.ProjectSimulationModel.TargetDate}</p>
+                        <a href='/simulation-progress/{sim.SimulationId}'>View Progress</a>
+                    </li>";
+            }
+            simulationsListHtml += "</ul>";
+
+            return Results.Content(simulationsListHtml, "text/html");
+        });
+
         return app;
     }
 }
