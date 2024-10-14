@@ -1,6 +1,6 @@
-namespace ProjectRiskManagementSim.ProjectSimulation;
+namespace ProjectRiskManagementSim.ProjectSimulation.Models;
 
-internal class DeliverableModel : IComparer<DeliverableModel>
+public class DeliverableModel : IComparer<DeliverableModel>
 {
     public Guid Id { get; set; }
     public int Nr { get; set; }

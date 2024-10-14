@@ -1,7 +1,7 @@
-namespace ProjectRiskManagementSim.ProjectSimulation;
+namespace ProjectRiskManagementSim.ProjectSimulation.Models;
 
 
-internal class ProjectSimulationModel
+public class ProjectSimulationModel
 {
     public required string Name { get; set; }
     public List<StaffModel>? Staff { get; set; }

@@ -1,6 +1,6 @@
-namespace ProjectRiskManagementSim.ProjectSimulation;
+namespace ProjectRiskManagementSim.ProjectSimulation.Models;
 
-internal class ColumnModel
+public class ColumnModel
 {
     public Guid Id { get; set; }
     public string? Name { get; set; }

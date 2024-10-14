@@ -1,6 +1,6 @@
-namespace ProjectRiskManagementSim.ProjectSimulation;
+namespace ProjectRiskManagementSim.ProjectSimulation.Models;
 
-internal class BacklogModel
+public class BacklogModel
 {
     public required List<DeliverableModel> Deliverables { get; set; }
     public required double PercentageLowBound { get; set; }

@@ -1,6 +1,6 @@
-namespace ProjectRiskManagementSim.ProjectSimulation;
+namespace ProjectRiskManagementSim.ProjectSimulation.Models;
 
-internal enum Role
+public enum Role
 {
     ProjectManager,
     FrontendDeveloper,
@@ -8,7 +8,7 @@ internal enum Role
     SoftwareTester,
     UXUIDesigner,
 }
-internal class StaffModel
+public class StaffModel
 {
     public required string Name { get; set; }
     public Role Role { get; set; }
