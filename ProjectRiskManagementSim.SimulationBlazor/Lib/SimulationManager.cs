@@ -40,4 +40,8 @@ public static class SimulationManager
         SimulationManager.StartSimulation(simulationId, simulation);
         return SimulationManager.GetAllSimulations();
     }
+    public static IMonteCarloSimulation GetFirstSimulation()
+    {
+        return Simulations.Values.FirstOrDefault();
+    }
 }
