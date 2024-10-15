@@ -2,6 +2,7 @@ using ProjectRiskManagementSim.SimulationBlazor.Components;
 using ProjectRiskManagementSim.SimulationBlazor.Components.Shared;
 using ProjectRiskManagementSim.SimulationBlazor.Components.Pages.Simulations;
 using ProjectRiskManagementSim.SimulationBlazor.Components.Pages.Dashboard;
+using ProjectRiskManagementSim.SimulationBlazor.Components.Pages.RunSimulation;
 using ProjectRiskManagementSim.SimulationBlazor.Models;
 using ProjectRiskManagementSim.SimulationBlazor.Lib;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -17,8 +18,14 @@ public static class PageRoutes
         app.MapGet("/htmx-test",
             () => new RazorComponentResult<HtmxTest>());
 
+        app.MapGet("/dashboardMain",
+            () => new RazorComponentResult<DashboardMain>());
+
         app.MapGet("/simulations",
             () => new RazorComponentResult<Simulations>());
+
+        app.MapGet("/run-simulation",
+            () => new RazorComponentResult<RunSimulation>());
 
         app.MapPost("/create-simulation", async (HttpRequest request, IMonteCarloSimulation MCS) =>
         {
