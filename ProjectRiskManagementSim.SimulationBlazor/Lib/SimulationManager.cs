@@ -7,7 +7,7 @@ public static class SimulationManager
 {
     private static readonly Dictionary<Guid, IMonteCarloSimulation> Simulations = new();
 
-    public static void StartSimulation(Guid simulationId, IMonteCarloSimulation simulation)
+    public static void AddSimulationToManager(Guid simulationId, IMonteCarloSimulation simulation)
     {
         Simulations[simulationId] = simulation;
     }
@@ -30,14 +30,14 @@ public static class SimulationManager
     {
         var projectData = Database.ProjectModelInit();
         var simulationId = Guid.NewGuid(); // Create a unique ID for this simulation session
-        var mappedProjectData = ModelMapper.MapToProjectSimulationModel(projectData);
+        var mappedProjectData = ModelMapper.MapToSimProjProjectSimulationModel(projectData);
 
         // Use the injected IMonteCarloSimulation instance to get a new simulation instance
         var simulation = MCS.GetSimulationInstance();
-        simulation.InitiateAndRunSimulation(mappedProjectData, 100, simulationId);
+        simulation.InitiateSimulation(mappedProjectData, simulationId);
 
         // Store the simulation instance with the simulationId for later retrieval
-        SimulationManager.StartSimulation(simulationId, simulation);
+        SimulationManager.AddSimulationToManager(simulationId, simulation);
         return SimulationManager.GetAllSimulations();
     }
     public static IMonteCarloSimulation GetFirstSimulation()

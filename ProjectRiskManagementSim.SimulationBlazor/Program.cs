@@ -4,6 +4,7 @@ using ProjectRiskManagementSim.ProjectSimulation.Interfaces;
 using ProjectRiskManagementSim.ProjectSimulation;
 using ProjectRiskManagementSim.SimulationBlazor.Routes;
 using ProjectRiskManagementSim.SimulationBlazor.Lib;
+using ProjectRiskManagementSim.SimulationBlazor.Components.Pages.RunSimulation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,7 @@ builder.Services
 
 // Dependency Injection
 builder.Services.AddSingleton<IMonteCarloSimulation, MonteCarloSimulation>();
+builder.Services.AddSingleton<RunSimulationHandler>();
 
 var app = builder.Build();
 

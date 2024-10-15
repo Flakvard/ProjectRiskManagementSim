@@ -7,6 +7,7 @@ using ProjectRiskManagementSim.SimulationBlazor.Models;
 using ProjectRiskManagementSim.SimulationBlazor.Lib;
 using Microsoft.AspNetCore.Http.HttpResults;
 using ProjectRiskManagementSim.ProjectSimulation.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 
 namespace ProjectRiskManagementSim.SimulationBlazor.Routes;
@@ -26,6 +27,44 @@ public static class PageRoutes
 
         app.MapGet("/run-simulation",
             () => new RazorComponentResult<RunSimulation>());
+
+        app.MapGet("/running-simulation", async ([FromServices] RunSimulationHandler handler) =>
+        {
+            if (!handler.simulationRunning)
+            {
+                await handler.StartSimulation();
+            }
+
+            return Results.Json(new { status = "Simulation Started" });
+        });
+
+        app.MapGet("/update-kanban-board", (HttpContext context, [FromServices] RunSimulationHandler handler) =>
+        {
+            // Simulate fetching the updated deliverables and columns for the Kanban board.
+            return Results.Content($@"
+            <table class=""table table-bordered"">
+                <thead>
+                    <tr>
+                        {string.Join("", handler.columns.Select(column => $"<th>{column.Name} (WIP: {column.WIP})</th>"))}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {string.Join("", handler.columns.Select(column =>
+                                    $@"<td>
+                                {string.Join("", handler.columnDeliverables[column].Select(deliverable => $@"
+                                    <div>
+                                        <strong>Task: {deliverable.Nr}</strong><br />
+                                        Completion Days: {deliverable.CompletionDays}<br />
+                                        Wait Time: {deliverable.WaitTime}<br />
+                                        Stopped Time: {deliverable.StoppedWorkingTime}
+                                    </div>"))}
+                              </td>"))}
+                    </tr>
+                </tbody>
+            </table>", "text/html");
+        });
+
 
         app.MapPost("/create-simulation", async (HttpRequest request, IMonteCarloSimulation MCS) =>
         {
@@ -71,26 +110,26 @@ public static class PageRoutes
                 },
                 Columns = new List<ColumnModel>
                 {
-                  new ColumnModel(wip: wip) { Name = "Backlog", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 54 },
-                  new ColumnModel(wip: wip) { Name = "Open", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 54 },
-                  new ColumnModel(wip: 5) { Name = "In Progress", EstimatedLowBound = 1, EstimatedHighBound = 47 },
-                  new ColumnModel(wip: wip) { Name = "Rdy4Test", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 50 },
-                  new ColumnModel(wip: 0) { Name = "Test Stage", EstimatedLowBound = 1, EstimatedHighBound = 11 },
-                  new ColumnModel(wip: wip) { Name = "Await Dply Prod", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 22 },
-                  new ColumnModel(wip: 0) { Name = "Rdy4TestProd", EstimatedLowBound = 1, EstimatedHighBound = 54 },
-                  new ColumnModel(wip: wip) { Name = "Done", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 54 }
+                  new ColumnModel(wip: wip, wipMax: wip) { Name = "Backlog", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 54 },
+                  new ColumnModel(wip: wip, wipMax: wip) { Name = "Open", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 54 },
+                  new ColumnModel(wip: 5, wipMax: 5) { Name = "In Progress", EstimatedLowBound = 1, EstimatedHighBound = 47 },
+                  new ColumnModel(wip: wip, wipMax: wip) { Name = "Rdy4Test", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 50 },
+                  new ColumnModel(wip: 0, wipMax: 5) { Name = "Test Stage", EstimatedLowBound = 1, EstimatedHighBound = 11 },
+                  new ColumnModel(wip: wip, wipMax: wip) { Name = "Await Dply Prod", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 22 },
+                  new ColumnModel(wip: 0, wipMax: 5) { Name = "Rdy4TestProd", EstimatedLowBound = 1, EstimatedHighBound = 54 },
+                  new ColumnModel(wip: wip, wipMax: wip) { Name = "Done", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 54 }
                 }
             };
 
             var simulationId = Guid.NewGuid(); // Create a unique ID for this simulation session
-            var mappedProjectData = ModelMapper.MapToProjectSimulationModel(projectData);
+            var mappedProjectData = ModelMapper.MapToSimProjProjectSimulationModel(projectData);
 
             // Use the injected IMonteCarloSimulation instance to get a new simulation instance
             var simulation = MCS.GetSimulationInstance();
             simulation.InitiateAndRunSimulation(mappedProjectData, 100, simulationId);
 
             // Store the simulation instance with the simulationId for later retrieval
-            SimulationManager.StartSimulation(simulationId, simulation);
+            SimulationManager.AddSimulationToManager(simulationId, simulation);
 
             // Prepare simulation result HTML to return
             var htmlContent = $@"
