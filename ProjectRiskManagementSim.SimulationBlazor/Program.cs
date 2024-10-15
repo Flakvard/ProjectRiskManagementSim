@@ -3,6 +3,7 @@ using ProjectRiskManagementSim.SimulationBlazor.Components;
 using ProjectRiskManagementSim.ProjectSimulation.Interfaces;
 using ProjectRiskManagementSim.ProjectSimulation;
 using ProjectRiskManagementSim.SimulationBlazor.Routes;
+using ProjectRiskManagementSim.SimulationBlazor.Lib;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,13 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+}
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+    // Initiate the database with a SimulationManager instance
+    IMonteCarloSimulation monteCarloSimulation = new MonteCarloSimulation();
+    SimulationManager.InitSimulationsFromDb(monteCarloSimulation);
 }
 
 app.UseHttpsRedirection();
