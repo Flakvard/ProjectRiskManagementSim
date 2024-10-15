@@ -1,0 +1,1486 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen flex flex-col overflow-hidden">
+  <div class="Dashboard w-[1440px] h-[1024px] bg-[#192b3e] flex-col justify-between items-center inline-flex">
+    <div
+      class="Navbar self-stretch h-14 px-[180px] bg-gradient-to-r from-[#7e44eb] to-[#ff7c87] justify-between items-center inline-flex">
+      <div class="Companyname w-[167px] self-stretch justify-center items-center gap-2.5 flex">
+        <div class="Oxygen w-[74.93px] text-white text-xl font-semibold font-['Inter']">Oxygen</div>
+      </div>
+      <div class="Menunav justify-start items-center gap-9 flex">
+        <div class="Settings text-white text-xl font-normal font-['Inter']">Settings</div>
+        <div class="Projects w-[76.93px] text-white text-xl font-normal font-['Inter']">Projects</div>
+        <div class="Dashboard w-[103.90px] text-white text-xl font-normal font-['Inter']">Dashboard</div>
+        <div class="Simulations w-[108.90px] text-white text-xl font-normal font-['Inter']">Simulations</div>
+        <div class="User w-[44.96px] text-white text-xl font-normal font-['Inter']">User</div>
+      </div>
+    </div>
+    <div class="Newsimulation self-stretch grow shrink basis-0 justify-center items-start inline-flex">
+      <div
+        class="SidebarNavigation w-64 self-stretch p-2.5 bg-[#7e44eb]/40 flex-col justify-start items-start gap-2.5 inline-flex">
+        <div
+          class="UpperSidebarNav self-stretch grow shrink basis-0 p-2.5 flex-col justify-start items-start gap-2.5 flex">
+          <div class="SimulationHeader self-stretch h-[130px] p-2.5 flex-col justify-start items-start gap-2.5 flex">
+            <div
+              class="SimHeadContainer self-stretch h-[113px] p-2.5 rounded-[22px] flex-col justify-center items-center gap-2.5 flex">
+              <div
+                class="SimHeadName w-[167px] text-center text-white text-xl font-bold font-['Outfit'] capitalize leading-relaxed">
+                Phase II of Bech Bruun project</div>
+              <div class="CostDelaySection px-2.5 py-[5px] justify-start items-start gap-2.5 inline-flex">
+                <div
+                  class="CostDelayValue w-[113px] text-right text-white text-base font-bold font-['Outfit'] capitalize leading-tight">
+                  Bech-Bruun</div>
+                <div class="ExternalLink w-[18px] h-[18px] p-[2.25px] justify-center items-center flex"></div>
+              </div>
+            </div>
+          </div>
+          <div class="StartDateSection self-stretch px-2.5 py-[5px] justify-end items-start gap-2.5 inline-flex">
+            <div class="Frame10 grow shrink basis-0 h-[26px] justify-start items-center gap-2.5 flex">
+              <div class="StartDateName text-white text-xl font-bold font-['Outfit'] capitalize leading-relaxed">Start:
+              </div>
+            </div>
+            <div
+              class="StartDateValue text-right text-white text-xl font-bold font-['Outfit'] capitalize leading-relaxed">
+              01-02-2024</div>
+          </div>
+          <div class="TargetDateSection self-stretch px-2.5 py-[5px] justify-end items-start gap-2.5 inline-flex">
+            <div class="Frame11 grow shrink basis-0 h-[26px] justify-start items-center gap-2.5 flex">
+              <div class="TargetDateName text-white text-xl font-bold font-['Outfit'] capitalize leading-relaxed">
+                Target:</div>
+            </div>
+            <div
+              class="TargetDateValue text-right text-white text-xl font-bold font-['Outfit'] capitalize leading-relaxed">
+              09-11-2024</div>
+          </div>
+          <div class="EndDateSection self-stretch px-2.5 py-[5px] justify-end items-start gap-2.5 inline-flex">
+            <div class="Frame12 grow shrink basis-0 h-[26px] justify-start items-center gap-2.5 flex">
+              <div class="EndDateName text-white text-xl font-bold font-['Outfit'] capitalize leading-relaxed">End:
+              </div>
+            </div>
+            <div
+              class="EndDateValue text-right text-white text-xl font-bold font-['Outfit'] capitalize leading-relaxed">
+              19-11-2024</div>
+          </div>
+          <div class="BudgetSection self-stretch px-2.5 py-[5px] justify-end items-start gap-2.5 inline-flex">
+            <div class="Frame13 grow shrink basis-0 h-[26px] justify-start items-center gap-2.5 flex">
+              <div class="BudgetName w-20 text-white text-xl font-bold font-['Outfit'] capitalize leading-relaxed">
+                Budget:</div>
+            </div>
+            <div class="BudgetValue text-right text-white text-xl font-bold font-['Outfit'] capitalize leading-relaxed">
+              1.100.000</div>
+          </div>
+          <div class="CostSection self-stretch px-2.5 py-[5px] justify-end items-start gap-2.5 inline-flex">
+            <div class="Frame14 grow shrink basis-0 h-[26px] justify-start items-center gap-2.5 flex">
+              <div class="CostName text-white text-xl font-bold font-['Outfit'] capitalize leading-relaxed">Cost:</div>
+            </div>
+            <div class="CostValue text-right text-white text-xl font-bold font-['Outfit'] capitalize leading-relaxed">
+              1.070.000</div>
+          </div>
+          <div class="CostDelaySection self-stretch px-2.5 py-[5px] justify-end items-start gap-2.5 inline-flex">
+            <div class="Frame15 grow shrink basis-0 h-[26px] justify-start items-center gap-2.5 flex">
+              <div class="CostDelayName text-white text-xl font-bold font-['Outfit'] capitalize leading-relaxed">
+                delay/day:</div>
+            </div>
+            <div
+              class="CostDelayValue text-right text-white text-xl font-bold font-['Outfit'] capitalize leading-relaxed">
+              5.320</div>
+          </div>
+        </div>
+        <div class="Rectangle2 self-stretch h-0.5 bg-[#ff7c87]"></div>
+        <div
+          class="LowerSidebarNav self-stretch grow shrink basis-0 px-2.5 pt-2.5 pb-[25px] flex-col justify-start items-start gap-2.5 flex">
+          <div class="SimulationsHeadlines self-stretch h-[74px] py-6 flex-col justify-start items-start gap-2.5 flex">
+            <div class="Frame6 w-[198px] px-4 justify-center items-center gap-2.5 inline-flex">
+              <div class="Simulations text-white text-xl font-bold font-['Outfit'] capitalize leading-relaxed">
+                Simulations</div>
+              <div class="ExternalLink w-6 h-6 p-[3px] justify-center items-center flex"></div>
+            </div>
+          </div>
+          <div
+            class="TableOfSimulations self-stretch grow shrink basis-0 p-2.5 border border-[#ff7c87] flex-col justify-start items-start gap-2.5 flex">
+            <div
+              class="SimRow self-stretch px-[18px] py-1 border-b border-[#ff7c87] justify-center items-center gap-2.5 inline-flex">
+              <div class="SimName grow shrink basis-0 text-white text-base font-bold font-['Outfit'] leading-tight">
+                Phase I</div>
+              <div
+                class="Edit w-5 h-5 pl-[1.67px] pr-[1.57px] pt-[1.57px] pb-[1.67px] justify-center items-center flex">
+              </div>
+            </div>
+            <div
+              class="SimRow self-stretch px-[18px] py-1 border-b border-[#ff7c87] justify-center items-center gap-2.5 inline-flex">
+              <div class="SimName grow shrink basis-0 text-white text-base font-bold font-['Outfit'] leading-tight">
+                Ekstra Feature to project</div>
+              <div
+                class="Edit w-5 h-5 pl-[1.67px] pr-[1.57px] pt-[1.57px] pb-[1.67px] justify-center items-center flex">
+              </div>
+            </div>
+            <div
+              class="SimRow self-stretch px-[18px] py-1 border-b border-[#ff7c87] justify-center items-center gap-2.5 inline-flex">
+              <div class="SimName grow shrink basis-0 text-white text-base font-bold font-['Outfit'] leading-tight">New
+                Deadline</div>
+              <div
+                class="Edit w-5 h-5 pl-[1.67px] pr-[1.57px] pt-[1.57px] pb-[1.67px] justify-center items-center flex">
+              </div>
+            </div>
+            <div
+              class="SimRow self-stretch px-[18px] py-1 border-b border-[#ff7c87] justify-center items-center gap-2.5 inline-flex">
+              <div class="SimName grow shrink basis-0 text-white text-base font-bold font-['Outfit'] leading-tight">
+                Phase II of Bech Bruun project</div>
+              <div
+                class="Edit w-5 h-5 pl-[1.67px] pr-[1.57px] pt-[1.57px] pb-[1.67px] justify-center items-center flex">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="Rectangle3 self-stretch h-0.5 bg-[#ff7c87]"></div>
+        <div class="SidebarFooterSettings self-stretch h-12 justify-center items-center gap-[45px] inline-flex">
+          <div class="Archive w-6 h-6 px-px py-[3px] justify-center items-center flex"></div>
+          <div class="Settings w-6 h-6 p-px justify-center items-center flex"></div>
+          <div class="ExternalLink w-6 h-6 p-[3px] justify-center items-center flex"></div>
+        </div>
+      </div>
+      <div class="Runsimulation h-[837px] flex-col justify-start items-start gap-2.5 inline-flex">
+        <div class="TableKanbanboard self-stretch grow shrink basis-0 p-2.5 flex-col justify-start items-start flex">
+          <div
+            class="RowHeader self-stretch h-[88px] bg-[#ffb4ba]/50 border border-white justify-start items-start inline-flex">
+            <div
+              class="CellHeaderWBuf grow shrink basis-0 self-stretch p-2.5 border border-white flex-col justify-start items-start gap-[5px] inline-flex">
+              <div class="CellTextContent flex-col justify-center items-center gap-2.5 flex">
+                <div
+                  class="ColText w-[60px] text-white text-base font-extrabold font-['Outfit'] capitalize leading-tight">
+                  Backlog</div>
+              </div>
+              <div class="CellTextContent justify-center items-center gap-0.5 inline-flex">
+                <div class="ColText text-white text-base font-extrabold font-['Outfit'] capitalize leading-tight">
+                  Buffer:</div>
+                <div class="BufferWip text-white text-base font-extrabold font-['Outfit'] capitalize leading-tight">max
+                </div>
+              </div>
+            </div>
+            <div
+              class="CellHeaderWBuf grow shrink basis-0 self-stretch p-2.5 border border-white flex-col justify-start items-start gap-[5px] inline-flex">
+              <div class="CellTextContent flex-col justify-center items-center gap-2.5 flex">
+                <div
+                  class="ColText w-[60px] text-white text-base font-extrabold font-['Outfit'] capitalize leading-tight">
+                  Open</div>
+              </div>
+              <div class="CellTextContent justify-center items-center gap-0.5 inline-flex">
+                <div class="ColText text-white text-base font-extrabold font-['Outfit'] capitalize leading-tight">
+                  Buffer:</div>
+                <div class="BufferWip text-white text-base font-extrabold font-['Outfit'] capitalize leading-tight">10
+                </div>
+              </div>
+            </div>
+            <div
+              class="CellHeaderWIcon grow shrink basis-0 self-stretch p-2.5 border border-white flex-col justify-start items-start gap-[5px] inline-flex">
+              <div class="CellTextContent flex-col justify-center items-center gap-2.5 flex">
+                <div
+                  class="ColText w-[60px] text-white text-base font-extrabold font-['Outfit'] capitalize leading-tight">
+                  in progress</div>
+              </div>
+              <div class="WipContent justify-start items-center gap-0.5 inline-flex">
+                <div class="User w-4 h-4 px-[2.67px] py-0.5 justify-center items-center flex"></div>
+                <div class="User w-4 h-4 px-[2.67px] py-0.5 justify-center items-center flex"></div>
+                <div class="User w-4 h-4 px-[2.67px] py-0.5 justify-center items-center flex"></div>
+                <div class="User w-4 h-4 px-[2.67px] py-0.5 justify-center items-center flex"></div>
+                <div class="User w-4 h-4 px-[2.67px] py-0.5 justify-center items-center flex"></div>
+              </div>
+            </div>
+            <div
+              class="CellHeaderWBuf grow shrink basis-0 self-stretch p-2.5 border border-white flex-col justify-start items-start gap-[5px] inline-flex">
+              <div class="CellTextContent flex-col justify-center items-center gap-2.5 flex">
+                <div
+                  class="ColText w-[60px] text-white text-base font-extrabold font-['Outfit'] capitalize leading-tight">
+                  Stuck</div>
+              </div>
+              <div class="CellTextContent justify-center items-center gap-0.5 inline-flex">
+                <div class="ColText text-white text-base font-extrabold font-['Outfit'] capitalize leading-tight">
+                  Buffer:</div>
+                <div class="BufferWip text-white text-base font-extrabold font-['Outfit'] capitalize leading-tight">10
+                </div>
+              </div>
+            </div>
+            <div
+              class="CellHeaderWBuf grow shrink basis-0 self-stretch p-2.5 border border-white flex-col justify-start items-start gap-[5px] inline-flex">
+              <div class="CellTextContent flex-col justify-center items-center gap-2.5 flex">
+                <div
+                  class="ColText w-[60px] text-white text-base font-extrabold font-['Outfit'] capitalize leading-tight">
+                  Finished</div>
+              </div>
+              <div class="CellTextContent justify-center items-center gap-0.5 inline-flex">
+                <div class="ColText text-white text-base font-extrabold font-['Outfit'] capitalize leading-tight">
+                  Buffer:</div>
+                <div class="BufferWip text-white text-base font-extrabold font-['Outfit'] capitalize leading-tight">10
+                </div>
+              </div>
+            </div>
+            <div
+              class="CellHeaderWBuf grow shrink basis-0 self-stretch p-2.5 border border-white flex-col justify-start items-start gap-[5px] inline-flex">
+              <div class="CellTextContent flex-col justify-center items-center gap-2.5 flex">
+                <div
+                  class="ColText w-[60px] text-white text-base font-extrabold font-['Outfit'] capitalize leading-tight">
+                  Ready to Test on stage</div>
+              </div>
+              <div class="CellTextContent justify-center items-center gap-0.5 inline-flex">
+                <div class="ColText text-white text-base font-extrabold font-['Outfit'] capitalize leading-tight">
+                  Buffer:</div>
+                <div class="BufferWip text-white text-base font-extrabold font-['Outfit'] capitalize leading-tight">10
+                </div>
+              </div>
+            </div>
+            <div
+              class="CellHeaderWIcon grow shrink basis-0 self-stretch p-2.5 border border-white flex-col justify-start items-start gap-[5px] inline-flex">
+              <div class="CellTextContent flex-col justify-center items-center gap-2.5 flex">
+                <div
+                  class="ColText w-[60px] text-white text-base font-extrabold font-['Outfit'] capitalize leading-tight">
+                  testing on stage</div>
+              </div>
+              <div class="WipContent justify-start items-center gap-0.5 inline-flex">
+                <div class="User w-4 h-4 px-[2.67px] py-0.5 justify-center items-center flex"></div>
+                <div class="User w-4 h-4 px-[2.67px] py-0.5 justify-center items-center flex"></div>
+                <div class="User w-4 h-4 px-[2.67px] py-0.5 justify-center items-center flex"></div>
+              </div>
+            </div>
+            <div
+              class="CellHeaderWBuf grow shrink basis-0 self-stretch p-2.5 border border-white flex-col justify-start items-start gap-[5px] inline-flex">
+              <div class="CellTextContent flex-col justify-center items-center gap-2.5 flex">
+                <div
+                  class="ColText w-[60px] text-white text-base font-extrabold font-['Outfit'] capitalize leading-tight">
+                  Awaiting for deployment</div>
+              </div>
+              <div class="CellTextContent justify-center items-center gap-0.5 inline-flex">
+                <div class="ColText text-white text-base font-extrabold font-['Outfit'] capitalize leading-tight">
+                  Buffer:</div>
+                <div class="BufferWip text-white text-base font-extrabold font-['Outfit'] capitalize leading-tight">10
+                </div>
+              </div>
+            </div>
+            <div
+              class="CellHeaderWIcon grow shrink basis-0 self-stretch p-2.5 border border-white flex-col justify-start items-start gap-[5px] inline-flex">
+              <div class="CellTextContent flex-col justify-center items-center gap-2.5 flex">
+                <div
+                  class="ColText w-[60px] text-white text-base font-extrabold font-['Outfit'] capitalize leading-tight">
+                  Ready to test on production</div>
+              </div>
+              <div class="WipContent justify-start items-center gap-0.5 inline-flex">
+                <div class="User w-4 h-4 px-[2.67px] py-0.5 justify-center items-center flex"></div>
+                <div class="User w-4 h-4 px-[2.67px] py-0.5 justify-center items-center flex"></div>
+              </div>
+            </div>
+            <div
+              class="CellHeaderWBuf grow shrink basis-0 self-stretch p-2.5 border border-white flex-col justify-start items-start gap-[5px] inline-flex">
+              <div class="CellTextContent flex-col justify-center items-center gap-2.5 flex">
+                <div
+                  class="ColText w-[60px] text-white text-base font-extrabold font-['Outfit'] capitalize leading-tight">
+                  Done</div>
+              </div>
+              <div class="CellTextContent justify-center items-center gap-0.5 inline-flex">
+                <div class="ColText text-white text-base font-extrabold font-['Outfit'] capitalize leading-tight">
+                  Buffer:</div>
+                <div class="BufferWip text-white text-base font-extrabold font-['Outfit'] capitalize leading-tight">10
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="Row self-stretch grow shrink basis-0 border border-white justify-start items-start inline-flex">
+            <div
+              class="ColWTask w-[110.40px] self-stretch py-[5px] border border-white flex-col justify-start items-start inline-flex">
+              <div
+                class="CellTask self-stretch h-[72px] px-2.5 py-[5px] flex-col justify-start items-start gap-[5px] flex">
+                <div
+                  class="TaskContent self-stretch h-[62px] p-[5px] bg-[#7e44eb] rounded-md flex-col justify-center items-center gap-[2.50px] flex">
+                  <div class="CellTextContent self-stretch justify-center items-center inline-flex">
+                    <div class="ColText w-8 text-white text-sm font-bold font-['Outfit'] capitalize leading-[18.20px]">#
+                      01</div>
+                    <div
+                      class="ColText grow shrink basis-0 text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                      Deliverble</div>
+                  </div>
+                  <div class="Divider w-[79px] h-px bg-[#d9d9d9]"></div>
+                  <div class="CellGridContent self-stretch justify-center items-center gap-3.5 inline-flex">
+                    <div class="LeftCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          D:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          37</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          S:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          08</div>
+                      </div>
+                    </div>
+                    <div class="RightCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          W:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          80</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          T:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          117</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="CellTask self-stretch h-[72px] px-2.5 py-[5px] flex-col justify-start items-start gap-[5px] flex">
+                <div
+                  class="TaskContent self-stretch h-[62px] p-[5px] bg-[#7e44eb] rounded-md flex-col justify-center items-center gap-[2.50px] flex">
+                  <div class="CellTextContent self-stretch justify-center items-center inline-flex">
+                    <div class="ColText w-8 text-white text-sm font-bold font-['Outfit'] capitalize leading-[18.20px]">#
+                      01</div>
+                    <div
+                      class="ColText grow shrink basis-0 text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                      Deliverble</div>
+                  </div>
+                  <div class="Divider w-[79px] h-px bg-[#d9d9d9]"></div>
+                  <div class="CellGridContent self-stretch justify-center items-center gap-3.5 inline-flex">
+                    <div class="LeftCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          D:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          37</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          S:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          08</div>
+                      </div>
+                    </div>
+                    <div class="RightCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          W:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          80</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          T:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          117</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="CellTask self-stretch h-[72px] px-2.5 py-[5px] flex-col justify-start items-start gap-[5px] flex">
+                <div
+                  class="TaskContent self-stretch h-[62px] p-[5px] bg-[#7e44eb] rounded-md flex-col justify-center items-center gap-[2.50px] flex">
+                  <div class="CellTextContent self-stretch justify-center items-center inline-flex">
+                    <div class="ColText w-8 text-white text-sm font-bold font-['Outfit'] capitalize leading-[18.20px]">#
+                      01</div>
+                    <div
+                      class="ColText grow shrink basis-0 text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                      Deliverble</div>
+                  </div>
+                  <div class="Divider w-[79px] h-px bg-[#d9d9d9]"></div>
+                  <div class="CellGridContent self-stretch justify-center items-center gap-3.5 inline-flex">
+                    <div class="LeftCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          D:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          37</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          S:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          08</div>
+                      </div>
+                    </div>
+                    <div class="RightCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          W:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          80</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          T:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          117</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="CellTask self-stretch h-[72px] px-2.5 py-[5px] flex-col justify-start items-start gap-[5px] flex">
+                <div
+                  class="TaskContent self-stretch h-[62px] p-[5px] bg-[#7e44eb] rounded-md flex-col justify-center items-center gap-[2.50px] flex">
+                  <div class="CellTextContent self-stretch justify-center items-center inline-flex">
+                    <div class="ColText w-8 text-white text-sm font-bold font-['Outfit'] capitalize leading-[18.20px]">#
+                      01</div>
+                    <div
+                      class="ColText grow shrink basis-0 text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                      Deliverble</div>
+                  </div>
+                  <div class="Divider w-[79px] h-px bg-[#d9d9d9]"></div>
+                  <div class="CellGridContent self-stretch justify-center items-center gap-3.5 inline-flex">
+                    <div class="LeftCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          D:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          37</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          S:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          08</div>
+                      </div>
+                    </div>
+                    <div class="RightCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          W:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          80</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          T:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          117</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="CellTask self-stretch h-[72px] px-2.5 py-[5px] flex-col justify-start items-start gap-[5px] flex">
+                <div
+                  class="TaskContent self-stretch h-[62px] p-[5px] bg-[#7e44eb] rounded-md flex-col justify-center items-center gap-[2.50px] flex">
+                  <div class="CellTextContent self-stretch justify-center items-center inline-flex">
+                    <div class="ColText w-8 text-white text-sm font-bold font-['Outfit'] capitalize leading-[18.20px]">#
+                      01</div>
+                    <div
+                      class="ColText grow shrink basis-0 text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                      Deliverble</div>
+                  </div>
+                  <div class="Divider w-[79px] h-px bg-[#d9d9d9]"></div>
+                  <div class="CellGridContent self-stretch justify-center items-center gap-3.5 inline-flex">
+                    <div class="LeftCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          D:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          37</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          S:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          08</div>
+                      </div>
+                    </div>
+                    <div class="RightCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          W:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          80</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          T:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          117</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="CellTask self-stretch h-[72px] px-2.5 py-[5px] flex-col justify-start items-start gap-[5px] flex">
+                <div
+                  class="TaskContent self-stretch h-[62px] p-[5px] bg-[#7e44eb] rounded-md flex-col justify-center items-center gap-[2.50px] flex">
+                  <div class="CellTextContent self-stretch justify-center items-center inline-flex">
+                    <div class="ColText w-8 text-white text-sm font-bold font-['Outfit'] capitalize leading-[18.20px]">#
+                      01</div>
+                    <div
+                      class="ColText grow shrink basis-0 text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                      Deliverble</div>
+                  </div>
+                  <div class="Divider w-[79px] h-px bg-[#d9d9d9]"></div>
+                  <div class="CellGridContent self-stretch justify-center items-center gap-3.5 inline-flex">
+                    <div class="LeftCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          D:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          37</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          S:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          08</div>
+                      </div>
+                    </div>
+                    <div class="RightCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          W:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          80</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          T:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          117</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="CellTask self-stretch h-[72px] px-2.5 py-[5px] flex-col justify-start items-start gap-[5px] flex">
+                <div
+                  class="TaskContent self-stretch h-[62px] p-[5px] bg-[#7e44eb] rounded-md flex-col justify-center items-center gap-[2.50px] flex">
+                  <div class="CellTextContent self-stretch justify-center items-center inline-flex">
+                    <div class="ColText w-8 text-white text-sm font-bold font-['Outfit'] capitalize leading-[18.20px]">#
+                      01</div>
+                    <div
+                      class="ColText grow shrink basis-0 text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                      Deliverble</div>
+                  </div>
+                  <div class="Divider w-[79px] h-px bg-[#d9d9d9]"></div>
+                  <div class="CellGridContent self-stretch justify-center items-center gap-3.5 inline-flex">
+                    <div class="LeftCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          D:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          37</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          S:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          08</div>
+                      </div>
+                    </div>
+                    <div class="RightCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          W:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          80</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          T:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          117</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="CellTask self-stretch h-[72px] px-2.5 py-[5px] flex-col justify-start items-start gap-[5px] flex">
+                <div
+                  class="TaskContent self-stretch h-[62px] p-[5px] bg-[#7e44eb] rounded-md flex-col justify-center items-center gap-[2.50px] flex">
+                  <div class="CellTextContent self-stretch justify-center items-center inline-flex">
+                    <div class="ColText w-8 text-white text-sm font-bold font-['Outfit'] capitalize leading-[18.20px]">#
+                      01</div>
+                    <div
+                      class="ColText grow shrink basis-0 text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                      Deliverble</div>
+                  </div>
+                  <div class="Divider w-[79px] h-px bg-[#d9d9d9]"></div>
+                  <div class="CellGridContent self-stretch justify-center items-center gap-3.5 inline-flex">
+                    <div class="LeftCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          D:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          37</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          S:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          08</div>
+                      </div>
+                    </div>
+                    <div class="RightCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          W:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          80</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          T:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          117</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="CellTask self-stretch h-[72px] px-2.5 py-[5px] flex-col justify-start items-start gap-[5px] flex">
+                <div
+                  class="TaskContent self-stretch h-[62px] p-[5px] bg-[#7e44eb] rounded-md flex-col justify-center items-center gap-[2.50px] flex">
+                  <div class="CellTextContent self-stretch justify-center items-center inline-flex">
+                    <div class="ColText w-8 text-white text-sm font-bold font-['Outfit'] capitalize leading-[18.20px]">#
+                      01</div>
+                    <div
+                      class="ColText grow shrink basis-0 text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                      Deliverble</div>
+                  </div>
+                  <div class="Divider w-[79px] h-px bg-[#d9d9d9]"></div>
+                  <div class="CellGridContent self-stretch justify-center items-center gap-3.5 inline-flex">
+                    <div class="LeftCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          D:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          37</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          S:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          08</div>
+                      </div>
+                    </div>
+                    <div class="RightCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          W:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          80</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          T:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          117</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="CellTask self-stretch h-[72px] px-2.5 py-[5px] flex-col justify-start items-start gap-[5px] flex">
+                <div
+                  class="TaskContent self-stretch h-[62px] p-[5px] bg-[#7e44eb] rounded-md flex-col justify-center items-center gap-[2.50px] flex">
+                  <div class="CellTextContent self-stretch justify-center items-center inline-flex">
+                    <div class="ColText w-8 text-white text-sm font-bold font-['Outfit'] capitalize leading-[18.20px]">#
+                      01</div>
+                    <div
+                      class="ColText grow shrink basis-0 text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                      Deliverble</div>
+                  </div>
+                  <div class="Divider w-[79px] h-px bg-[#d9d9d9]"></div>
+                  <div class="CellGridContent self-stretch justify-center items-center gap-3.5 inline-flex">
+                    <div class="LeftCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          D:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          37</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          S:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          08</div>
+                      </div>
+                    </div>
+                    <div class="RightCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          W:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          80</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          T:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          117</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="ColWTask w-[110.40px] self-stretch py-[5px] border border-white flex-col justify-start items-start inline-flex">
+              <div
+                class="CellBug self-stretch h-[72px] px-2.5 py-[5px] flex-col justify-start items-start gap-[5px] flex">
+                <div
+                  class="TaskContent self-stretch h-[62px] p-[5px] bg-[#ff7c87] rounded-md flex-col justify-center items-center gap-[2.50px] flex">
+                  <div class="CellTextContent self-stretch justify-center items-center inline-flex">
+                    <div class="ColText w-8 text-white text-sm font-bold font-['Outfit'] capitalize leading-[18.20px]">#
+                      01</div>
+                    <div
+                      class="ColText grow shrink basis-0 text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                      bug</div>
+                  </div>
+                  <div class="Divider w-[79px] h-px bg-[#d9d9d9]"></div>
+                  <div class="CellGridContent self-stretch justify-center items-center gap-3.5 inline-flex">
+                    <div class="LeftCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          D:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          37</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          S:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          08</div>
+                      </div>
+                    </div>
+                    <div class="RightCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          W:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          80</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          T:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          117</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="ColWTask w-[110.40px] h-[88px] py-[5px] flex-col justify-start items-start inline-flex">
+              <div
+                class="CellTask self-stretch grow shrink basis-0 px-2.5 py-[5px] flex-col justify-start items-start gap-[5px] flex">
+                <div
+                  class="TaskContent self-stretch h-[62px] p-[5px] bg-[#7e44eb] rounded-md flex-col justify-center items-center gap-[2.50px] flex">
+                  <div class="CellTextContent self-stretch justify-center items-center inline-flex">
+                    <div class="ColText w-8 text-white text-sm font-bold font-['Outfit'] capitalize leading-[18.20px]">#
+                      01</div>
+                    <div
+                      class="ColText grow shrink basis-0 text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                      Deliverble</div>
+                  </div>
+                  <div class="Divider w-[79px] h-px bg-[#d9d9d9]"></div>
+                  <div class="CellGridContent self-stretch justify-center items-center gap-3.5 inline-flex">
+                    <div class="LeftCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          D:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          37</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          S:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          08</div>
+                      </div>
+                    </div>
+                    <div class="RightCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          W:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          80</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          T:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          117</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="ColWTask w-[110.40px] self-stretch py-[5px] border border-white flex-col justify-start items-start inline-flex">
+              <div
+                class="CellStuck self-stretch h-[72px] px-2.5 py-[5px] flex-col justify-start items-start gap-[5px] flex">
+                <div
+                  class="TaskContent self-stretch h-[62px] p-[5px] bg-[#eb221e] rounded-md flex-col justify-center items-center gap-[2.50px] flex">
+                  <div class="CellTextContent self-stretch justify-center items-center inline-flex">
+                    <div class="ColText w-8 text-white text-sm font-bold font-['Outfit'] capitalize leading-[18.20px]">#
+                      01</div>
+                    <div
+                      class="ColText grow shrink basis-0 text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                      Stuck</div>
+                  </div>
+                  <div class="Divider w-[79px] h-px bg-[#d9d9d9]"></div>
+                  <div class="CellGridContent self-stretch justify-center items-center gap-3.5 inline-flex">
+                    <div class="LeftCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          D:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          37</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          S:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          08</div>
+                      </div>
+                    </div>
+                    <div class="RightCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          W:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          80</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          T:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          117</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="CellStuck self-stretch h-[72px] px-2.5 py-[5px] flex-col justify-start items-start gap-[5px] flex">
+                <div
+                  class="TaskContent self-stretch h-[62px] p-[5px] bg-[#eb221e] rounded-md flex-col justify-center items-center gap-[2.50px] flex">
+                  <div class="CellTextContent self-stretch justify-center items-center inline-flex">
+                    <div class="ColText w-8 text-white text-sm font-bold font-['Outfit'] capitalize leading-[18.20px]">#
+                      01</div>
+                    <div
+                      class="ColText grow shrink basis-0 text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                      Stuck</div>
+                  </div>
+                  <div class="Divider w-[79px] h-px bg-[#d9d9d9]"></div>
+                  <div class="CellGridContent self-stretch justify-center items-center gap-3.5 inline-flex">
+                    <div class="LeftCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          D:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          37</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          S:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          08</div>
+                      </div>
+                    </div>
+                    <div class="RightCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          W:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          80</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          T:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          117</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="ColWTask w-[110.40px] self-stretch py-[5px] border border-white flex-col justify-start items-start inline-flex">
+              <div
+                class="CellTask self-stretch h-[72px] px-2.5 py-[5px] flex-col justify-start items-start gap-[5px] flex">
+                <div
+                  class="TaskContent self-stretch h-[62px] p-[5px] bg-[#7e44eb] rounded-md flex-col justify-center items-center gap-[2.50px] flex">
+                  <div class="CellTextContent self-stretch justify-center items-center inline-flex">
+                    <div class="ColText w-8 text-white text-sm font-bold font-['Outfit'] capitalize leading-[18.20px]">#
+                      01</div>
+                    <div
+                      class="ColText grow shrink basis-0 text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                      Deliverble</div>
+                  </div>
+                  <div class="Divider w-[79px] h-px bg-[#d9d9d9]"></div>
+                  <div class="CellGridContent self-stretch justify-center items-center gap-3.5 inline-flex">
+                    <div class="LeftCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          D:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          37</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          S:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          08</div>
+                      </div>
+                    </div>
+                    <div class="RightCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          W:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          80</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          T:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          117</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="CellTask self-stretch h-[72px] px-2.5 py-[5px] flex-col justify-start items-start gap-[5px] flex">
+                <div
+                  class="TaskContent self-stretch h-[62px] p-[5px] bg-[#7e44eb] rounded-md flex-col justify-center items-center gap-[2.50px] flex">
+                  <div class="CellTextContent self-stretch justify-center items-center inline-flex">
+                    <div class="ColText w-8 text-white text-sm font-bold font-['Outfit'] capitalize leading-[18.20px]">#
+                      01</div>
+                    <div
+                      class="ColText grow shrink basis-0 text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                      Deliverble</div>
+                  </div>
+                  <div class="Divider w-[79px] h-px bg-[#d9d9d9]"></div>
+                  <div class="CellGridContent self-stretch justify-center items-center gap-3.5 inline-flex">
+                    <div class="LeftCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          D:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          37</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          S:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          08</div>
+                      </div>
+                    </div>
+                    <div class="RightCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          W:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          80</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          T:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          117</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="ColWTask w-[110.40px] self-stretch py-[5px] border border-white flex-col justify-start items-start inline-flex">
+              <div
+                class="CellBug self-stretch h-[72px] px-2.5 py-[5px] flex-col justify-start items-start gap-[5px] flex">
+                <div
+                  class="TaskContent self-stretch h-[62px] p-[5px] bg-[#ff7c87] rounded-md flex-col justify-center items-center gap-[2.50px] flex">
+                  <div class="CellTextContent self-stretch justify-center items-center inline-flex">
+                    <div class="ColText w-8 text-white text-sm font-bold font-['Outfit'] capitalize leading-[18.20px]">#
+                      01</div>
+                    <div
+                      class="ColText grow shrink basis-0 text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                      bug</div>
+                  </div>
+                  <div class="Divider w-[79px] h-px bg-[#d9d9d9]"></div>
+                  <div class="CellGridContent self-stretch justify-center items-center gap-3.5 inline-flex">
+                    <div class="LeftCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          D:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          37</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          S:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          08</div>
+                      </div>
+                    </div>
+                    <div class="RightCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          W:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          80</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          T:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          117</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="ColWTask w-[110.40px] h-[88px] py-[5px] flex-col justify-start items-start inline-flex">
+              <div
+                class="CellTask self-stretch grow shrink basis-0 px-2.5 py-[5px] flex-col justify-start items-start gap-[5px] flex">
+                <div
+                  class="TaskContent self-stretch h-[62px] p-[5px] bg-[#7e44eb] rounded-md flex-col justify-center items-center gap-[2.50px] flex">
+                  <div class="CellTextContent self-stretch justify-center items-center inline-flex">
+                    <div class="ColText w-8 text-white text-sm font-bold font-['Outfit'] capitalize leading-[18.20px]">#
+                      01</div>
+                    <div
+                      class="ColText grow shrink basis-0 text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                      Deliverble</div>
+                  </div>
+                  <div class="Divider w-[79px] h-px bg-[#d9d9d9]"></div>
+                  <div class="CellGridContent self-stretch justify-center items-center gap-3.5 inline-flex">
+                    <div class="LeftCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          D:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          37</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          S:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          08</div>
+                      </div>
+                    </div>
+                    <div class="RightCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          W:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          80</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          T:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          117</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="ColWTask w-[110.40px] self-stretch py-[5px] border border-white flex-col justify-start items-start inline-flex">
+              <div
+                class="CellStuck self-stretch h-[72px] px-2.5 py-[5px] flex-col justify-start items-start gap-[5px] flex">
+                <div
+                  class="TaskContent self-stretch h-[62px] p-[5px] bg-[#eb221e] rounded-md flex-col justify-center items-center gap-[2.50px] flex">
+                  <div class="CellTextContent self-stretch justify-center items-center inline-flex">
+                    <div class="ColText w-8 text-white text-sm font-bold font-['Outfit'] capitalize leading-[18.20px]">#
+                      01</div>
+                    <div
+                      class="ColText grow shrink basis-0 text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                      Stuck</div>
+                  </div>
+                  <div class="Divider w-[79px] h-px bg-[#d9d9d9]"></div>
+                  <div class="CellGridContent self-stretch justify-center items-center gap-3.5 inline-flex">
+                    <div class="LeftCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          D:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          37</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          S:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          08</div>
+                      </div>
+                    </div>
+                    <div class="RightCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          W:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          80</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          T:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          117</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="CellStuck self-stretch h-[72px] px-2.5 py-[5px] flex-col justify-start items-start gap-[5px] flex">
+                <div
+                  class="TaskContent self-stretch h-[62px] p-[5px] bg-[#eb221e] rounded-md flex-col justify-center items-center gap-[2.50px] flex">
+                  <div class="CellTextContent self-stretch justify-center items-center inline-flex">
+                    <div class="ColText w-8 text-white text-sm font-bold font-['Outfit'] capitalize leading-[18.20px]">#
+                      01</div>
+                    <div
+                      class="ColText grow shrink basis-0 text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                      Stuck</div>
+                  </div>
+                  <div class="Divider w-[79px] h-px bg-[#d9d9d9]"></div>
+                  <div class="CellGridContent self-stretch justify-center items-center gap-3.5 inline-flex">
+                    <div class="LeftCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          D:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          37</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          S:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          08</div>
+                      </div>
+                    </div>
+                    <div class="RightCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          W:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          80</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          T:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          117</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="ColWTask w-[110.40px] self-stretch py-[5px] border border-white flex-col justify-start items-start inline-flex">
+              <div
+                class="CellTask self-stretch h-[72px] px-2.5 py-[5px] flex-col justify-start items-start gap-[5px] flex">
+                <div
+                  class="TaskContent self-stretch h-[62px] p-[5px] bg-[#7e44eb] rounded-md flex-col justify-center items-center gap-[2.50px] flex">
+                  <div class="CellTextContent self-stretch justify-center items-center inline-flex">
+                    <div class="ColText w-8 text-white text-sm font-bold font-['Outfit'] capitalize leading-[18.20px]">#
+                      01</div>
+                    <div
+                      class="ColText grow shrink basis-0 text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                      Deliverble</div>
+                  </div>
+                  <div class="Divider w-[79px] h-px bg-[#d9d9d9]"></div>
+                  <div class="CellGridContent self-stretch justify-center items-center gap-3.5 inline-flex">
+                    <div class="LeftCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          D:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          37</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          S:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          08</div>
+                      </div>
+                    </div>
+                    <div class="RightCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          W:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          80</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          T:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          117</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="CellTask self-stretch h-[72px] px-2.5 py-[5px] flex-col justify-start items-start gap-[5px] flex">
+                <div
+                  class="TaskContent self-stretch h-[62px] p-[5px] bg-[#7e44eb] rounded-md flex-col justify-center items-center gap-[2.50px] flex">
+                  <div class="CellTextContent self-stretch justify-center items-center inline-flex">
+                    <div class="ColText w-8 text-white text-sm font-bold font-['Outfit'] capitalize leading-[18.20px]">#
+                      01</div>
+                    <div
+                      class="ColText grow shrink basis-0 text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                      Deliverble</div>
+                  </div>
+                  <div class="Divider w-[79px] h-px bg-[#d9d9d9]"></div>
+                  <div class="CellGridContent self-stretch justify-center items-center gap-3.5 inline-flex">
+                    <div class="LeftCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          D:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          37</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          S:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          08</div>
+                      </div>
+                    </div>
+                    <div class="RightCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          W:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          80</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          T:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          117</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="ColWTask w-[110.40px] self-stretch py-[5px] border border-white flex-col justify-start items-start inline-flex">
+              <div
+                class="CellTask self-stretch h-[72px] px-2.5 py-[5px] flex-col justify-start items-start gap-[5px] flex">
+                <div
+                  class="TaskContent self-stretch h-[62px] p-[5px] bg-[#7e44eb] rounded-md flex-col justify-center items-center gap-[2.50px] flex">
+                  <div class="CellTextContent self-stretch justify-center items-center inline-flex">
+                    <div class="ColText w-8 text-white text-sm font-bold font-['Outfit'] capitalize leading-[18.20px]">#
+                      01</div>
+                    <div
+                      class="ColText grow shrink basis-0 text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                      Deliverble</div>
+                  </div>
+                  <div class="Divider w-[79px] h-px bg-[#d9d9d9]"></div>
+                  <div class="CellGridContent self-stretch justify-center items-center gap-3.5 inline-flex">
+                    <div class="LeftCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          D:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          37</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          S:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          08</div>
+                      </div>
+                    </div>
+                    <div class="RightCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          W:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          80</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          T:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          117</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="CellTask self-stretch h-[72px] px-2.5 py-[5px] flex-col justify-start items-start gap-[5px] flex">
+                <div
+                  class="TaskContent self-stretch h-[62px] p-[5px] bg-[#7e44eb] rounded-md flex-col justify-center items-center gap-[2.50px] flex">
+                  <div class="CellTextContent self-stretch justify-center items-center inline-flex">
+                    <div class="ColText w-8 text-white text-sm font-bold font-['Outfit'] capitalize leading-[18.20px]">#
+                      01</div>
+                    <div
+                      class="ColText grow shrink basis-0 text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                      Deliverble</div>
+                  </div>
+                  <div class="Divider w-[79px] h-px bg-[#d9d9d9]"></div>
+                  <div class="CellGridContent self-stretch justify-center items-center gap-3.5 inline-flex">
+                    <div class="LeftCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          D:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          37</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          S:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          08</div>
+                      </div>
+                    </div>
+                    <div class="RightCol flex-col justify-start items-start gap-0.5 inline-flex">
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          W:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          80</div>
+                      </div>
+                      <div class="Row w-[34px] justify-between items-center inline-flex">
+                        <div class="ColText text-white text-[10px] font-bold font-['Outfit'] capitalize leading-[13px]">
+                          T:</div>
+                        <div
+                          class="BufferWip text-white text-[10px] font-normal font-['Inter'] capitalize leading-[13px]">
+                          117</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="BgCircles h-[600px] pr-[568px] justify-start items-center inline-flex">
+      <div class="Ellipse1 w-[600px] h-[600px] bg-[#7e44eb]/90 rounded-full blur-[300px]"></div>
+    </div>
+    <div class="Footer self-stretch h-[11px] flex-col justify-end items-center gap-2.5 flex">
+      <div class="Rectangle1 self-stretch h-[11px] bg-gradient-to-r from-[#7e44eb] to-[#ff7c87]"></div>
+    </div>
+  </div>
+</body>
+
+</html>
