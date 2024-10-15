@@ -17,6 +17,8 @@ public class MonteCarloSimulation : IMonteCarloSimulation
     public DateTime NewDate { get; set; }
     public bool IsCompleted { get; set; }
     public Guid SimulationId { get; set; }
+    public Dictionary<ColumnModel, List<DeliverableModel>> ColumnDeliverables { get; set; }
+    public List<DeliverableModel> DeliverablesCopy { get; set; }
 
     private int _simulationCount;
 
@@ -24,6 +26,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
     public void InitiateAndRunSimulation(ProjectSimulationModel projectSimulationModel,
                                 int simulationCount, Guid simulationId)
     {
+        IsCompleted = false;
         SimulationId = simulationId;
         ProjectSimulationModel = projectSimulationModel;
         _simulationCount = simulationCount;
@@ -77,6 +80,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
         Simulations = simulationListofList;
         var averageTotalDays = simulationDays.Average();
         NewDate = startDate.AddDays(averageTotalDays);
+        IsCompleted = true;
     }
 
     private static List<DeliverableModel> RunSimulation(BacklogModel backlog,
@@ -824,5 +828,220 @@ public class MonteCarloSimulation : IMonteCarloSimulation
     public IMonteCarloSimulation GetSimulationInstance()
     {
         return new MonteCarloSimulation();
+    }
+
+    public List<DeliverableModel> RunSimulationStep(ProjectSimulationModel projectSimulationModel, int currentDay)
+    {
+        var simulationList = new List<DeliverableModel>();
+
+        if (ColumnDeliverables.Any(kvp => kvp.Value.Count > 0))
+        {
+            simulationList = MonteCarloSimulation.RunStepSlowSimulation(projectSimulationModel.Backlog, DeliverablesCopy, projectSimulationModel.Columns, currentDay, ColumnDeliverables);
+            return simulationList;
+        }
+        IsCompleted = true;
+        return simulationList;
+    }
+
+
+    private static List<DeliverableModel> RunStepSlowSimulation(
+                                      BacklogModel backlog,
+                                      List<DeliverableModel> deliverablesCopy,
+                                      List<ColumnModel> columns,
+                                      int currentDay,
+                                      Dictionary<ColumnModel, List<DeliverableModel>> columnDeliverables
+                                      )
+    {
+
+        // Increment the current day for each iteration
+        double currentSimDay = currentDay;
+        const int developersHelping = 1;
+        int originalTestingProdWIP = columns.First(c => c.Name == "Rdy4TestProd").WIP;
+        int originalTestingDevWIP = columns.First(c => c.Name == "Test Stage").WIP;
+        int originalDevelopersWIP = columns.First(c => c.Name == "In Progress").WIP;
+
+        // While there are deliverables in the system
+        if (columnDeliverables.Any(kvp => kvp.Value.Count > 0))
+        {
+            foreach (var column in columns)
+            {
+                var wipQueue = columnDeliverables[column];
+                var wipStack = new List<DeliverableModel>();
+
+                var backlogColumn = columns.FirstOrDefault(c => c.Name == "Backlog");
+                var openColumn = columns.FirstOrDefault(c => c.Name == "Open");
+                var testingProdColumn = columns.FirstOrDefault(c => c.Name == "Rdy4TestProd");
+                var testingDevColumn = columns.FirstOrDefault(c => c.Name == "Test Stage");
+                var developerColumn = columns.FirstOrDefault(c => c.Name == "In Progress");
+
+                // Check if the "Ready for Test Stage" column is full
+                // if so allocate developers to help testing
+                var readyForTestDevColumn = columns.FirstOrDefault(c => c.Name == "Rdy4Test");
+                if (readyForTestDevColumn != null
+                    && IsBottleneck(readyForTestDevColumn, columnDeliverables[readyForTestDevColumn])
+                    && testingDevColumn?.WIP <= testingDevColumn?.WIPMax
+                    )
+                {
+                    ReallocateWIP(developersHelping, testingDevColumn, developerColumn);
+                }
+
+
+                // Check if the "Ready for Test on Prod" column is full
+                // if so allocate developers to help testing
+                var readyForTestProdColumn = columns.FirstOrDefault(c => c.Name == "Await Dply Prod");
+                if (readyForTestProdColumn != null
+                    && IsBottleneck(readyForTestProdColumn, columnDeliverables[readyForTestProdColumn])
+                    && testingProdColumn?.WIP <= testingProdColumn?.WIPMax
+                    )
+                {
+                    ReallocateWIP(developersHelping, testingProdColumn, developerColumn);
+                }
+
+                // We use a new list to keep track of deliverables to move to next column
+                var deliverablesToMove = new List<DeliverableModel>();
+
+                // Calculate the deliverable completion day and add to list 
+                CalculateDeliverableCompletionDayANDAddToList(backlog, currentSimDay, column, wipQueue, wipStack, deliverablesToMove);
+
+                // Check how many are working on the deliverable in columns and add a day to the ones that are postponed for the next day.
+                if (column.WIP < wipQueue.Count)
+                {
+                    for (var i = 0; i < column.WIP; ++i)
+                    {
+                        wipQueue[i].CompletionDays += 1;
+                        wipQueue[i].StoppedWorkingTime += 1;
+                    }
+                }
+
+                // Move deliverables to the next column if possible
+                MoveDeliverablesToNextColumnIfPossible(columns, columnDeliverables, currentSimDay, column, wipQueue, wipStack, deliverablesToMove);
+
+                var devStack = columnDeliverables[developerColumn].Count;
+
+                // Check if the "Ready for Test Stage" column is NOT full anymore and give back WIP
+                if (readyForTestDevColumn != null
+                    && !IsBottleneck(readyForTestDevColumn, columnDeliverables[readyForTestDevColumn])
+                    && testingDevColumn?.WIP <= testingDevColumn?.WIPMax
+                    && devStack != 0
+                    )
+                {
+                    ReallocateWIP(developersHelping, developerColumn, testingDevColumn);
+                }
+
+                // Check if the "Ready for Test on Prod" column is NOT full anymore and give back WIP
+                if (readyForTestProdColumn != null
+                    && !IsBottleneck(readyForTestProdColumn, columnDeliverables[readyForTestProdColumn])
+                    && testingProdColumn?.WIP <= testingProdColumn?.WIPMax
+                    && devStack != 0
+                    )
+                {
+                    ReallocateWIP(developersHelping, developerColumn, testingProdColumn);
+                }
+
+                var testDevStack = columnDeliverables[testingDevColumn].Count;
+                var rdyForTestDevStack = columnDeliverables[readyForTestDevColumn].Count;
+                var backlogStack = columnDeliverables[backlogColumn].Count;
+                var openStack = columnDeliverables[openColumn].Count;
+                var testProdStack = columnDeliverables[testingProdColumn].Count;
+
+                // if Testing on Stage is not doing any work, reallocate back
+                if (testDevStack < testingDevColumn.WIP && devStack != 0)
+                {
+                    ReallocateWIP(developersHelping, developerColumn, testingDevColumn);
+                }
+
+                // if Testing on Prod is not doing any work, reallocate back
+                if (testProdStack < testingProdColumn.WIP && devStack != 0)
+                {
+                    ReallocateWIP(developersHelping, developerColumn, testingProdColumn);
+                }
+
+                // if Testing on Stage is not doing any work, reallocate back
+                if (testDevStack < testingDevColumn.WIP && devStack == 0 && openStack > 0)
+                {
+                    ReallocateWIP(developersHelping, developerColumn, testingDevColumn);
+                }
+
+                // if Testing on Prod is not doing any work, reallocate back
+                if (testProdStack < testingProdColumn.WIP && devStack == 0 && openStack > 0)
+                {
+                    ReallocateWIP(developersHelping, developerColumn, testingProdColumn);
+                }
+
+                // if there is no work "In Progress" reallocate to test on stage
+                if (devStack == 0 && rdyForTestDevStack > 0 && backlogStack == 0 && currentSimDay > 20)
+                {
+                    ReallocateWIP(developersHelping, testingDevColumn, developerColumn);
+                }
+
+                // if there is no work "In Progress" and no work in "Test Stage" reallocate to test prod
+                if (devStack == 0 && testDevStack == 0 && rdyForTestDevStack == 0 && backlogStack == 0 && currentSimDay > 20)
+                {
+                    ReallocateWIP(developersHelping, testingProdColumn, testingDevColumn);
+                }
+            }
+            var orderdedByAccumulated = deliverablesCopy.OrderBy(d => d.AccumulatedDays).ToList();
+            return orderdedByAccumulated;
+        }
+
+        return deliverablesCopy;
+    }
+
+    public void InitiateSimulation(ProjectSimulationModel projectSimulationModel, Guid simulationId)
+    {
+        IsCompleted = false;
+        SimulationId = simulationId;
+        ProjectSimulationModel = projectSimulationModel;
+        var staff = projectSimulationModel.Staff;
+        var startDate = projectSimulationModel.StartDate;
+        var targetDate = projectSimulationModel.TargetDate;
+        var revenue = projectSimulationModel.Revenue;
+        var cost = projectSimulationModel.Costs;
+        var backlog = projectSimulationModel.Backlog;
+        var columns = projectSimulationModel.Columns;
+
+        ValidateProps(staff, revenue, cost, projectSimulationModel.Backlog);
+
+        var totalDays = (targetDate - startDate).TotalDays;
+
+        var totalRevenue = 0.0;
+        var totalCost = 0.0;
+        for (var i = 0; i < staff?.Count; i++)
+        {
+            var staffMember = staff[i];
+            var staffDays = staffMember.Days;
+            var staffRevenue = staffMember.Sale * staffDays;
+            var staffCost = staffMember.Cost * staffDays;
+            totalRevenue += staffRevenue;
+            totalCost += staffCost;
+        }
+        var estimatedRevenuePerDay = revenue.Amount / totalDays;
+        var estimatedCostPerDay = cost.Cost / totalDays;
+
+
+        var simulationList = new List<DeliverableModel>();
+        // Simulation logic
+        // For each deliverable, simulate the probability of 
+        // completion for each column holding the contrains of 
+        // the WIPs in each column
+
+        DeliverablesCopy = projectSimulationModel.Backlog.Deliverables.Select(d => new DeliverableModel
+        {
+            Id = d.Id,
+            Nr = d.Nr,
+            CompletionDays = d.CompletionDays,
+            AccumulatedDays = d.AccumulatedDays
+        }).ToList();
+
+
+        // List of deliverables in each column
+        ColumnDeliverables = columns.ToDictionary(c => c, c => new List<DeliverableModel>());
+
+        // Initialize deliverables
+        foreach (var deliverable in DeliverablesCopy)
+        {
+            var firstColumn = columns.First();
+            ColumnDeliverables[firstColumn].Add(deliverable);
+        }
     }
 }
