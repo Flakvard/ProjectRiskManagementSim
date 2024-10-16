@@ -38,6 +38,15 @@ public static class PageRoutes
             return Results.Json(new { status = "Simulation Started" });
         });
 
+        app.MapPost("/reset-simulation", (RunSimulationHandler simulationHandler) =>
+        {
+            // Call the ResetSimulation method to reset the state
+            simulationHandler.ResetSimulation();
+
+            // Return a status message
+            return Results.Ok(new { message = "Simulation has been reset successfully." });
+        });
+
         app.MapGet("/update-kanban-board", (HttpContext context, [FromServices] RunSimulationHandler handler) =>
         {
             // Simulate fetching the updated deliverables and columns for the Kanban board.
