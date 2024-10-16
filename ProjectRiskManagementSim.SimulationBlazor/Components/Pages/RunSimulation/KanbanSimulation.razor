@@ -4,51 +4,42 @@
 @using ProjectRiskManagementSim.ProjectSimulation.Interfaces;
 @using ProjectRiskManagementSim.SimulationBlazor.Components.Pages.RunSimulation;
 @inject RunSimulationHandler runSimulationHandler
-<div hx-get="/kanban-simulation" hx-trigger="every 1s" hx-target="this" hx-swap="innerHTML">
 <div>
-    <h3>Kanban Board Simulation - Day @runSimulationHandler.currentDay</h3>
-
-   
-        <table class="table table-bordered w-full">
-            <thead>
-                <tr>
-                    @foreach (var column in runSimulationHandler.columns)
-                    {
-                        <th class="text-left">@column.Name (WIP: @column.WIP)</th>
-                    }
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="align-top">
-                    @foreach (var column in runSimulationHandler.columns)
-                    {
-                        <td class="align-top p-4 items-start">
-                            <div class="flex flex-col items-start space-y-2">
-                                @foreach (var deliverable in runSimulationHandler.columnDeliverables[column])
-                                {
-                                    <div class="border-b pb-2 mb-2">
-                                        <strong>Task: @deliverable.Nr</strong><br />
-                                        Completion Days: @deliverable.CompletionDays<br />
-                                        Wait Time: @deliverable.WaitTime<br />
-                                        Stopped Time: @deliverable.StoppedWorkingTime
-                                    </div>
-                                }
-                            </div>
-                        </td>
-                    }
-                </tr>
-            </tbody>
-        </table>
-
-    </div>
-
-    @if (!runSimulationHandler.simulationRunning)
-    {
-        <button hx-get="/running-simulation" hx-trigger="click" class="btn btn-primary">Start Simulation</button>
-    }
-    else
-    {
-        <p>Simulation is running...</p>
-    }
+  <h3 class="text-white border border-white w-full p-2">Kanban Board Simulation - Day
+    @runSimulationHandler.currentDay</h3>
+  <div class="Runsimulation h-full flex-col justify-start items-start gap-2.5 inline-flex">
+    <table class="min-w-full table-auto border-collapse border border-white">
+      <thead class="bg-[#ffb4ba]/50">
+        <tr>
+          @foreach (var column in runSimulationHandler.columns)
+          {
+          <th class="border border-white p-4 text-white text-base font-extrabold font-['Outfit']">@column.Name
+            (WIP: @column.WIP)
+            (WIPMax: @column.WIPMax)
+          </th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="align-top">
+          @foreach (var column in runSimulationHandler.columns)
+          {
+          <td class="border border-white align-top p-2">
+            <div class="flex flex-col gap-2">
+              @foreach (var deliverable in runSimulationHandler.columnDeliverables[column])
+              {
+              <div class="bg-[#7e44eb] w-f h-f p-2 text-white">
+                <strong>Task: @deliverable.Nr</strong><br />
+                Completion Days: @Math.Round(deliverable.CompletionDays)<br />
+                Wait Time: @Math.Round(deliverable.WaitTime)<br />
+                Stopped Time: @Math.Round(deliverable.StoppedWorkingTime)
+              </div>
+              }
+            </div>
+          </td>
+          }
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
-

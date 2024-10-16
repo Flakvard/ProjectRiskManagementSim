@@ -1,38 +1,71 @@
 @using ProjectRiskManagementSim.SimulationBlazor.Components.Layout
-@using ProjectRiskManagementSim.SimulationBlazor.Lib;
+@using ProjectRiskManagementSim.SimulationBlazor.Lib
+@using ProjectRiskManagementSim.SimulationBlazor.Models
+@using ProjectRiskManagementSim.ProjectSimulation.Interfaces;
+@using ProjectRiskManagementSim.SimulationBlazor.Components.Pages.RunSimulation;
 @page "/run-simulation"
+@inject RunSimulationHandler runSimulationHandler
+<div>
 
-<div class="Runsimulation h-[837px] flex-col justify-start items-start gap-2.5 inline-flex">
-  <table class="min-w-full table-auto border-collapse border border-white">
-    <thead class="bg-[#ffb4ba]/50">
-      <tr>
-        <th class="border border-white p-4 text-white text-base font-extrabold font-['Outfit']">Backlog</th>
-        <th class="border border-white p-4 text-white text-base font-extrabold font-['Outfit']">Open</th>
-        <th class="border border-white p-4 text-white text-base font-extrabold font-['Outfit']">In Progress</th>
-        <th class="border border-white p-4 text-white text-base font-extrabold font-['Outfit']">Stuck</th>
-        <th class="border border-white p-4 text-white text-base font-extrabold font-['Outfit']">Finished</th>
-        <th class="border border-white p-4 text-white text-base font-extrabold font-['Outfit']">Ready to Test (Stage)
-        </th>
-        <th class="border border-white p-4 text-white text-base font-extrabold font-['Outfit']">Testing (Stage)</th>
-        <th class="border border-white p-4 text-white text-base font-extrabold font-['Outfit']">Awaiting Deployment</th>
-        <th class="border border-white p-4 text-white text-base font-extrabold font-['Outfit']">Ready to Test (Prod)
-        </th>
-        <th class="border border-white p-4 text-white text-base font-extrabold font-['Outfit']">Done</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="border border-white p-2 text-white">test</td>
-        <td class="border border-white p-2 text-white">test</td>
-        <td class="border border-white p-2 text-white">test</td>
-        <td class="border border-white p-2 text-white">test</td>
-        <td class="border border-white p-2 text-white">test</td>
-        <td class="border border-white p-2 text-white">test</td>
-        <td class="border border-white p-2 text-white">test</td>
-        <td class="border border-white p-2 text-white">test</td>
-        <td class="border border-white p-2 text-white">test</td>
-        <td class="border border-white p-2 text-white">test</td>
-      </tr>
-    </tbody>
-  </table>
+  @if (!runSimulationHandler.simulationRunning)
+  {
+  <div class="flex flex-row gap-2">
+    <div class="bg-[#7e44eb] rounded-md w-fit p-2">
+      <button hx-get="/running-simulation" hx-trigger="click" class="btn text-white">Start Simulation</button>
+    </div>
+    <div class="bg-[#7e44eb] rounded-md w-fit p-2">
+      <button hx-post="/Reset-Simulation" hx-swap="none" hx-trigger="click" class="btn text-white">Reset
+        Simulation</button>
+    </div>
+  </div>
+  }
+  else
+  {
+  <div class="bg-[#7e44eb] rounded-md">
+    <p>Simulation is running...</p>
+  </div>
+  }
+  <div class="overflow-auto">
+    <div hx-get="/kanban-simulation" hx-trigger="every 100ms" hx-target="this" hx-swap="innerHTML">
+      <div>
+        <h3 class="text-white border border-white w-full p-2">Kanban Board Simulation - Day
+          @runSimulationHandler.currentDay</h3>
+        <div class="Runsimulation h-full flex-col justify-start items-start gap-2.5 inline-flex">
+          <table class="min-w-full table-auto border-collapse border border-white">
+            <thead class="bg-[#ffb4ba]/50">
+              <tr>
+                @foreach (var column in runSimulationHandler.columns)
+                {
+                <th class="border border-white p-4 text-white text-base font-extrabold font-['Outfit']">@column.Name
+                  (WIP: @column.WIP)
+                  (WIPMax: @column.WIPMax)
+                </th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="align-top">
+                @foreach (var column in runSimulationHandler.columns)
+                {
+                <td class="border border-white align-top p-2">
+                  <div class="flex flex-col gap-2">
+                    @foreach (var deliverable in runSimulationHandler.columnDeliverables[column])
+                    {
+                    <div class="bg-[#7e44eb] w-f h-f p-2 text-white">
+                      <strong>Task: @deliverable.Nr</strong><br />
+                      Completion Days: @Math.Round(deliverable.CompletionDays)<br />
+                      Wait Time: @Math.Round(deliverable.WaitTime)<br />
+                      Stopped Time: @Math.Round(deliverable.StoppedWorkingTime)
+                    </div>
+                    }
+                  </div>
+                </td>
+                }
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
