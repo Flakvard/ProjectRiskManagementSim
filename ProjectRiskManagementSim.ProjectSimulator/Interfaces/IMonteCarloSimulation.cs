@@ -19,6 +19,6 @@ public interface IMonteCarloSimulation
     public void PrintSimulationResults(ProjectSimulationModel projectSimulationModel, int simulationCount);
     public void InitiateAndRunSimulation(ProjectSimulationModel projectSimulationModel, int simulationCount, Guid simulationId);
     public IMonteCarloSimulation GetSimulationInstance();
-    public List<DeliverableModel> RunSimulationStep(ProjectSimulationModel projectSimulationModel, int currentDay);
+    public (List<ColumnModel>, List<DeliverableModel>) RunSimulationStep(ProjectSimulationModel projectSimulationModel, int currentDay);
     public void InitiateSimulation(ProjectSimulationModel projectSimulationModel, Guid simulationId);
 }

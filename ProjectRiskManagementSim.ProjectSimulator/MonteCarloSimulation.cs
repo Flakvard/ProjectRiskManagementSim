@@ -830,17 +830,17 @@ public class MonteCarloSimulation : IMonteCarloSimulation
         return new MonteCarloSimulation();
     }
 
-    public List<DeliverableModel> RunSimulationStep(ProjectSimulationModel projectSimulationModel, int currentDay)
+    public (List<ColumnModel>, List<DeliverableModel>) RunSimulationStep(ProjectSimulationModel projectSimulationModel, int currentDay)
     {
         var simulationList = new List<DeliverableModel>();
 
         if (ColumnDeliverables.Any(kvp => kvp.Value.Count > 0))
         {
             simulationList = MonteCarloSimulation.RunStepSlowSimulation(projectSimulationModel.Backlog, DeliverablesCopy, projectSimulationModel.Columns, currentDay, ColumnDeliverables);
-            return simulationList;
+            return (ProjectSimulationModel.Columns, simulationList);
         }
         IsCompleted = true;
-        return simulationList;
+        return (ProjectSimulationModel.Columns, simulationList);
     }
 
 
