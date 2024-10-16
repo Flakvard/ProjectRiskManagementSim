@@ -39,13 +39,16 @@ public class RunSimulationHandler
             currentDay++;
 
             // Simulate one step of the Monte Carlo Simulation
-            var updatedDeliverables = MCS.RunSimulationStep(MCS.ProjectSimulationModel, currentDay);
+            (var updatedColumns, var updatedDeliverables) = MCS.RunSimulationStep(MCS.ProjectSimulationModel, currentDay);
             var mappedUpdatedDeliverables = updatedDeliverables
                 .Select(ModelMapper.MapToBlazorDeliverableModel)
                 .ToList();
+            var mappedUpdatedColumns = updatedColumns
+                .Select(ModelMapper.MapToBlazorColumnModel)
+                .ToList();
 
             // Update the UI
-            UpdateBoard(mappedUpdatedDeliverables);
+            UpdateBoard(mappedUpdatedColumns, mappedUpdatedDeliverables);
 
             // Simulate delay between steps (like Thread.Sleep in console)
             await Task.Delay(100);
@@ -54,8 +57,22 @@ public class RunSimulationHandler
         simulationRunning = false;
     }
 
-    private void UpdateBoard(List<DeliverableModel> updatedDeliverables)
+    private void UpdateBoard(List<ColumnModel> mappedUpdatedColumns, List<DeliverableModel> updatedDeliverables)
     {
+        // Update the columns
+        foreach (var column in mappedUpdatedColumns)
+        {
+            var existingColumn = columns.FirstOrDefault(c => c.Name == column.Name);
+            if (existingColumn != null)
+            {
+                existingColumn.EstimatedLowBound = column.EstimatedLowBound;
+                existingColumn.EstimatedHighBound = column.EstimatedHighBound;
+                existingColumn.WIP = column.WIP;
+                existingColumn.WIPMax = column.WIPMax;
+                existingColumn.IsBuffer = column.IsBuffer;
+            }
+        }
+
         // Clear only the deliverables inside the columns, not the columns themselves
         foreach (var column in columns)
         {
@@ -71,5 +88,29 @@ public class RunSimulationHandler
                 columnDeliverables[columns[columnIndex]].Add(deliverable);
             }
         }
+    }
+    public void ResetSimulation()
+    {
+        // Reset the current day
+        currentDay = 0;
+
+        // Fetch the simulation from the simulation manager again (or reset if applicable)
+        MCS = SimulationManager.GetFirstSimulation();
+
+        // Reset columns
+        columns = MCS.ProjectSimulationModel.Columns
+            .Select(ModelMapper.MapToBlazorColumnModel)
+            .ToList();
+
+        // Reset deliverables
+        deliverables = MCS.ProjectSimulationModel.Backlog.Deliverables
+            .Select(ModelMapper.MapToBlazorDeliverableModel)
+            .ToList();
+
+        // Clear the column deliverables
+        columnDeliverables = columns.ToDictionary(c => c, c => new List<DeliverableModel>());
+
+        // Reset the simulationRunning state
+        simulationRunning = false;
     }
 }
