@@ -39,6 +39,7 @@ public static class ModelMapper
                 EstimatedLowBound = c.EstimatedLowBound,
                 EstimatedHighBound = c.EstimatedHighBound,
                 WIP = c.WIP,
+                WIPMax = c.WIPMax,
                 IsBuffer = c.IsBuffer
             }).ToList()
         };
@@ -140,6 +141,7 @@ public static class ModelMapper
                 EstimatedLowBound = c.EstimatedLowBound,
                 EstimatedHighBound = c.EstimatedHighBound,
                 WIP = c.WIP,
+                WIPMax = c.WIPMax,
                 IsBuffer = c.IsBuffer
             }).ToList()
         };
