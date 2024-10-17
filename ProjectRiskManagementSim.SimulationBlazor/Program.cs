@@ -14,9 +14,27 @@ builder.Services
     //.AddInteractiveServerComponents()
     .AddHtmx();
 
-// Dependency Injection
-builder.Services.AddSingleton<IMonteCarloSimulation, MonteCarloSimulation>();
-builder.Services.AddSingleton<RunSimulationHandler>();
+// Register as Scoped or Transient depending on how you want the lifecycle to work
+builder.Services.AddScoped<SimulationManager>();
+builder.Services.AddScoped<IMonteCarloSimulation, MonteCarloSimulation>();
+builder.Services.AddScoped<RunSimulationHandler>(); // Register RunSimulationHandler
+
+// Dictionary to store handlers per simulationId
+builder.Services.AddSingleton<IDictionary<Guid, RunSimulationHandler>>(new Dictionary<Guid, RunSimulationHandler>());
+builder.Services.AddScoped<Func<Guid, RunSimulationHandler>>(serviceProvider =>
+{
+    var handlers = serviceProvider.GetRequiredService<IDictionary<Guid, RunSimulationHandler>>();
+    return simulationId =>
+    {
+        if (!handlers.TryGetValue(simulationId, out var handler))
+        {
+            handler = ActivatorUtilities.CreateInstance<RunSimulationHandler>(serviceProvider);
+            handler.SetSimulationId(simulationId);
+            handlers[simulationId] = handler;
+        }
+        return handler;
+    };
+});
 
 var app = builder.Build();
 
@@ -30,9 +48,6 @@ if (!app.Environment.IsDevelopment())
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    // Initiate the database with a SimulationManager instance
-    IMonteCarloSimulation monteCarloSimulation = new MonteCarloSimulation();
-    SimulationManager.InitSimulationsFromDb(monteCarloSimulation);
 }
 
 app.UseHttpsRedirection();

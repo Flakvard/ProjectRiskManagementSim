@@ -28,23 +28,33 @@ public static class PageRoutes
         app.MapGet("/run-simulation",
             () => new RazorComponentResult<RunSimulation>());
 
-        app.MapGet("/running-simulation", async ([FromServices] RunSimulationHandler handler) =>
+        app.MapGet("/running-simulation/{simulationId:guid}", async (Guid simulationId, [FromServices] Func<Guid, RunSimulationHandler> handlerFactory) =>
         {
+            var handler = handlerFactory(simulationId);
             if (!handler.simulationRunning)
             {
                 await handler.StartSimulation();
             }
 
-            return Results.Json(new { status = "Simulation Started" });
+            return Results.Json(new { status = "Simulation Started", id = simulationId });
         });
 
-        app.MapPost("/reset-simulation", (RunSimulationHandler simulationHandler) =>
+        app.MapGet("/kanban-simulation/{simulationId:guid}", async (Guid simulationId, [FromServices] Func<Guid, RunSimulationHandler> handlerFactory) =>
         {
-            // Call the ResetSimulation method to reset the state
-            simulationHandler.ResetSimulation();
+            var handler = handlerFactory(simulationId);
+            return Results.Json(new
+            {
+                status = "Kanban Updated",
+                currentDay = handler.currentDay,
+                columns = handler.columns,
+                deliverables = handler.columnDeliverables
+            });
+        });
 
-            // Return a status message
-            return Results.Ok(new { message = "Simulation has been reset successfully." });
+        app.MapPost("/reset-simulation/{simulationId:guid}", ([FromServices] RunSimulationHandler handler, Guid simulationId) =>
+        {
+            handler.ResetSimulation(); // Reset the specific simulation
+            return Results.Json(new { status = "Simulation has been reset successfully.", id = simulationId });
         });
 
         app.MapGet("/update-kanban-board", (HttpContext context, [FromServices] RunSimulationHandler handler) =>

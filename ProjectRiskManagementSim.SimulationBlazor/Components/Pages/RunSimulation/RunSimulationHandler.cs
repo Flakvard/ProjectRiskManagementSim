@@ -12,22 +12,37 @@ public class RunSimulationHandler
     public Dictionary<ColumnModel, List<DeliverableModel>> columnDeliverables { get; set; }
     public int currentDay { get; set; } = 0;
     public bool simulationRunning { get; set; } = false;
+    private SimulationManager _simulationManager { get; set; }
+    public Guid SimulationId { get; private set; }
 
-    public RunSimulationHandler()
+    // Inject SimulationManager via constructor
+    public RunSimulationHandler(SimulationManager simulationManager)
+    {
+        _simulationManager = simulationManager;
+        SimulationId = Guid.NewGuid(); // Generate a new ID for each instance
+        InitializeSimulation();
+    }
+
+    public void SetSimulationId(Guid id)
+    {
+        SimulationId = id;
+        InitializeSimulation();
+    }
+
+    private void InitializeSimulation()
     {
         // Initialize from the Monte Carlo simulation, this is shared throughout the simulation
-        MCS = SimulationManager.GetFirstSimulation();
+        MCS = _simulationManager.GetFirstSimulation(SimulationId); // Pass the simulation ID to get the unique simulation instance
         columns = MCS.ProjectSimulationModel.Columns
             .Select(ModelMapper.MapToBlazorColumnModel)
             .ToList();
-
         deliverables = MCS.ProjectSimulationModel.Backlog.Deliverables
-            .Select(ModelMapper.MapToBlazorDeliverableModel)
-            .ToList();
-
+          .Select(ModelMapper.MapToBlazorDeliverableModel)
+          .ToList();
         // Initialize columnDeliverables as empty for now
         columnDeliverables = columns.ToDictionary(c => c, c => new List<DeliverableModel>());
     }
+
 
     public async Task StartSimulation()
     {
@@ -95,7 +110,7 @@ public class RunSimulationHandler
         currentDay = 0;
 
         // Fetch the simulation from the simulation manager again (or reset if applicable)
-        MCS = SimulationManager.GetFirstSimulation();
+        MCS = _simulationManager.GetFirstSimulation(SimulationId);
 
         // Reset columns
         columns = MCS.ProjectSimulationModel.Columns
