@@ -110,19 +110,17 @@ public class RunSimulationHandler
         currentDay = 0;
 
         // Fetch the simulation from the simulation manager again (or reset if applicable)
-        MCS = _simulationManager.GetFirstSimulation(SimulationId);
+        //MCS = _simulationManager.GetFirstSimulation(SimulationId);
+        MCS.ResetSimulation();
 
-        // Reset columns
+        // Reset columns & deliverables
         columns = MCS.ProjectSimulationModel.Columns
-            .Select(ModelMapper.MapToBlazorColumnModel)
-            .ToList();
-
-        // Reset deliverables
+          .Select(ModelMapper.MapToBlazorColumnModel)
+          .ToList();
         deliverables = MCS.ProjectSimulationModel.Backlog.Deliverables
-            .Select(ModelMapper.MapToBlazorDeliverableModel)
-            .ToList();
-
-        // Clear the column deliverables
+          .Select(ModelMapper.MapToBlazorDeliverableModel)
+          .ToList();
+        // Initialize columnDeliverables as empty for now
         columnDeliverables = columns.ToDictionary(c => c, c => new List<DeliverableModel>());
 
         // Reset the simulationRunning state

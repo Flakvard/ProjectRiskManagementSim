@@ -36,25 +36,31 @@ public static class PageRoutes
                 await handler.StartSimulation();
             }
 
-            return Results.Json(new { status = "Simulation Started", id = simulationId });
+            var html = $@"<button hx-get='/running-simulation/{simulationId}' hx-trigger='click'class='btn text-white'> Start Simulation </button>";
+
+            return Results.Content(html, "text/html");
         });
 
         app.MapGet("/kanban-simulation/{simulationId:guid}", async (Guid simulationId, [FromServices] Func<Guid, RunSimulationHandler> handlerFactory) =>
         {
             var handler = handlerFactory(simulationId);
-            return Results.Json(new
-            {
-                status = "Kanban Updated",
-                currentDay = handler.currentDay,
-                columns = handler.columns,
-                deliverables = handler.columnDeliverables
-            });
         });
 
-        app.MapPost("/reset-simulation/{simulationId:guid}", ([FromServices] RunSimulationHandler handler, Guid simulationId) =>
+        app.MapPost("/reset-simulation/{simulationId:guid}", (Guid simulationId, [FromServices] Func<Guid, RunSimulationHandler> handlerFactory) =>
         {
+            var handler = handlerFactory(simulationId);
             handler.ResetSimulation(); // Reset the specific simulation
-            return Results.Json(new { status = "Simulation has been reset successfully.", id = simulationId });
+            var html = $@"<div class='flex flex-row gap-2'>
+                            <div class='bg-[#7e44eb] rounded-md w-fit p-2'>
+                              <button hx-get='/running-simulation/@runSimulationHandler.SimulationId' hx-trigger='click'
+                                class='btn text-white'>Start Simulation</button>
+                            </div>
+                            <div class='bg-[#7e44eb] rounded-md w-fit p-2'>
+                              <button hx-post='/reset-simulation/@runSimulationHandler.SimulationId' hx-swap='none' hx-trigger='click'
+                                class='btn text-white'>Reset Simulation</button>
+                            </div>
+                          </div>";
+            return Results.Content(html, "text/html");
         });
 
         app.MapGet("/update-kanban-board", (HttpContext context, [FromServices] RunSimulationHandler handler) =>

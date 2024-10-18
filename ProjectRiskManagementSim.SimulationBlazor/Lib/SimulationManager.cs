@@ -71,4 +71,5 @@ public class SimulationManager
             Simulations.Remove(simulationId); // Reset simulation by removing the old instance
         }
     }
+    
 }
