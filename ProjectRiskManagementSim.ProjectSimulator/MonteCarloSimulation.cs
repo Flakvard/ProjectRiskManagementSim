@@ -17,8 +17,8 @@ public class MonteCarloSimulation : IMonteCarloSimulation
     public DateTime NewDate { get; set; }
     public bool IsCompleted { get; set; }
     public Guid SimulationId { get; set; }
-    public Dictionary<ColumnModel, List<DeliverableModel>> ColumnDeliverables { get; set; }
-    public List<DeliverableModel> DeliverablesCopy { get; set; }
+    public Dictionary<ColumnModel, List<DeliverableModel>?>? ColumnDeliverables { get; set; }
+    public List<DeliverableModel>? DeliverablesCopy { get; set; }
 
     private int _simulationCount;
 
@@ -183,7 +183,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
                 // Move deliverables to the next column if possible
                 MoveDeliverablesToNextColumnIfPossible(columns, columnDeliverables, currentDay, column, wipQueue, wipStack, deliverablesToMove);
 
-                var devStack = columnDeliverables[developerColumn].Count;
+                int devStack = developerColumn != null && columnDeliverables.ContainsKey(developerColumn) && columnDeliverables[developerColumn] != null ? columnDeliverables[developerColumn].Count : 0;
 
                 // Check if the "Ready for Test Stage" column is NOT full anymore and give back WIP
                 if (readyForTestDevColumn != null
@@ -205,32 +205,32 @@ public class MonteCarloSimulation : IMonteCarloSimulation
                     ReallocateWIP(developersHelping, developerColumn, testingProdColumn);
                 }
 
-                var testDevStack = columnDeliverables[testingDevColumn].Count;
-                var rdyForTestDevStack = columnDeliverables[readyForTestDevColumn].Count;
-                var backlogStack = columnDeliverables[backlogColumn].Count;
-                var openStack = columnDeliverables[openColumn].Count;
-                var testProdStack = columnDeliverables[testingProdColumn].Count;
+                int testDevStack = testingDevColumn != null && columnDeliverables.ContainsKey(testingDevColumn) && columnDeliverables[testingDevColumn] != null ? columnDeliverables[testingDevColumn].Count : 0;
+                int rdyForTestDevStack = readyForTestDevColumn != null && columnDeliverables.ContainsKey(readyForTestDevColumn) && columnDeliverables[readyForTestDevColumn] != null ? columnDeliverables[readyForTestDevColumn].Count : 0;
+                int backlogStack = backlogColumn != null && columnDeliverables.ContainsKey(backlogColumn) && columnDeliverables[backlogColumn] != null ? columnDeliverables[backlogColumn].Count : 0;
+                int openStack = openColumn != null && columnDeliverables.ContainsKey(openColumn) && columnDeliverables[openColumn] != null ? columnDeliverables[openColumn].Count : 0;
+                int testProdStack = testingProdColumn != null && columnDeliverables.ContainsKey(testingProdColumn) && columnDeliverables[testingProdColumn] != null ? columnDeliverables[testingProdColumn].Count : 0;
 
                 // if Testing on Stage is not doing any work, reallocate back
-                if (testDevStack < testingDevColumn.WIP && devStack != 0)
+                if (testDevStack < testingDevColumn?.WIP && devStack != 0)
                 {
                     ReallocateWIP(developersHelping, developerColumn, testingDevColumn);
                 }
 
                 // if Testing on Prod is not doing any work, reallocate back
-                if (testProdStack < testingProdColumn.WIP && devStack != 0)
+                if (testProdStack < testingProdColumn?.WIP && devStack != 0)
                 {
                     ReallocateWIP(developersHelping, developerColumn, testingProdColumn);
                 }
 
                 // if Testing on Stage is not doing any work, reallocate back
-                if (testDevStack < testingDevColumn.WIP && devStack == 0 && openStack > 0)
+                if (testDevStack < testingDevColumn?.WIP && devStack == 0 && openStack > 0)
                 {
                     ReallocateWIP(developersHelping, developerColumn, testingDevColumn);
                 }
 
                 // if Testing on Prod is not doing any work, reallocate back
-                if (testProdStack < testingProdColumn.WIP && devStack == 0 && openStack > 0)
+                if (testProdStack < testingProdColumn?.WIP && devStack == 0 && openStack > 0)
                 {
                     ReallocateWIP(developersHelping, developerColumn, testingProdColumn);
                 }
@@ -403,7 +403,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
                 // Move deliverables to the next column if possible
                 MoveDeliverablesToNextColumnIfPossible(columns, columnDeliverables, currentDay, column, wipQueue, wipStack, deliverablesToMove);
 
-                var devStack = columnDeliverables[developerColumn].Count;
+                int devStack = developerColumn != null && columnDeliverables.ContainsKey(developerColumn) && columnDeliverables[developerColumn] != null ? columnDeliverables[developerColumn].Count : 0;
 
                 // Check if the "Ready for Test Stage" column is NOT full anymore and give back WIP
                 if (readyForTestDevColumn != null
@@ -425,32 +425,32 @@ public class MonteCarloSimulation : IMonteCarloSimulation
                     ReallocateWIP(developersHelping, developerColumn, testingProdColumn);
                 }
 
-                var testDevStack = columnDeliverables[testingDevColumn].Count;
-                var rdyForTestDevStack = columnDeliverables[readyForTestDevColumn].Count;
-                var backlogStack = columnDeliverables[backlogColumn].Count;
-                var openStack = columnDeliverables[openColumn].Count;
-                var testProdStack = columnDeliverables[testingProdColumn].Count;
+                int testDevStack = testingDevColumn != null && columnDeliverables.ContainsKey(testingDevColumn) && columnDeliverables[testingDevColumn] != null ? columnDeliverables[testingDevColumn].Count : 0;
+                int rdyForTestDevStack = readyForTestDevColumn != null && columnDeliverables.ContainsKey(readyForTestDevColumn) && columnDeliverables[readyForTestDevColumn] != null ? columnDeliverables[readyForTestDevColumn].Count : 0;
+                int backlogStack = backlogColumn != null && columnDeliverables.ContainsKey(backlogColumn) && columnDeliverables[backlogColumn] != null ? columnDeliverables[backlogColumn].Count : 0;
+                int openStack = openColumn != null && columnDeliverables.ContainsKey(openColumn) && columnDeliverables[openColumn] != null ? columnDeliverables[openColumn].Count : 0;
+                int testProdStack = testingProdColumn != null && columnDeliverables.ContainsKey(testingProdColumn) && columnDeliverables[testingProdColumn] != null ? columnDeliverables[testingProdColumn].Count : 0;
 
                 // if Testing on Stage is not doing any work, reallocate back
-                if (testDevStack < testingDevColumn.WIP && devStack != 0)
+                if (testDevStack < testingDevColumn?.WIP && devStack != 0)
                 {
                     ReallocateWIP(developersHelping, developerColumn, testingDevColumn);
                 }
 
                 // if Testing on Prod is not doing any work, reallocate back
-                if (testProdStack < testingProdColumn.WIP && devStack != 0)
+                if (testProdStack < testingProdColumn?.WIP && devStack != 0)
                 {
                     ReallocateWIP(developersHelping, developerColumn, testingProdColumn);
                 }
 
                 // if Testing on Stage is not doing any work, reallocate back
-                if (testDevStack < testingDevColumn.WIP && devStack == 0 && openStack > 0)
+                if (testDevStack < testingDevColumn?.WIP && devStack == 0 && openStack > 0)
                 {
                     ReallocateWIP(developersHelping, developerColumn, testingDevColumn);
                 }
 
                 // if Testing on Prod is not doing any work, reallocate back
-                if (testProdStack < testingProdColumn.WIP && devStack == 0 && openStack > 0)
+                if (testProdStack < testingProdColumn?.WIP && devStack == 0 && openStack > 0)
                 {
                     ReallocateWIP(developersHelping, developerColumn, testingProdColumn);
                 }
@@ -916,7 +916,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
                 // Move deliverables to the next column if possible
                 MoveDeliverablesToNextColumnIfPossible(columns, columnDeliverables, currentSimDay, column, wipQueue, wipStack, deliverablesToMove);
 
-                var devStack = columnDeliverables[developerColumn].Count;
+                int devStack = developerColumn != null && columnDeliverables.ContainsKey(developerColumn) && columnDeliverables[developerColumn] != null ? columnDeliverables[developerColumn].Count : 0;
 
                 // Check if the "Ready for Test Stage" column is NOT full anymore and give back WIP
                 if (readyForTestDevColumn != null
@@ -938,32 +938,32 @@ public class MonteCarloSimulation : IMonteCarloSimulation
                     ReallocateWIP(developersHelping, developerColumn, testingProdColumn);
                 }
 
-                var testDevStack = columnDeliverables[testingDevColumn].Count;
-                var rdyForTestDevStack = columnDeliverables[readyForTestDevColumn].Count;
-                var backlogStack = columnDeliverables[backlogColumn].Count;
-                var openStack = columnDeliverables[openColumn].Count;
-                var testProdStack = columnDeliverables[testingProdColumn].Count;
+                int testDevStack = testingDevColumn != null && columnDeliverables.ContainsKey(testingDevColumn) && columnDeliverables[testingDevColumn] != null ? columnDeliverables[testingDevColumn].Count : 0;
+                int rdyForTestDevStack = readyForTestDevColumn != null && columnDeliverables.ContainsKey(readyForTestDevColumn) && columnDeliverables[readyForTestDevColumn] != null ? columnDeliverables[readyForTestDevColumn].Count : 0;
+                int backlogStack = backlogColumn != null && columnDeliverables.ContainsKey(backlogColumn) && columnDeliverables[backlogColumn] != null ? columnDeliverables[backlogColumn].Count : 0;
+                int openStack = openColumn != null && columnDeliverables.ContainsKey(openColumn) && columnDeliverables[openColumn] != null ? columnDeliverables[openColumn].Count : 0;
+                int testProdStack = testingProdColumn != null && columnDeliverables.ContainsKey(testingProdColumn) && columnDeliverables[testingProdColumn] != null ? columnDeliverables[testingProdColumn].Count : 0;
 
                 // if Testing on Stage is not doing any work, reallocate back
-                if (testDevStack < testingDevColumn.WIP && devStack != 0)
+                if (testDevStack < testingDevColumn?.WIP && devStack != 0)
                 {
                     ReallocateWIP(developersHelping, developerColumn, testingDevColumn);
                 }
 
                 // if Testing on Prod is not doing any work, reallocate back
-                if (testProdStack < testingProdColumn.WIP && devStack != 0)
+                if (testProdStack < testingProdColumn?.WIP && devStack != 0)
                 {
                     ReallocateWIP(developersHelping, developerColumn, testingProdColumn);
                 }
 
                 // if Testing on Stage is not doing any work, reallocate back
-                if (testDevStack < testingDevColumn.WIP && devStack == 0 && openStack > 0)
+                if (testDevStack < testingDevColumn?.WIP && devStack == 0 && openStack > 0)
                 {
                     ReallocateWIP(developersHelping, developerColumn, testingDevColumn);
                 }
 
                 // if Testing on Prod is not doing any work, reallocate back
-                if (testProdStack < testingProdColumn.WIP && devStack == 0 && openStack > 0)
+                if (testProdStack < testingProdColumn?.WIP && devStack == 0 && openStack > 0)
                 {
                     ReallocateWIP(developersHelping, developerColumn, testingProdColumn);
                 }
@@ -1057,6 +1057,10 @@ public class MonteCarloSimulation : IMonteCarloSimulation
         // Set the deliverables to column index 0
         DeliverablesCopy.Clear();
         ColumnDeliverables.Clear();
+        foreach (var column in ProjectSimulationModel.Columns)
+        {
+            ColumnDeliverables.Add(column, new List<DeliverableModel>());
+        }
         InitiateDeliverablesAndColumns(ProjectSimulationModel);
 
     }
