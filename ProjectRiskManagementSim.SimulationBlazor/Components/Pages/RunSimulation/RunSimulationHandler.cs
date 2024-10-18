@@ -46,6 +46,7 @@ public class RunSimulationHandler
 
     public async Task StartSimulation()
     {
+        MCS.IsCompleted = false;
         simulationRunning = true;
 
         // Simulate day-by-day and update the Kanban board
@@ -125,5 +126,6 @@ public class RunSimulationHandler
 
         // Reset the simulationRunning state
         simulationRunning = false;
+        MCS.IsCompleted = true;
     }
 }
