@@ -19,4 +19,21 @@ public class ColumnModel
         WIP = wip ?? 0;
         WIPMax = wipMax ?? WIP;
     }
+    public static List<ColumnModel> InitializeKanbanColumns()
+    {
+        return new List<ColumnModel>
+        {
+            new ColumnModel(wip: 20, wipMax: 20) { Name = "Open", EstimatedLowBound = 2, EstimatedHighBound = 50, IsBuffer = true },
+            new ColumnModel(wip: 3, wipMax: 3) { Name = "In Progress", EstimatedLowBound = 1, EstimatedHighBound = 30, IsBuffer = false },
+            new ColumnModel(wip: 17, wipMax: 17) { Name = "Stuck", EstimatedLowBound = 2, EstimatedHighBound = 50, IsBuffer = true },
+            new ColumnModel(wip: 20, wipMax: 20) { Name = "Finished", EstimatedLowBound = 2, EstimatedHighBound = 40, IsBuffer = true },
+            new ColumnModel(wip: 17, wipMax: 17) { Name = "Ready to test on Development", EstimatedLowBound = 2, EstimatedHighBound = 50, IsBuffer = true },
+            new ColumnModel(wip: 0, wipMax: 2) { Name = "Testing on Development", EstimatedLowBound = 1, EstimatedHighBound = 52, IsBuffer = false },
+            new ColumnModel(wip: 10, wipMax: 10) { Name = "Ready to test on Production", EstimatedLowBound = 2, EstimatedHighBound = 45, IsBuffer = true },
+            new ColumnModel(wip: 20, wipMax: 20) { Name = "Done", EstimatedLowBound = 1, EstimatedHighBound = 30, IsBuffer = true },
+            new ColumnModel(wip: 10, wipMax: 10) { Name = "Ready to test on Production", EstimatedLowBound = 2, EstimatedHighBound = 45, IsBuffer = true },
+            new ColumnModel(wip: 0, wipMax: 2) { Name = "Testing on Production", EstimatedLowBound = 5, EstimatedHighBound = 70, IsBuffer = false },
+            new ColumnModel(wip: 20, wipMax: 20) { Name = "Done", EstimatedLowBound = 1, EstimatedHighBound = 30, IsBuffer = true }
+        };
+    }
 }

@@ -1,3 +1,4 @@
+@using ProjectRiskManagementSim.SimulationBlazor.Models;
 <table class="KanbanColumnTable table-auto self-stretch h-[405px] flex-col justify-start items-start flex">
   <thead class="sticky top-0">
     <tr class="Headerrow self-stretch px-2.5 justify-start items-start gap-[5px] inline-flex">
@@ -34,7 +35,7 @@
     <tr class="Row self-stretch px-2.5 justify-start items-center gap-[5px] inline-flex">
       <td class="Cell px-[7px] py-2 justify-center items-center gap-2.5 flex">
         <div class="Frame7 justify-start items-center gap-2.5 flex">
-          <div class="w-[104px] text-white text-sm font-normal font-['Outfit'] capitalize leading-[18.20px]">@row.Status
+          <div class="w-[104px] text-white text-sm font-normal font-['Outfit'] capitalize leading-[18.20px]">@row.Name
           </div>
         </div>
       </td>
@@ -42,26 +43,26 @@
         <div class="Content w-[27px] flex-col justify-center items-center gap-2.5 inline-flex">
           <div
             class="self-stretch text-center text-white text-sm font-normal font-['Outfit'] capitalize leading-[18.20px]">
-            @row.Wip</div>
+            @row.WIP</div>
         </div>
       </td>
       <td class="Cell px-[7px] py-2 justify-center items-center gap-2.5 flex">
         <div class="Content w-[43px] flex-col justify-center items-center gap-2.5 inline-flex">
           <div
             class="self-stretch text-center text-white text-sm font-normal font-['Outfit'] capitalize leading-[18.20px]">
-            @row.LowB</div>
+            @row.EstimatedLowBound</div>
         </div>
       </td>
       <td class="Cell px-[7px] py-2 justify-center items-center gap-2.5 flex">
         <div class="Content w-[46px] flex-col justify-center items-center gap-2.5 inline-flex">
           <div
             class="self-stretch text-center text-white text-sm font-normal font-['Outfit'] capitalize leading-[18.20px]">
-            @row.HighB</div>
+            @row.EstimatedHighBound</div>
         </div>
       </td>
       <td class="Cell h-10 px-[7px] py-2 justify-center items-center gap-2.5 flex">
-        <div class="Bufferswitch w-10 pl-[3px] pr-[19px] py-[3px] @(row.IsBufferActive ? " bg-[#ff7c87]"
-          : "bg-[#2c2c2c]" ) rounded-full border border-[#2c2c2c] justify-start items-center flex">
+        <div class="Bufferswitch w-10 pl-[3px] pr-[19px] py-[3px] @(row.IsBuffer ? " bg-[#ff7c87]" : "bg-[#2c2c2c]" )
+          rounded-full border border-[#2c2c2c] justify-start items-center flex">
         </div>
       </td>
     </tr>
@@ -71,5 +72,5 @@
 
 @code {
 [Parameter]
-public List<KanbanColumnModel> kanbanRows { get; set; } = KanbanColumnModel.InitializeKanbanColumns();
+public List<ColumnModel> kanbanRows { get; set; } = ColumnModel.InitializeKanbanColumns();
   }
