@@ -1,31 +1,410 @@
-<!-- Button trigger modal -->
+<!-- Button trigger modal
 <button id="openModal" class="bg-[#7e44eb] text-white px-4 py-2 rounded hover:bg-blue-600">
   Launch demo modal
 </button>
-
+-->
 <!-- Modal (Full-screen) -->
-<div id="modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
-  <div class="bg-white rounded-lg shadow-lg w-1/3">
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden" id="modal">
+  <div class="bg-white rounded-lg shadow-lg w-1/3 h-5/6 flex flex-col">
+
     <!-- Modal Header -->
-    <div class="px-4 py-2 flex justify-between items-center border-b">
-      <h2 class="text-black text-lg font-semibold">Modal title</h2>
-      <button id="closeModal" class="text-gray-500 hover:text-black">&times;</button>
+    <div class="px-4 py-2 bg-[#7e44eb] rounded-t-lg flex justify-between items-center border-b">
+      <h2 class="text-white text-lg font-semibold">New Simulation</h2>
+      <button id="closeModal" class="text-white hover:text-black">&times;</button>
     </div>
 
     <!-- Modal Body -->
-    <div class="p-4">
-      <p class="text-black">Modal content goes here...</p>
+    <div class="flex flex-col p-4 flex-grow overflow-hidden">
+      <form class="overflow-hidden" id="start-simulation-form" hx-post="/create-simulation"
+        hx-target="#simulation-result" hx-swap="innerHTML">
+        <div class="flex flex-row gap-4 h-full">
+
+          <!-- Simulation Details -->
+          <div class="flex flex-col gap-2 h-full flex-grow">
+            <h2>Project details</h2>
+            <div class="flex flex-col h-full gap-2">
+              <div>
+                <label>Name:</label>
+                <input class="input-border" type="text" name="Name" required />
+              </div>
+              <div>
+                <label>Start Date:</label>
+                <input class="input-border" type="date" name="StartDate" required />
+              </div>
+              <div>
+                <label>Target Date:</label>
+                <input class="input-border" type="date" name="TargetDate" required />
+              </div>
+              <div>
+                <label>Revenue Amount:</label>
+                <input class="input-border" type="number" name="RevenueAmount" required />
+              </div>
+              <div>
+                <label>Cost:</label>
+                <input class="input-border" type="number" name="Cost" required />
+              </div>
+              <div>
+                <label>Cost Days:</label>
+                <input class="input-border" type="number" name="CostDays" required />
+              </div>
+              <div>
+                <label>Work In Progress (WIP):</label>
+                <input class="input-border" type="number" name="WIP" required />
+              </div>
+            </div>
+          </div>
+
+          <!-- Contianer for Column Details and Deliverables Details -->
+          <div class="flex flex-col flex-grow gap-2">
+
+            <!-- Column Details -->
+            <div class="flex flex-col h-full flex-grow overflow-hidden">
+              <h2>Columns</h2>
+              <div class="flex flex-col border border-[#b9b9b9] p-4 gap-2 h-full overflow-y-auto">
+                <div id="kanbanForm" class="flex flex-col gap-2">
+                  <!-- Column 1 -->
+                  <div class="column-input-border">
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="name1">Name:</label>
+                      <input class="input-border" type="text" id="name1" name="name1" value="Open">
+                    </div>
+
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="wip1">WIP:</label>
+                      <input class="input-border" type="number" id="wip1" name="wip1" value="20">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="wipMax1">WIP Max:</label>
+                      <input class="input-border" type="number" id="wipMax1" name="wipMax1" value="20">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="lowBound1">Estimated Low Bound:</label>
+                      <input class="input-border" type="number" id="lowBound1" name="lowBound1" value="2">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="highBound1">Estimated High Bound:</label>
+                      <input class="input-border" type="number" id="highBound1" name="highBound1" value="50">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="isBuffer1">Is Buffer:</label>
+                      <input class="input-border" type="checkbox" id="isBuffer1" name="isBuffer1" checked>
+                    </div>
+                  </div>
+                  <!-- Column 2 -->
+                  <div class="column-input-border">
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="name2">Name:</label>
+                      <input class="input-border" type="text" id="name2" name="name2" value="In Progress">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="wip2">WIP:</label>
+                      <input class="input-border" type="number" id="wip2" name="wip2" value="3">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="wipMax2">WIP Max:</label>
+                      <input class="input-border" type="number" id="wipMax2" name="wipMax2" value="3">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="lowBound2">Estimated Low Bound:</label>
+                      <input class="input-border" type="number" id="lowBound2" name="lowBound2" value="1">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="highBound2">Estimated High Bound:</label>
+                      <input class="input-border" type="number" id="highBound2" name="highBound2" value="30">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="isBuffer2">Is Buffer:</label>
+                      <input class="input-border" type="checkbox" id="isBuffer2" name="isBuffer2">
+                    </div>
+                  </div>
+                  <!-- Column 3 -->
+                  <div class="column-input-border">
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="name3">Name:</label>
+                      <input class="input-border" type="text" id="name3" name="name3" value="Stuck">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="wip3">WIP:</label>
+                      <input class="input-border" type="number" id="wip3" name="wip3" value="17">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="wipMax3">WIP Max:</label>
+                      <input class="input-border" type="number" id="wipMax3" name="wipMax3" value="17">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="lowBound3">Estimated Low Bound:</label>
+                      <input class="input-border" type="number" id="lowBound3" name="lowBound3" value="2">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="highBound3">Estimated High Bound:</label>
+                      <input class="input-border" type="number" id="highBound3" name="highBound3" value="50">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="isBuffer3">Is Buffer:</label>
+                      <input class="input-border" type="checkbox" id="isBuffer3" name="isBuffer3" checked>
+                    </div>
+                  </div>
+                  <!-- Column 4 -->
+                  <div class="column-input-border">
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="name4">Name:</label>
+                      <input class="input-border" type="text" id="name4" name="name4" value="Finished">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="wip4">WIP:</label>
+                      <input class="input-border" type="number" id="wip4" name="wip4" value="20">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="wipMax4">WIP Max:</label>
+                      <input class="input-border" type="number" id="wipMax4" name="wipMax4" value="20">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="lowBound4">Estimated Low Bound:</label>
+                      <input class="input-border" type="number" id="lowBound4" name="lowBound4" value="2">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="highBound4">Estimated High Bound:</label>
+                      <input class="input-border" type="number" id="highBound4" name="highBound4" value="40">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="isBuffer4">Is Buffer:</label>
+                      <input class="input-border" type="checkbox" id="isBuffer4" name="isBuffer4" checked>
+                    </div>
+                  </div>
+                  <!-- Column 5 -->
+                  <div class="column-input-border">
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="name5">Name:</label>
+                      <input class="input-border" type="text" id="name5" name="name5"
+                        value="Ready to test on Development">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="wip5">WIP:</label>
+                      <input class="input-border" type="number" id="wip5" name="wip5" value="17">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="wipMax5">WIP Max:</label>
+                      <input class="input-border" type="number" id="wipMax5" name="wipMax5" value="17">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="lowBound5">Estimated Low Bound:</label>
+                      <input class="input-border" type="number" id="lowBound5" name="lowBound5" value="2">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="highBound5">Estimated High Bound:</label>
+                      <input class="input-border" type="number" id="highBound5" name="highBound5" value="50">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="isBuffer5">Is Buffer:</label>
+                      <input class="input-border" type="checkbox" id="isBuffer5" name="isBuffer5" checked>
+                    </div>
+                  </div>
+                  <!-- Column 6 -->
+                  <div class="column-input-border">
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="name6">Name:</label>
+                      <input class="input-border" type="text" id="name6" name="name6" value="Testing on Development">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="wip6">WIP:</label>
+                      <input class="input-border" type="number" id="wip6" name="wip6" value="0">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="wipMax6">WIP Max:</label>
+                      <input class="input-border" type="number" id="wipMax6" name="wipMax6" value="2">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="lowBound6">Estimated Low Bound:</label>
+                      <input class="input-border" type="number" id="lowBound6" name="lowBound6" value="1">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="highBound6">Estimated High Bound:</label>
+                      <input class="input-border" type="number" id="highBound6" name="highBound6" value="52">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="isBuffer6">Is Buffer:</label>
+                      <input class="input-border" type="checkbox" id="isBuffer6" name="isBuffer6">
+                    </div>
+                  </div>
+                  <!-- Column 7 -->
+                  <div class="column-input-border">
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="name7">Name:</label>
+                      <input class="input-border" type="text" id="name7" name="name7"
+                        value="Ready to test on Production">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="wip7">WIP:</label>
+                      <input class="input-border" type="number" id="wip7" name="wip7" value="10">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="wipMax7">WIP Max:</label>
+                      <input class="input-border" type="number" id="wipMax7" name="wipMax7" value="10">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="lowBound7">Estimated Low Bound:</label>
+                      <input class="input-border" type="number" id="lowBound7" name="lowBound7" value="2">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="highBound7">Estimated High Bound:</label>
+                      <input class="input-border" type="number" id="highBound7" name="highBound7" value="45">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="isBuffer7">Is Buffer:</label>
+                      <input class="input-border" type="checkbox" id="isBuffer7" name="isBuffer7" checked>
+                    </div>
+                  </div>
+                  <!-- Column 8 -->
+                  <div class="column-input-border">
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="name8">Name:</label>
+                      <input class="input-border" type="text" id="name8" name="name8" value="Done">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="wip8">WIP:</label>
+                      <input class="input-border" type="number" id="wip8" name="wip8" value="20">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="wipMax8">WIP Max:</label>
+                      <input class="input-border" type="number" id="wipMax8" name="wipMax8" value="20">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="lowBound8">Estimated Low Bound:</label>
+                      <input class="input-border" type="number" id="lowBound8" name="lowBound8" value="1">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="highBound8">Estimated High Bound:</label>
+                      <input class="input-border" type="number" id="highBound8" name="highBound8" value="30">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="isBuffer8">Is Buffer:</label>
+                      <input class="input-border" type="checkbox" id="isBuffer8" name="isBuffer8" checked>
+                    </div>
+                  </div>
+                  <!-- Column 9 -->
+                  <div class="column-input-border">
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="name9">Name:</label>
+                      <input class="input-border" type="text" id="name9" name="name9"
+                        value="Ready to test on Production">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="wip9">WIP:</label>
+                      <input class="input-border" type="number" id="wip9" name="wip9" value="10">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="wipMax9">WIP Max:</label>
+                      <input class="input-border" type="number" id="wipMax9" name="wipMax9" value="10">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="lowBound9">Estimated Low Bound:</label>
+                      <input class="input-border" type="number" id="lowBound9" name="lowBound9" value="2">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="highBound9">Estimated High Bound:</label>
+                      <input class="input-border" type="number" id="highBound9" name="highBound9" value="45">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="isBuffer9">Is Buffer:</label>
+                      <input class="input-border" type="checkbox" id="isBuffer9" name="isBuffer9" checked>
+                    </div>
+                  </div>
+                  <!-- Column 10 -->
+                  <div class="column-input-border">
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="name10">Name:</label>
+                      <input class="input-border" type="text" id="name10" name="name10" value="Testing on Production">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="wip10">WIP:</label>
+                      <input class="input-border" type="number" id="wip10" name="wip10" value="0">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="wipMax10">WIP Max:</label>
+                      <input class="input-border" type="number" id="wipMax10" name="wipMax10" value="2">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="lowBound10">Estimated Low Bound:</label>
+                      <input class="input-border" type="number" id="lowBound10" name="lowBound10" value="5">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="highBound10">Estimated High Bound:</label>
+                      <input class="input-border" type="number" id="highBound10" name="highBound10" value="70">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="isBuffer10">Is Buffer:</label>
+                      <input class="input-border" type="checkbox" id="isBuffer10" name="isBuffer10">
+                    </div>
+                  </div>
+                  <!-- Column 11 -->
+                  <div class="column-input-border">
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="name11">Name:</label>
+                      <input class="input-border" type="text" id="name11" name="name11" value="Done">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="wip11">WIP:</label>
+                      <input class="input-border" type="number" id="wip11" name="wip11" value="20">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="wipMax11">WIP Max:</label>
+                      <input class="input-border" type="number" id="wipMax11" name="wipMax11" value="20">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="lowBound11">Estimated Low Bound:</label>
+                      <input class="input-border" type="number" id="lowBound11" name="lowBound11" value="1">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="highBound11">Estimated High Bound:</label>
+                      <input class="input-border" type="number" id="highBound11" name="highBound11" value="30">
+                    </div>
+                    <div class="flex flex-row gap-2 justify-center items-center">
+                      <label class="label-input" for="isBuffer11">Is Buffer:</label>
+                      <input class="input-border" type="checkbox" id="isBuffer11" name="isBuffer11" checked>
+                    </div>
+                  </div>
+                  <div id="addColumnButton" class="w-fit bg-[#7e44eb] text-white px-4 py-2 rounded hover:bg-blue-600">
+                    <button type="button" onclick="addColumn()">Add Column</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Deliverables Details -->
+            <div class="flex flex-col h-full flex-grow overflow-hidden">
+              <h2>Deliverables</h2>
+              <div class="flex flex-col border border-[#b9b9b9] p-4 gap-2 flex-grow">
+                <div>
+                  <label>Deliverable Number:</label>
+                  <input class="input-border" type="number" step="1" name="DeliverablesNumber" required value="36" />
+                </div>
+                <div>
+                  <label>Percentage Low Bound:</label>
+                  <input class="input-border" type="number" step="0.01" name="PercentageLowBound" required />
+                </div>
+                <div>
+                  <label>Percentage High Bound:</label>
+                  <input class="input-border" type="number" step="0.01" name="PercentageHighBound" required />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="simulation-result"></div>
+      </form>
     </div>
 
     <!-- Modal Footer -->
-    <div class="px-4 py-2 border-t flex justify-end">
+    <div class="px-4 py-2 border-t h-fit flex justify-end">
       <button id="closeModalFooter" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 mr-2">
         Close
       </button>
-      <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+      <button type="submit" class="bg-[#7e44eb] text-white px-4 py-2 rounded hover:bg-blue-600">
         Save changes
       </button>
     </div>
+
   </div>
 </div>
 
@@ -58,6 +437,45 @@
       document.body.classList.remove('overflow-hidden'); // Re-enable scrolling
     }
   });
+
+
+  <!-- To handle Columns in form -->
+  let columnCount = 11; // Initial count based on the provided columns
+
+  function addColumn() {
+    columnCount++;
+    const form = document.getElementById('kanbanForm');
+    const newColumn = document.createElement('div');
+    newColumn.innerHTML = `
+                <div class="column-input-border">
+                  <div class="flex flex-row gap-2 justify-center items-center>
+                    <label class="label-input" for="name${columnCount}">Name:</label>
+                    <input class="input-border" type="text" id="name${columnCount}" name="name${columnCount}">
+                  </div>
+                  <div class="flex flex-row gap-2 justify-center items-center>
+                    <label class="label-input" for="wip${columnCount}">WIP:</label>
+                    <input class="input-border" type="number" id="wip${columnCount}" name="wip${columnCount}">
+                  </div>
+                  <div class="flex flex-row gap-2 justify-center items-center>
+                    <label class="label-input" for="wipMax${columnCount}">WIP Max:</label>
+                    <input class="input-border" type="number" id="wipMax${columnCount}" name="wipMax${columnCount}">
+                  </div>
+                  <div class="flex flex-row gap-2 justify-center items-center>
+                    <label class="label-input" for="lowBound${columnCount}">Estimated Low Bound:</label>
+                    <input class="input-border" type="number" id="lowBound${columnCount}" name="lowBound${columnCount}">
+                  </div>
+                  <div class="flex flex-row gap-2 justify-center items-center>
+                    <label class="label-input" for="highBound${columnCount}">Estimated High Bound:</label>
+                    <input class="input-border" type="number" id="highBound${columnCount}" name="highBound${columnCount}">
+                  </div>
+                  <div class="flex flex-row gap-2 justify-center items-center>
+                    <label class="label-input" for="isBuffer${columnCount}">Is Buffer:</label>
+                    <input class="input-border" type="checkbox" id="isBuffer${columnCount}" name="isBuffer${columnCount}">
+                  </div>
+                </div>
+            `;
+    form.insertBefore(newColumn, document.getElementById('addColumnButton'));
+  }
 </script>
 
 <style>

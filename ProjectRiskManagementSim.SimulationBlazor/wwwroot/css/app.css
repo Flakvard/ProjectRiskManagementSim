@@ -18,4 +18,13 @@
   .cell-header-bg{
     @apply bg-[#7e44eb];
   }
+  .input-border {
+    @apply border border-[#b9b9b9] rounded-md p-1 w-full;
+  }
+  .label-input {
+    @apply w-full;
+  }
+  .column-input-border {
+    @apply flex flex-col gap-2 border border-[#b9b9b9] bg-gray-50 rounded-md p-2;
+  }
 }

@@ -106,7 +106,17 @@ public static class PageRoutes
             var percentageLowBound = double.Parse(form["PercentageLowBound"]);
             var percentageHighBound = double.Parse(form["PercentageHighBound"]);
             var wip = int.Parse(form["WIP"]);
+            var deliverableNumber = int.Parse(form["DeliverablesNumber"]);
 
+            var deliverableModel = new List<DeliverableModel>();
+            for (var i = 1; i < deliverableNumber; i++)
+            {
+                deliverableModel.Add(new DeliverableModel
+                {
+                    Id = Guid.NewGuid(),
+                    Nr = i
+                });
+            }
 
             // Initialize the ProjectSimulationModel
             var projectData = new ProjectSimulationModel
@@ -125,11 +135,7 @@ public static class PageRoutes
                 },
                 Backlog = new BacklogModel
                 {
-                    Deliverables = new List<DeliverableModel>
-                    {
-                      new DeliverableModel { Id = Guid.NewGuid(), Nr = 1 },
-                      new DeliverableModel { Id = Guid.NewGuid(), Nr = 2 },
-                    }, // You can add logic to populate this if needed
+                    Deliverables = deliverableModel,
                     PercentageLowBound = percentageLowBound,
                     PercentageHighBound = percentageHighBound
                 },
@@ -151,7 +157,7 @@ public static class PageRoutes
 
             // Use the injected IMonteCarloSimulation instance to get a new simulation instance
             var simulation = MCS.GetSimulationInstance();
-            simulation.InitiateAndRunSimulation(mappedProjectData, 100, simulationId);
+            simulation.InitiateSimulation(mappedProjectData, simulationId);
 
             // Store the simulation instance with the simulationId for later retrieval
             SimulationManager.AddSimulationToManager(simulationId, simulation);
