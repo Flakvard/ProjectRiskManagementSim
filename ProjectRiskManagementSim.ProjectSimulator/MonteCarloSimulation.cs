@@ -993,7 +993,6 @@ public class MonteCarloSimulation : IMonteCarloSimulation
 
         ProjectSimulationModel = projectSimulationModel;
 
-        IsCompleted = false;
         InitiateDeliverablesAndColumns(projectSimulationModel);
     }
 
@@ -1050,6 +1049,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
             var firstColumn = columns.First();
             ColumnDeliverables[firstColumn].Add(deliverable);
         }
+        IsCompleted = false;
     }
 
     public void ResetSimulation()
