@@ -18,7 +18,7 @@ public static class Database
                 Nr = i
             });
         }
-        var backLogModel = new BacklogModel { Deliverables = deliverableModel, PercentageLowBound = 0.5, PercentageHighBound = 0.8 };
+        var backLogModel = new BacklogModel { Deliverables = deliverableModel, PercentageLowBound = 0.0, PercentageHighBound = 1 };
         var wip = 30;
         ProjectSimulationModel projectData = new ProjectSimulationModel
         {
