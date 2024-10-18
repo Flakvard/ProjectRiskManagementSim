@@ -10,7 +10,7 @@ public interface IMonteCarloSimulation
     public List<double>? SimTotalSalesResult { get; set; }
     public List<List<DeliverableModel>>? Simulations { get; set; }
     public DateTime NewDate { get; set; }
-    public bool IsCompleted { get; }
+    public bool IsCompleted { get; set; }
     public Guid SimulationId { get; set; }
 
     public Task ColumnEstimateAnalysis(ProjectSimulationModel projectSimModel, int projectSimulationsCount);
@@ -21,4 +21,5 @@ public interface IMonteCarloSimulation
     public IMonteCarloSimulation GetSimulationInstance();
     public (List<ColumnModel>, List<DeliverableModel>) RunSimulationStep(ProjectSimulationModel projectSimulationModel, int currentDay);
     public void InitiateSimulation(ProjectSimulationModel projectSimulationModel, Guid simulationId);
+    public void ResetSimulation();
 }

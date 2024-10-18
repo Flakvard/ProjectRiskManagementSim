@@ -17,6 +17,7 @@ public class DeliverableModel : IComparer<DeliverableModel>
         Nr = 0;
         CompletionDays = 0;
         AccumulatedDays = 0;
+        StoppedWorkingTime = 0;
     }
     public int Compare(DeliverableModel? x, DeliverableModel? y)
     {

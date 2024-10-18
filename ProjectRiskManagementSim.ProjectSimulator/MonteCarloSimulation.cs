@@ -989,9 +989,16 @@ public class MonteCarloSimulation : IMonteCarloSimulation
 
     public void InitiateSimulation(ProjectSimulationModel projectSimulationModel, Guid simulationId)
     {
-        IsCompleted = false;
         SimulationId = simulationId;
+
         ProjectSimulationModel = projectSimulationModel;
+
+        IsCompleted = false;
+        InitiateDeliverablesAndColumns(projectSimulationModel);
+    }
+
+    private void InitiateDeliverablesAndColumns(ProjectSimulationModel projectSimulationModel)
+    {
         var staff = projectSimulationModel.Staff;
         var startDate = projectSimulationModel.StartDate;
         var targetDate = projectSimulationModel.TargetDate;
@@ -1043,5 +1050,14 @@ public class MonteCarloSimulation : IMonteCarloSimulation
             var firstColumn = columns.First();
             ColumnDeliverables[firstColumn].Add(deliverable);
         }
+    }
+
+    public void ResetSimulation()
+    {
+        // Set the deliverables to column index 0
+        DeliverablesCopy.Clear();
+        ColumnDeliverables.Clear();
+        InitiateDeliverablesAndColumns(ProjectSimulationModel);
+
     }
 }
