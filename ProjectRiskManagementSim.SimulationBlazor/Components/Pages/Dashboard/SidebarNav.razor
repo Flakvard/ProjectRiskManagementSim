@@ -112,10 +112,16 @@
       <button hx-get="/run-simulation" hx-target="#dashboardMain" hx-swap="outerHTML">Run Simulation</button>
     </div>
     <div class="dashboardButton justify-center items-center flex bg-white rounded-md">
-      <button hx-get="/dashboard" hx-target="#runsimulationMain" hx-swap="outerHTML">Back to Dashboard</button>
+      <a href="/dashboard">Back to Dashboard</a>
     </div>
-    <div class="Archive w-6 h-6 px-px py-[3px] justify-center items-center flex"></div>
-    <div class="Settings w-6 h-6 p-px justify-center items-center flex"></div>
-    <div class="ExternalLink w-6 h-6 p-[3px] justify-center items-center flex"></div>
+    <div class="Archive w-6 h-6 px-px py-[3px] justify-center items-center flex">
+    </div>
+    <div class="Settings w-6 h-6 p-px justify-center items-center flex">
+      <button>
+        <SettingsIcon />
+      </button>
+    </div>
+    <div class="ExternalLink w-6 h-6 p-[3px] justify-center items-center flex">
+    </div>
   </div>
 </nav>
