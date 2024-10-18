@@ -20,33 +20,54 @@
           <tr>
             @foreach (var column in runSimulationHandler.columns)
             {
-            <th class="border border-white p-4 text-white text-base font-extrabold font-['Outfit']">@column.Name
-              (WIP: @column.WIP)
-              (WIPMax: @column.WIPMax)
-            </th>
-            }
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="align-top">
-            @foreach (var column in runSimulationHandler.columns)
-            {
-            <td class="border border-white align-top p-2">
-              <div class="flex flex-col gap-2">
-                @foreach (var deliverable in runSimulationHandler.columnDeliverables[column])
-                {
-                <div class="bg-[#7e44eb] w-f h-f p-2 text-white">
-                  <strong>Task: @deliverable.Nr</strong><br />
-                  Completion Days: @Math.Round(deliverable.CompletionDays)<br />
-                  Wait Time: @Math.Round(deliverable.WaitTime)<br />
-                  Stopped Time: @Math.Round(deliverable.StoppedWorkingTime)
+            <th class="border border-white">
+              <div class="p-4 shrink h-full">
+                <div class="text-white text-base font-extrabold font-['Outfit']">
+                  @column.Name
+                </div>
+                <div class="WipContent justify-start items-center gap-0.5 inline-flex shrink">
+                  @if (!column.IsBuffer)
+                  {
+                  @for (int i = 0; i < @column.WIP; i++) { <div>
+                    <WIPSVGIconWhite />
                 </div>
                 }
+                @for (int i = @column.WIP; i < @column.WIPMax; i++) { <div>
+                  <WIPSVGIconBlack />
               </div>
-            </td>
-            }
-          </tr>
-        </tbody>
-      </table>
+              }
+              }else{
+              <div class="text-white text-base font-extrabold font-['Outfit']">
+                WIP: @column.WIP
+                Max: @column.WIPMax
+              </div>
+              }
     </div>
+  </div>
+  </th>
+  }
+  </tr>
+  </thead>
+  <tbody>
+    <tr class="align-top">
+      @foreach (var column in runSimulationHandler.columns)
+      {
+      <td class="border border-white align-top p-2">
+        <div class="flex flex-col gap-2">
+          @foreach (var deliverable in runSimulationHandler.columnDeliverables[column])
+          {
+          <div class="bg-[#7e44eb] w-f h-f p-2 text-white">
+            <strong>Task: @deliverable.Nr</strong><br />
+            Completion Days: @Math.Round(deliverable.CompletionDays)<br />
+            Wait Time: @Math.Round(deliverable.WaitTime)<br />
+            Stopped Time: @Math.Round(deliverable.StoppedWorkingTime)
+          </div>
+          }
+        </div>
+      </td>
+      }
+    </tr>
+  </tbody>
+  </table>
+  </div>
   </div>
