@@ -14,11 +14,40 @@
     </div>
 
     <!-- Modal Body -->
-    <div class="flex flex-col p-4 flex-grow overflow-hidden">
-    </div>
+    <div class="flex flex-col p-4 h-full">
+      <!-- table -->
+      <div class="overflow-auto">
+        <table class="w-full">
+          <thead>
+            <tr>
+              <th class="border-b-2 border-gray-300">Name</th>
+              <th class="border-b-2 border-gray-300">Type</th>
+              <th class="border-b-2 border-gray-300">Manager</th>
+              <th class="border-b-2 border-gray-300">Start Date</th>
+              <th class="border-b-2 border-gray-300">End Date</th>
+              <th class="border-b-2 border-gray-300">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach (var project in Projects)
+            {
+            <tr id="@project.Id" hx-put="/weatherforecast/@project.Id" hx-trigger="click" hx-swap="innerHTML">
+              <td class="border-b border-gray-300">@project.Name</td>
+              <td class="border-b border-gray-300">@project.Type</td>
+              <td class="border-b border-gray-300">@project.Manager</td>
+              <td class="border-b border-gray-300">@project.StartDate.ToString("MM/dd/yyyy")</td>
+              <td class="border-b border-gray-300">@project.EndDate.ToString("MM/dd/yyyy")</td>
+              <td class="border-b border-gray-300">@project.Status</td>
+            </tr>
+            }
+          </tbody>
+        </table>
 
+      </div>
+
+    </div>
     <!-- Modal Footer -->
-    <div class="px-4 py-2 border-t h-fit flex justify-end">
+    <div class=" px-4 py-2 border-t h-fit flex justify-end">
       <button id="closeModalFooter" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 mr-2">
         Close
       </button>
@@ -30,3 +59,9 @@
 
   </div>
 </div>
+
+@code {
+[Parameter]
+public List<ProjectList> Projects { get; set; } = ProjectList.Init();
+
+  }
