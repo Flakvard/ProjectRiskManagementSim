@@ -29,12 +29,12 @@
               <th class="border-b-2 border-gray-300">Selected</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="ProjectsInTable">
             @foreach (var project in ProjectsView.Projects)
             {
             <tr id="@project.Id"
               hx-put="/select-project/@project.Id?projectListViewModelId=@project.ProjectListViewModelId"
-              hx-trigger="click" hx-target="this" hx-swap="innerHTML">
+              hx-trigger="click" hx-target="#ProjectsInTable" hx-swap="innerHTML">
               <td class="border-b border-gray-300 hidden">@project.Id</td>
               <td class="border-b border-gray-300 hidden">@project.ProjectListViewModelId</td>
               <td class="border-b border-gray-300">@project.Name</td>
