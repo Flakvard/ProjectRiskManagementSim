@@ -36,6 +36,23 @@ builder.Services.AddScoped<Func<Guid, RunSimulationHandler>>(serviceProvider =>
     };
 });
 
+// Handle Projects selection for modal
+builder.Services.AddSingleton<IDictionary<Guid, ProjectListViewModel>>(new Dictionary<Guid, ProjectListViewModel>());
+builder.Services.AddScoped<Func<Guid, ProjectListViewModel>>(serviceProvider =>
+{
+    var handlers = serviceProvider.GetRequiredService<IDictionary<Guid, ProjectListViewModel>>();
+    return simulationId =>
+    {
+        if (!handlers.TryGetValue(simulationId, out var handler))
+        {
+            handler = ActivatorUtilities.CreateInstance<ProjectListViewModel>(serviceProvider);
+            handler.SetProjectListViewModelId(simulationId);
+            handlers[simulationId] = handler;
+        }
+        return handler;
+    };
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

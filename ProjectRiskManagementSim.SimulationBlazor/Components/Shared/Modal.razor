@@ -26,18 +26,24 @@
               <th class="border-b-2 border-gray-300">Start Date</th>
               <th class="border-b-2 border-gray-300">End Date</th>
               <th class="border-b-2 border-gray-300">Status</th>
+              <th class="border-b-2 border-gray-300">Selected</th>
             </tr>
           </thead>
           <tbody>
-            @foreach (var project in Projects)
+            @foreach (var project in ProjectsView.Projects)
             {
-            <tr id="@project.Id" hx-put="/weatherforecast/@project.Id" hx-trigger="click" hx-swap="innerHTML">
+            <tr id="@project.Id"
+              hx-put="/select-project/@project.Id?projectListViewModelId=@project.ProjectListViewModelId"
+              hx-trigger="click" hx-target="this" hx-swap="innerHTML">
+              <td class="border-b border-gray-300 hidden">@project.Id</td>
+              <td class="border-b border-gray-300 hidden">@project.ProjectListViewModelId</td>
               <td class="border-b border-gray-300">@project.Name</td>
               <td class="border-b border-gray-300">@project.Type</td>
               <td class="border-b border-gray-300">@project.Manager</td>
               <td class="border-b border-gray-300">@project.StartDate.ToString("MM/dd/yyyy")</td>
               <td class="border-b border-gray-300">@project.EndDate.ToString("MM/dd/yyyy")</td>
               <td class="border-b border-gray-300">@project.Status</td>
+              <td class="border-b border-gray-300">@project.Selected</td>
             </tr>
             }
           </tbody>
@@ -62,6 +68,6 @@
 
 @code {
 [Parameter]
-public List<ProjectList> Projects { get; set; } = ProjectList.Init();
+public ProjectListViewModel ProjectsView { get; set; } = new ProjectListViewModel();
 
-  }
+}

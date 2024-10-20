@@ -28,6 +28,44 @@ public static class PageRoutes
         app.MapGet("/run-simulation",
             () => new RazorComponentResult<RunSimulation>());
 
+        app.MapPut("/select-project/{projectId:int}",
+            (int projectId, [FromQuery] Guid projectListViewModelId, [FromServices] Func<Guid, ProjectListViewModel> handlerFactory, ILogger<Program> logger) =>
+            {
+                try
+                {
+                    logger.LogInformation("Received projectId: {ProjectId}, projectListViewModelId: {ProjectListViewModelId}", projectId, projectListViewModelId);
+
+                    var handlerProjectListViewModel = handlerFactory(projectListViewModelId);
+                    // Use projectId and handler as needed
+                    if (handlerProjectListViewModel.Projects.Any())
+                    {
+                        var project = handlerProjectListViewModel.Projects.FirstOrDefault(p => p.Id == projectId);
+                        if (project != null)
+                        {
+                            project.Selected = !project.Selected;
+                            var activeTdClass = (project.Selected == true ? "bg-[#7e44eb] text-white border-b border-gray-300" : "border-b border-gray-300");
+                            var html = $@"
+                                    <td class='hidden'>{project.Id}</td>
+                                    <td class='hidden'>{project.ProjectListViewModelId}</td>
+                                    <td class='{activeTdClass}'>{project.Name}</td>
+                                    <td class='{activeTdClass}'>{project.Type}</td>
+                                    <td class='{activeTdClass}'>{project.Manager}</td>
+                                    <td class='{activeTdClass}'>{project.StartDate.ToString("MM/dd/yyyy")}</td>
+                                    <td class='{activeTdClass}'>{project.EndDate.ToString("MM/dd/yyyy")}</td>
+                                    <td class='{activeTdClass}'>{project.Status}</td>
+                                    <td class='{activeTdClass}'>{project.Selected}</td>";
+                            return Results.Content(html, "text/html");
+                        }
+                    }
+                    return Results.Ok();
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "An error occurred while processing the request.");
+                    return Results.Problem("An error occurred while processing the request.");
+                }
+            });
+
         app.MapGet("/running-simulation/{simulationId:guid}", async (Guid simulationId, [FromServices] Func<Guid, RunSimulationHandler> handlerFactory) =>
         {
             var handler = handlerFactory(simulationId);
