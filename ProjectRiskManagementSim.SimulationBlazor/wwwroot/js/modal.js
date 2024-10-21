@@ -1,23 +1,30 @@
 <!-- Script to handle modal open/close functionality -->
+function initializeModal() {
   const openModal = document.getElementById('openModal');
   const modal = document.getElementById('modal');
   const closeModal = document.getElementById('closeModal');
   const closeModalFooter = document.getElementById('closeModalFooter');
 
-  openModal.addEventListener('click', () => {
-    modal.classList.remove('hidden');
-    document.body.classList.add('overflow-hidden'); // Prevent scrolling on body
-  });
+  if (openModal) {
+    openModal.addEventListener('click', () => {
+      modal.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden'); // Prevent scrolling on body
+    });
+  }
 
-  closeModal.addEventListener('click', () => {
-    modal.classList.add('hidden');
-    document.body.classList.remove('overflow-hidden'); // Re-enable scrolling
-  });
+  if (closeModal) {
+    closeModal.addEventListener('click', () => {
+      modal.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden'); // Re-enable scrolling
+    });
+  }
 
-  closeModalFooter.addEventListener('click', () => {
-    modal.classList.add('hidden');
-    document.body.classList.remove('overflow-hidden'); // Re-enable scrolling
-  });
+  if (closeModalFooter) {
+    closeModalFooter.addEventListener('click', () => {
+      modal.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden'); // Re-enable scrolling
+    });
+  }
 
   // Close modal if clicking outside of the modal content
   window.addEventListener('click', (e) => {
@@ -26,7 +33,6 @@
       document.body.classList.remove('overflow-hidden'); // Re-enable scrolling
     }
   });
-
 
   <!-- To handle Columns in form -->
   let columnCount = 11; // Initial count based on the provided columns
@@ -65,3 +71,14 @@
             `;
     form.insertBefore(newColumn, document.getElementById('addColumnButton'));
   }
+}
+
+// Attach the event listener for HTMX afterSwap event
+document.addEventListener('htmx:afterSwap', (event) => {
+  if (event.detail.target.id === 'modal') {
+    initializeModal();
+  }
+});
+
+// Initial call to initialize the modal when the page loads
+initializeModal();
