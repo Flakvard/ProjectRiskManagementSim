@@ -33,6 +33,17 @@ function initializeModal() {
       document.body.classList.remove('overflow-hidden'); // Re-enable scrolling
     }
   });
+}
+
+// Attach the event listener for HTMX afterSwap event
+document.addEventListener('htmx:afterSwap', (event) => {
+  if (event.detail.target.id === 'modal') {
+    initializeModal();
+  }
+});
+
+// Initial call to initialize the modal when the page loads
+initializeModal();
 
   <!-- To handle Columns in form -->
   let columnCount = 11; // Initial count based on the provided columns
@@ -71,14 +82,3 @@ function initializeModal() {
             `;
     form.insertBefore(newColumn, document.getElementById('addColumnButton'));
   }
-}
-
-// Attach the event listener for HTMX afterSwap event
-document.addEventListener('htmx:afterSwap', (event) => {
-  if (event.detail.target.id === 'modal') {
-    initializeModal();
-  }
-});
-
-// Initial call to initialize the modal when the page loads
-initializeModal();
