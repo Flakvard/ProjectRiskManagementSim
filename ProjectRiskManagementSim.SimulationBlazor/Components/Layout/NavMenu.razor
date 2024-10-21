@@ -6,6 +6,8 @@
   <div class="flex space-x-9">
     <a href="/htmx-test"
       class="w-[76.93px] text-white text-xl font-normal font-['Inter'] hover:text-red-400">Projects</a>
+    <button hx-put="/htmx-test" hx-swap="outerHTML" hx-vals='{ "Message": "Hello from Blazor" }'
+      class="w-[108.90px] text-white text-xl font-normal font-['Inter'] hover:text-red-400">HTMX-test</button>
     <a href="/dashboard"
       class="Dashboard w-[103.90px] text-white text-xl font-normal font-['Inter'] hover:text-red-400">Dashboard</a>
     <a href="/start-simulation"

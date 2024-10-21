@@ -1,6 +1,11 @@
-@layout MainLayout
+@page "/htmx-test"
 <div class="alert alert-info">
   <span class="text-lg-center">
-    I ❤️ HTMX
+    @Message
   </span>
 </div>
+
+@code {
+[SupplyParameterFromForm]
+public string? Message { get; set; } = "I ❤️ HTMX";
+}
