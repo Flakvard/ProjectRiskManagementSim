@@ -5,6 +5,9 @@ using ProjectRiskManagementSim.ProjectSimulation;
 using ProjectRiskManagementSim.SimulationBlazor.Routes;
 using ProjectRiskManagementSim.SimulationBlazor.Lib;
 using ProjectRiskManagementSim.SimulationBlazor.Components.Pages.RunSimulation;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,7 +39,7 @@ builder.Services.AddScoped<Func<Guid, RunSimulationHandler>>(serviceProvider =>
     };
 });
 
-// Handle Projects selection for modal
+// Dictionary to store project selection from modal
 builder.Services.AddSingleton<IDictionary<Guid, ProjectListViewModel>>(new Dictionary<Guid, ProjectListViewModel>());
 builder.Services.AddScoped<Func<Guid, ProjectListViewModel>>(serviceProvider =>
 {

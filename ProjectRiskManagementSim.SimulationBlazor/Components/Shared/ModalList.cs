@@ -18,6 +18,7 @@ public class ProjectListViewModel
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public List<ProjectViewModel> Projects { get; set; }
+    public int SelectedProjectId { get; set; }
 
     public ProjectListViewModel()
     {
@@ -42,4 +43,50 @@ public class ProjectListViewModel
     {
         Id = id;
     }
+    public void SetSelectedProject(int id)
+    {
+        SelectedProject = Projects.FirstOrDefault(x => x.Id == id);
+    }
+    public string HandleProjectSelection(int? projectId, ProjectListViewModel plvm)
+    {
+        var handlerProjectListViewModel = plvm; // Assuming ProjectsView is already populated
+        if (handlerProjectListViewModel.Projects.Any())
+        {
+            var project = handlerProjectListViewModel.Projects.FirstOrDefault(p => p.Id == projectId);
+            if (project != null)
+            {
+                // Check if other projects are selected and unselect them
+                foreach (var p in handlerProjectListViewModel.Projects)
+                {
+                    if (p.Selected && p.Id != projectId)
+                    {
+                        p.Selected = false;
+                    }
+                }
+                project.Selected = !project.Selected;
+                string html = "";
+                foreach (var p in handlerProjectListViewModel.Projects)
+                {
+                    var activeTdClass = (p.Selected == true ? "bg-[#7e44eb] text-white border-b border-gray-300" : "border-b border-gray-300");
+                    html += $@"
+                <tr id='{p.Id}'
+                  hx-put='/select-project/{p.Id}?projectListViewModelId={p.ProjectListViewModelId}'
+                  hx-trigger='click' hx-target='#ProjectsInTable' hx-swap='outerHTML'>
+                    <td class='hidden'>{p.Id}</td>
+                    <td class='hidden'>{p.ProjectListViewModelId}</td>
+                    <td class='{activeTdClass}'>{p.Name}</td>
+                    <td class='{activeTdClass}'>{p.Type}</td>
+                    <td class='{activeTdClass}'>{p.Manager}</td>
+                    <td class='{activeTdClass}'>{p.StartDate.ToString("MM/dd/yyyy")}</td>
+                    <td class='{activeTdClass}'>{p.EndDate.ToString("MM/dd/yyyy")}</td>
+                    <td class='{activeTdClass}'>{p.Status}</td>
+                    <td class='{activeTdClass}'>{p.Selected}</td>
+                </tr>";
+                }
+                return html;
+            }
+        }
+        return string.Empty;
+    }
 }
+

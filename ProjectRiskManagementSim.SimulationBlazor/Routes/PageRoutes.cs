@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using ProjectRiskManagementSim.ProjectSimulation.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace ProjectRiskManagementSim.SimulationBlazor.Routes;
 
@@ -16,8 +19,6 @@ public static class PageRoutes
 {
     public static WebApplication MapPageRoutes(this WebApplication app)
     {
-        app.MapGet("/htmx-test",
-            () => new RazorComponentResult<HtmxTest>());
 
         app.MapGet("/dashboardMain",
             () => new RazorComponentResult<DashboardMain>());
@@ -27,60 +28,6 @@ public static class PageRoutes
 
         app.MapGet("/run-simulation",
             () => new RazorComponentResult<RunSimulation>());
-
-        app.MapPut("/select-project/{projectId:int}",
-            (int projectId, [FromQuery] Guid projectListViewModelId, [FromServices] Func<Guid, ProjectListViewModel> handlerFactory, ILogger<Program> logger) =>
-            {
-                try
-                {
-                    logger.LogInformation("Received projectId: {ProjectId}, projectListViewModelId: {ProjectListViewModelId}", projectId, projectListViewModelId);
-
-                    var handlerProjectListViewModel = handlerFactory(projectListViewModelId);
-                    // Use projectId and handler as needed
-                    if (handlerProjectListViewModel.Projects.Any())
-                    {
-                        var project = handlerProjectListViewModel.Projects.FirstOrDefault(p => p.Id == projectId);
-                        if (project != null)
-                        {
-                            // Check if other projects are selected and unselect them
-                            foreach (var p in handlerProjectListViewModel.Projects)
-                            {
-                                if (p.Selected && p.Id != projectId)
-                                {
-                                    p.Selected = false;
-                                }
-                            }
-                            project.Selected = !project.Selected;
-                            string html = "";
-                            foreach (var p in handlerProjectListViewModel.Projects)
-                            {
-                                var activeTdClass = (p.Selected == true ? "bg-[#7e44eb] text-white border-b border-gray-300" : "border-b border-gray-300");
-                                html += $@"
-                                <tr id='{p.Id}'
-                                  hx-put='/select-project/{p.Id}?projectListViewModelId={p.ProjectListViewModelId}'
-                                  hx-trigger='click' hx-target='#ProjectsInTable' hx-swap='innerHTML'>
-                                    <td class='hidden'>{p.Id}</td>
-                                    <td class='hidden'>{p.ProjectListViewModelId}</td>
-                                    <td class='{activeTdClass}'>{p.Name}</td>
-                                    <td class='{activeTdClass}'>{p.Type}</td>
-                                    <td class='{activeTdClass}'>{p.Manager}</td>
-                                    <td class='{activeTdClass}'>{p.StartDate.ToString("MM/dd/yyyy")}</td>
-                                    <td class='{activeTdClass}'>{p.EndDate.ToString("MM/dd/yyyy")}</td>
-                                    <td class='{activeTdClass}'>{p.Status}</td>
-                                    <td class='{activeTdClass}'>{p.Selected}</td>
-                                </tr>";
-                            }
-                            return Results.Content(html, "text/html");
-                        }
-                    }
-                    return Results.Ok();
-                }
-                catch (Exception ex)
-                {
-                    logger.LogError(ex, "An error occurred while processing the request.");
-                    return Results.Problem("An error occurred while processing the request.");
-                }
-            });
 
         app.MapGet("/running-simulation/{simulationId:guid}", async (Guid simulationId, [FromServices] Func<Guid, RunSimulationHandler> handlerFactory) =>
         {
