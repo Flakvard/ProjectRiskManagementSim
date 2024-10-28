@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectRiskManagementSim.Pr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectRiskManagementSim.SimulationBlazor", "ProjectRiskManagementSim.SimulationBlazor\ProjectRiskManagementSim.SimulationBlazor.csproj", "{DCBEF4FD-0E4D-4A54-9EF0-946EC6A1D317}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectRiskManagementSim.DataAccess", "ProjectRiskManagementSim.DataAccess\ProjectRiskManagementSim.DataAccess.csproj", "{252EAED3-20FB-450F-A184-7B78A96940C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{DCBEF4FD-0E4D-4A54-9EF0-946EC6A1D317}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCBEF4FD-0E4D-4A54-9EF0-946EC6A1D317}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCBEF4FD-0E4D-4A54-9EF0-946EC6A1D317}.Release|Any CPU.Build.0 = Release|Any CPU
+		{252EAED3-20FB-450F-A184-7B78A96940C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{252EAED3-20FB-450F-A184-7B78A96940C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{252EAED3-20FB-450F-A184-7B78A96940C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{252EAED3-20FB-450F-A184-7B78A96940C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
