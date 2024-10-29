@@ -8,6 +8,7 @@ using ProjectRiskManagementSim.SimulationBlazor.Components.Pages.RunSimulation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +56,9 @@ builder.Services.AddScoped<Func<Guid, ProjectListViewModel>>(serviceProvider =>
         return handler;
     };
 });
+
+builder.Services.AddInfrastructureServices(Configuration);
+
 
 var app = builder.Build();
 
