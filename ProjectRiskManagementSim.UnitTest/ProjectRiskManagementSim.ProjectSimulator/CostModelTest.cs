@@ -1,4 +1,5 @@
 using ProjectRiskManagementSim.ProjectSimulation;
+using ProjectRiskManagementSim.ProjectSimulation.Models;
 
 namespace ProjectRiskManagementSim.UnitTest;
 

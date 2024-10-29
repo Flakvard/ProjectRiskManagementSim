@@ -7,9 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectRiskManagementSim.Un
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectRiskManagementSim.ProjectSimulator", "ProjectRiskManagementSim.ProjectSimulator\ProjectRiskManagementSim.ProjectSimulator.csproj", "{430779C4-CFE9-4479-B4D4-AE209AC04C29}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectRiskManagementSim.SimulationAPI", "ProjectRiskManagementSim.SimulationAPI\ProjectRiskManagementSim.SimulationAPI.csproj", "{C61F6EB7-A98C-4AA2-A150-B20EC48EA1C8}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectRiskManagementSim.SimulationBlazor", "ProjectRiskManagementSim.SimulationBlazor\ProjectRiskManagementSim.SimulationBlazor.csproj", "{DCBEF4FD-0E4D-4A54-9EF0-946EC6A1D317}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectRiskManagementSim.DataAccess", "ProjectRiskManagementSim.DataAccess\ProjectRiskManagementSim.DataAccess.csproj", "{252EAED3-20FB-450F-A184-7B78A96940C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,13 +28,13 @@ Global
 		{430779C4-CFE9-4479-B4D4-AE209AC04C29}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{430779C4-CFE9-4479-B4D4-AE209AC04C29}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{430779C4-CFE9-4479-B4D4-AE209AC04C29}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C61F6EB7-A98C-4AA2-A150-B20EC48EA1C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C61F6EB7-A98C-4AA2-A150-B20EC48EA1C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C61F6EB7-A98C-4AA2-A150-B20EC48EA1C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C61F6EB7-A98C-4AA2-A150-B20EC48EA1C8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DCBEF4FD-0E4D-4A54-9EF0-946EC6A1D317}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DCBEF4FD-0E4D-4A54-9EF0-946EC6A1D317}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCBEF4FD-0E4D-4A54-9EF0-946EC6A1D317}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCBEF4FD-0E4D-4A54-9EF0-946EC6A1D317}.Release|Any CPU.Build.0 = Release|Any CPU
+		{252EAED3-20FB-450F-A184-7B78A96940C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{252EAED3-20FB-450F-A184-7B78A96940C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{252EAED3-20FB-450F-A184-7B78A96940C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{252EAED3-20FB-450F-A184-7B78A96940C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
