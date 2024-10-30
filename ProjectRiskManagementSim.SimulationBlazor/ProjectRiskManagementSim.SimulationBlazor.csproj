@@ -2,10 +2,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ProjectRiskManagementSim.ProjectSimulator\ProjectRiskManagementSim.ProjectSimulator.csproj" />
+    <ProjectReference Include="..\ProjectRiskManagementSim.DataAccess\ProjectRiskManagementSim.DataAccess.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Htmxor" Version="1.0.0-beta.1.24" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
   </ItemGroup>
 
   <PropertyGroup>

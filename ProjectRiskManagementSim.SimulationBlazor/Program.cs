@@ -5,10 +5,9 @@ using ProjectRiskManagementSim.ProjectSimulation;
 using ProjectRiskManagementSim.SimulationBlazor.Routes;
 using ProjectRiskManagementSim.SimulationBlazor.Lib;
 using ProjectRiskManagementSim.SimulationBlazor.Components.Pages.RunSimulation;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
+using ProjectRiskManagementSim.DataAccess;
+using Microsoft.EntityFrameworkCore;
+using ProjectRiskManagementSim.DataAccess.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +16,32 @@ builder.Services
     .AddRazorComponents()
     //.AddInteractiveServerComponents()
     .AddHtmx();
+
+
+// Determine which connection string to use
+var useWindowsAuth = builder.Configuration.GetValue<bool>("UseWindowsAuth");
+var connectionStringAnalytics = useWindowsAuth
+    ? builder.Configuration.GetConnectionString("EfSqlDbOxygenAnalyticsWindows")
+    : builder.Configuration.GetConnectionString("EfSqlDbOxygenAnalytics");
+
+var connectionStringSimulation = useWindowsAuth
+    ? builder.Configuration.GetConnectionString("EfCoreSqlDbConnectionWindows")
+    : builder.Configuration.GetConnectionString("EfCoreSqlDbConnection");
+
+// Add Database connection string for OxygenSimulationContext
+builder.Services.AddDbContext<OxygenAnalyticsContext>(options =>
+    options.UseSqlServer(connectionStringAnalytics,
+      sqlServerOptionsAction: sqlOptions =>
+    {
+        sqlOptions.EnableRetryOnFailure();
+    }));
+
+builder.Services.AddDbContext<OxygenSimulationContext>(options =>
+    options.UseSqlServer(connectionStringSimulation,
+      sqlServerOptionsAction: sqlOptions =>
+    {
+        sqlOptions.EnableRetryOnFailure();
+    }));
 
 // Register as Scoped or Transient depending on how you want the lifecycle to work
 builder.Services.AddScoped<SimulationManager>();
@@ -42,23 +67,22 @@ builder.Services.AddScoped<Func<Guid, RunSimulationHandler>>(serviceProvider =>
 
 // Dictionary to store project selection from modal
 builder.Services.AddSingleton<IDictionary<Guid, ProjectListViewModel>>(new Dictionary<Guid, ProjectListViewModel>());
-builder.Services.AddScoped<Func<Guid, ProjectListViewModel>>(serviceProvider =>
+builder.Services.AddScoped<Func<Guid, Task<ProjectListViewModel>>>(serviceProvider =>
 {
     var handlers = serviceProvider.GetRequiredService<IDictionary<Guid, ProjectListViewModel>>();
-    return simulationId =>
+    var context = serviceProvider.GetRequiredService<OxygenAnalyticsContext>();
+    return async simulationId =>
     {
         if (!handlers.TryGetValue(simulationId, out var handler))
         {
-            handler = ActivatorUtilities.CreateInstance<ProjectListViewModel>(serviceProvider);
+            handler = new ProjectListViewModel();
+            await handler.InitializeProjectsAsync(context);
             handler.SetProjectListViewModelId(simulationId);
             handlers[simulationId] = handler;
         }
         return handler;
     };
 });
-
-builder.Services.AddInfrastructureServices(Configuration);
-
 
 var app = builder.Build();
 
