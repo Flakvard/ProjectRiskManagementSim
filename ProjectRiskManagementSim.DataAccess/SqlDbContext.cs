@@ -17,9 +17,15 @@ public class OxygenAnalyticsContext : DbContext
 
         // Optional: Define additional configurations if needed (e.g., primary keys, relationships)
     }
+    // Get all projects
     public async Task<List<Project>> GetProjectsAsync()
     {
         return await Projects.ToListAsync();
+    }
+    // Get a specific project by Id
+    public async Task<Project> GetProjectByIdAsync(int id)
+    {
+        return await Projects.FirstOrDefaultAsync(p => p.Id == id);
     }
 }
 
