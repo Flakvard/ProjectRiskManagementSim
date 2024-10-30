@@ -1,20 +1,32 @@
 using Microsoft.EntityFrameworkCore;
+using ProjectRiskManagementSim.DataAccess.Models;
 
-namespace ProjectRiskManagementSim.DataAccess
+
+namespace ProjectRiskManagementSim.DataAccess;
+public class OxygenAnalyticsContext : DbContext
 {
-    public class OxygenAnalyticsContext : DbContext
+    public OxygenAnalyticsContext(DbContextOptions<OxygenAnalyticsContext> options) : base(options) { }
+
+    public DbSet<IssueLeadTime> IssueLeadTimes { get; set; }
+    public DbSet<Project> Projects { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        public OxygenAnalyticsContext(DbContextOptions<OxygenAnalyticsContext> options) : base(options) { }
+        modelBuilder.Entity<IssueLeadTime>().ToTable("IssueLeadTimes", "dbo");
+        modelBuilder.Entity<Project>().ToTable("Projects", "dbo");
 
-        // Define DbSets for project data, e.g.
-        public DbSet<ProjectModel> ProjectModels { get; set; }
+        // Optional: Define additional configurations if needed (e.g., primary keys, relationships)
     }
-
-    public class OxygenSimulationContext : DbContext
+    public async Task<List<Project>> GetProjectsAsync()
     {
-        public OxygenSimulationContext(DbContextOptions<OxygenSimulationContext> options) : base(options) { }
-
-        // Define DbSets for simulation data, e.g.
-        public DbSet<SimulationResult> SimulationResults { get; set; }
+        return await Projects.ToListAsync();
     }
+}
+
+public class OxygenSimulationContext : DbContext
+{
+    public OxygenSimulationContext(DbContextOptions<OxygenSimulationContext> options) : base(options) { }
+
+    // Define DbSets for simulation data, e.g.
+    // public DbSet<SimulationResult> SimulationResults { get; set; }
 }
