@@ -27,6 +27,20 @@ public class OxygenAnalyticsContext : DbContext
     {
         return await Projects.FirstOrDefaultAsync(p => p.Id == id);
     }
+    // Get all IssueLeadTimes for a specific project
+    public async Task<List<IssueLeadTime>> GetIssueLeadTimesByProjectAsync(string projectName)
+    {
+        if (string.IsNullOrEmpty(projectName))
+        {
+            throw new ArgumentNullException(nameof(projectName));
+        }
+        var issues = await IssueLeadTimes.Where(i => i.Project == projectName).ToListAsync();
+        if (issues == null)
+        {
+            throw new ArgumentNullException(nameof(issues));
+        }
+        return issues;
+    }
 }
 
 public class OxygenSimulationContext : DbContext
