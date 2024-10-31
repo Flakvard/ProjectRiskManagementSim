@@ -43,15 +43,19 @@
             </div>
             <div>
               <label>Revenue Amount:</label>
-              <input class="input-border" type="number" name="RevenueAmount" required />
+              <input class="input-border" type="number" name="RevenueAmount" value="@double.Round(NewProjectHandler.TotalRevenue)" required />
             </div>
             <div>
               <label>Cost:</label>
-              <input class="input-border" type="number" name="Cost" required />
+              <input class="input-border" type="number" name="Cost" value="@double.Round(NewProjectHandler.TotalCost)" required />
             </div>
             <div>
               <label>Cost Days:</label>
               <input class="input-border" type="number" name="CostDays" required />
+            </div>
+            <div>
+              <label>Hours:</label>
+              <input class="input-border" type="number" name="hours" value="@double.Round(NewProjectHandler.TotalHours)" required />
             </div>
             <div>
               <label>Work In Progress (WIP):</label>

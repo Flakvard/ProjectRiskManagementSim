@@ -46,6 +46,10 @@ public class CreateNewProjectHandler
     public List<double> AwaitingRefinementPercentiles { get; set; } = new List<double> { 0, 0 };
     public List<double> OnHoldPercentiles { get; set; } = new List<double> { 0, 0 };
     public List<double> CreatedPercentiles { get; set; } = new List<double> { 0, 0 };
+    public List<IssueModel> Issues { get; set; } = new List<IssueModel>();
+    public double TotalHours { get; set; }
+    public double TotalCost { get; set; }
+    public double TotalRevenue { get; set; }
 
 
     public async Task InitializeProjectsAsync(OxygenAnalyticsContext context)
@@ -71,11 +75,11 @@ public class CreateNewProjectHandler
             IssueLeadTimes = new List<IssueLeadTime>(); // Ensure it’s an empty list instead of null
         }
 
-        CalculateCount();
+        await CalculateCount(context);
 
         CalculatePercentiles();
     }
-    private void CalculateCount()
+    private async Task CalculateCount(OxygenAnalyticsContext context)
     {
         var issuesCount = 0;
         var epicCount = 0;
@@ -94,10 +98,23 @@ public class CreateNewProjectHandler
             {
                 epicCount += 1;
             }
+            var issueModel = await context.GetIssueById(issueLeadTime.IssueId.Value);
+            if (issueModel != null)
+            {
+                Issues.Add(issueModel);
+            }
         }
         IssuesCount = issuesCount;
         EpicCount = epicCount;
         BugCount = bugCount;
+        var totalHours = Issues.Sum(x => x.TimeSpentSeconds) / 3600;
+        TotalHours = totalHours != null ? (double)totalHours : 0.0;
+        var totalCost = Issues.Sum(x => x.TimeSpentSeconds) / 3600 * 370;
+        TotalCost = totalCost != null ? (double)totalCost : 0.0;
+        var totalRevenue = Issues.Sum(x => x.TimeSpentSeconds) / 3600 * 1175;
+        TotalRevenue = totalRevenue != null ? (double)totalRevenue : 0.0;
+
+
     }
     private void CalculatePercentiles()
     {

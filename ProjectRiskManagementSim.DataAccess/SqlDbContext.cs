@@ -9,11 +9,13 @@ public class OxygenAnalyticsContext : DbContext
 
     public DbSet<IssueLeadTime> IssueLeadTimes { get; set; }
     public DbSet<Project> Projects { get; set; }
+    public DbSet<IssueModel> Issues { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<IssueLeadTime>().ToTable("IssueLeadTimes", "dbo");
         modelBuilder.Entity<Project>().ToTable("Projects", "dbo");
+        modelBuilder.Entity<IssueModel>().ToTable("Issues", "dbo");
 
         // Optional: Define additional configurations if needed (e.g., primary keys, relationships)
     }
@@ -40,6 +42,10 @@ public class OxygenAnalyticsContext : DbContext
             throw new ArgumentNullException(nameof(issues));
         }
         return issues;
+    }
+    public async Task<IssueModel> GetIssueById(int issueId)
+    {
+        return await Issues.FirstOrDefaultAsync(issue => issue.Id == issueId);
     }
 }
 
