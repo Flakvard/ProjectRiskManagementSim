@@ -20,15 +20,15 @@
         <div class="flex flex-col gap-2 h-full flex-grow">
           <h2>Project details</h2>
           <div class="flex flex-col h-full gap-2">
-                        @NewProjectHandler.JiraProjectId
-                        <div>
-                            <label>JiraProjectId:</label>
-                            <input class="input-border" type="text" name="Name" value="@NewProjectHandler.JiraProjectId" required />
-                        </div>
-                        <div>
-                            <label>Jira Project Name:</label>
-                            <input class="input-border" type="text" name="Name" value="@NewProjectHandler.Name" required />
-                        </div>
+            @NewProjectHandler.JiraProjectId
+            <div>
+              <label>JiraProjectId:</label>
+              <input class="input-border" type="text" name="Name" value="@NewProjectHandler.JiraProjectId" required />
+            </div>
+            <div>
+              <label>Jira Project Name:</label>
+              <input class="input-border" type="text" name="Name" value="@NewProjectHandler.Name" required />
+            </div>
             <div>
               <label>Name:</label>
               <input class="input-border" type="text" name="Name" required />
@@ -85,11 +85,13 @@
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="lowBound1">Estimated Low Bound:</label>
-                    <input class="input-border" type="number" id="lowBound1" name="lowBound1" value="2">
+                    <input class="input-border" type="number" id="lowBound1" name="lowBound1"
+                      value="@double.Round(NewProjectHandler.OpenPercentiles[0])">
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="highBound1">Estimated High Bound:</label>
-                    <input class="input-border" type="number" id="highBound1" name="highBound1" value="50">
+                    <input class="input-border" type="number" id="highBound1" name="highBound1"
+                      value="@double.Round(NewProjectHandler.OpenPercentiles[1])">
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="isBuffer1">Is Buffer:</label>
@@ -112,11 +114,13 @@
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="lowBound2">Estimated Low Bound:</label>
-                    <input class="input-border" type="number" id="lowBound2" name="lowBound2" value="1">
+                    <input class="input-border" type="number" id="lowBound2" name="lowBound2"
+                      value="@double.Round(NewProjectHandler.InProgressPercentiles[0])">
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="highBound2">Estimated High Bound:</label>
-                    <input class="input-border" type="number" id="highBound2" name="highBound2" value="30">
+                    <input class="input-border" type="number" id="highBound2" name="highBound2"
+                      value="@double.Round(NewProjectHandler.InProgressPercentiles[1])">
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="isBuffer2">Is Buffer:</label>
@@ -139,11 +143,13 @@
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="lowBound3">Estimated Low Bound:</label>
-                    <input class="input-border" type="number" id="lowBound3" name="lowBound3" value="2">
+                    <input class="input-border" type="number" id="lowBound3" name="lowBound3"
+                      value="@double.Round(NewProjectHandler.AwaitingCustomerPercentiles[0])">
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="highBound3">Estimated High Bound:</label>
-                    <input class="input-border" type="number" id="highBound3" name="highBound3" value="50">
+                    <input class="input-border" type="number" id="highBound3" name="highBound3"
+                      value="@double.Round(NewProjectHandler.AwaitingCustomerPercentiles[1])">
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="isBuffer3">Is Buffer:</label>
@@ -166,11 +172,13 @@
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="lowBound4">Estimated Low Bound:</label>
-                    <input class="input-border" type="number" id="lowBound4" name="lowBound4" value="2">
+                    <input class="input-border" type="number" id="lowBound4" name="lowBound4"
+                      value="@double.Round(NewProjectHandler.FinishedPercentiles[0])">
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="highBound4">Estimated High Bound:</label>
-                    <input class="input-border" type="number" id="highBound4" name="highBound4" value="40">
+                    <input class="input-border" type="number" id="highBound4" name="highBound4"
+                      value="@double.Round(NewProjectHandler.FinishedPercentiles[1])">
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="isBuffer4">Is Buffer:</label>
@@ -194,11 +202,13 @@
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="lowBound5">Estimated Low Bound:</label>
-                    <input class="input-border" type="number" id="lowBound5" name="lowBound5" value="2">
+                    <input class="input-border" type="number" id="lowBound5" name="lowBound5"
+                      value="@double.Round(NewProjectHandler.ReadyForTestOnStagePercentiles[0])">
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="highBound5">Estimated High Bound:</label>
-                    <input class="input-border" type="number" id="highBound5" name="highBound5" value="50">
+                    <input class="input-border" type="number" id="highBound5" name="highBound5"
+                      value="@double.Round(NewProjectHandler.ReadyForTestOnStagePercentiles[1])">
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="isBuffer5">Is Buffer:</label>
@@ -221,11 +231,13 @@
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="lowBound6">Estimated Low Bound:</label>
-                    <input class="input-border" type="number" id="lowBound6" name="lowBound6" value="1">
+                    <input class="input-border" type="number" id="lowBound6" name="lowBound6"
+                      value="@double.Round(NewProjectHandler.TestingOnStagePercentiles[0])">
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="highBound6">Estimated High Bound:</label>
-                    <input class="input-border" type="number" id="highBound6" name="highBound6" value="52">
+                    <input class="input-border" type="number" id="highBound6" name="highBound6"
+                      value="@double.Round(NewProjectHandler.TestingOnStagePercentiles[1])">
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="isBuffer6">Is Buffer:</label>
@@ -248,76 +260,25 @@
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="lowBound7">Estimated Low Bound:</label>
-                    <input class="input-border" type="number" id="lowBound7" name="lowBound7" value="2">
+                    <input class="input-border" type="number" id="lowBound7" name="lowBound7"
+                      value="@double.Round(NewProjectHandler.ReadyToTestOnProductionPercentiles[0])">
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="highBound7">Estimated High Bound:</label>
-                    <input class="input-border" type="number" id="highBound7" name="highBound7" value="45">
+                    <input class="input-border" type="number" id="highBound7" name="highBound7"
+                      value="@double.Round(NewProjectHandler.ReadyToTestOnProductionPercentiles[1])">
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="isBuffer7">Is Buffer:</label>
                     <input class="input-border" type="checkbox" id="isBuffer7" name="isBuffer7" checked>
                   </div>
                 </div>
-                <!-- Column 8 -->
-                <div class="column-input-border">
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="name8">Name:</label>
-                    <input class="input-border" type="text" id="name8" name="name8" value="Done">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="wip8">WIP:</label>
-                    <input class="input-border" type="number" id="wip8" name="wip8" value="20">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="wipMax8">WIP Max:</label>
-                    <input class="input-border" type="number" id="wipMax8" name="wipMax8" value="20">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="lowBound8">Estimated Low Bound:</label>
-                    <input class="input-border" type="number" id="lowBound8" name="lowBound8" value="1">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="highBound8">Estimated High Bound:</label>
-                    <input class="input-border" type="number" id="highBound8" name="highBound8" value="30">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="isBuffer8">Is Buffer:</label>
-                    <input class="input-border" type="checkbox" id="isBuffer8" name="isBuffer8" checked>
-                  </div>
-                </div>
-                <!-- Column 9 -->
-                <div class="column-input-border">
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="name9">Name:</label>
-                    <input class="input-border" type="text" id="name9" name="name9" value="Ready to test on Production">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="wip9">WIP:</label>
-                    <input class="input-border" type="number" id="wip9" name="wip9" value="10">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="wipMax9">WIP Max:</label>
-                    <input class="input-border" type="number" id="wipMax9" name="wipMax9" value="10">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="lowBound9">Estimated Low Bound:</label>
-                    <input class="input-border" type="number" id="lowBound9" name="lowBound9" value="2">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="highBound9">Estimated High Bound:</label>
-                    <input class="input-border" type="number" id="highBound9" name="highBound9" value="45">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="isBuffer9">Is Buffer:</label>
-                    <input class="input-border" type="checkbox" id="isBuffer9" name="isBuffer9" checked>
-                  </div>
-                </div>
                 <!-- Column 10 -->
                 <div class="column-input-border">
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="name10">Name:</label>
-                    <input class="input-border" type="text" id="name10" name="name10" value="Testing on Production">
+                    <input class="input-border" type="text" id="name10" name="name10"
+                      value="Waiting Deployment on Production">
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="wip10">WIP:</label>
@@ -329,11 +290,13 @@
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="lowBound10">Estimated Low Bound:</label>
-                    <input class="input-border" type="number" id="lowBound10" name="lowBound10" value="5">
+                    <input class="input-border" type="number" id="lowBound10" name="lowBound10"
+                      value="@double.Round(NewProjectHandler.WaitingForDeploymentToProductionPercentiles[0])">
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="highBound10">Estimated High Bound:</label>
-                    <input class="input-border" type="number" id="highBound10" name="highBound10" value="70">
+                    <input class="input-border" type="number" id="highBound10" name="highBound10"
+                      value="@double.Round(NewProjectHandler.WaitingForDeploymentToProductionPercentiles[1])">
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="isBuffer10">Is Buffer:</label>
@@ -356,11 +319,13 @@
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="lowBound11">Estimated Low Bound:</label>
-                    <input class="input-border" type="number" id="lowBound11" name="lowBound11" value="1">
+                    <input class="input-border" type="number" id="lowBound11" name="lowBound11"
+                      value="@double.Round(NewProjectHandler.DonePercentiles[0])">
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="highBound11">Estimated High Bound:</label>
-                    <input class="input-border" type="number" id="highBound11" name="highBound11" value="30">
+                    <input class="input-border" type="number" id="highBound11" name="highBound11"
+                      value="@double.Round(NewProjectHandler.DonePercentiles[1])">
                   </div>
                   <div class="flex flex-row gap-2 justify-center items-center">
                     <label class="label-input" for="isBuffer11">Is Buffer:</label>
@@ -380,7 +345,13 @@
             <div class="flex flex-col border border-[#b9b9b9] p-4 gap-2 flex-grow">
               <div>
                 <label>Deliverable Number:</label>
-                <input class="input-border" type="number" step="1" name="DeliverablesNumber" required value="36" />
+                <input class="input-border" type="number" step="1" name="DeliverablesNumber" required
+                  value="@NewProjectHandler.EpicCount" />
+              </div>
+              <div>
+                <label>Issues Number:</label>
+                <input class="input-border" type="number" step="1" name="DeliverablesNumber" required
+                  value="@NewProjectHandler.IssuesCount" />
               </div>
               <div>
                 <label>Percentage Low Bound:</label>
@@ -412,11 +383,11 @@
 </div>
 @code{
 
-    [Parameter] public int ProjectId { get; set; }
-    public CreateNewProjectHandler NewProjectHandler { get; set; } = new CreateNewProjectHandler();
-    protected override async Task OnInitializedAsync()
-    {
-        NewProjectHandler.ProjectId = ProjectId;
-        await NewProjectHandler.InitializeProjectsAsync(Context);
-    }
+[Parameter] public int ProjectId { get; set; }
+public CreateNewProjectHandler NewProjectHandler { get; set; } = new CreateNewProjectHandler();
+protected override async Task OnInitializedAsync()
+{
+NewProjectHandler.ProjectId = ProjectId;
+await NewProjectHandler.InitializeProjectsAsync(Context);
+}
 }
