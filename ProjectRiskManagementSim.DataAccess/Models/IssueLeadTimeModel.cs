@@ -2,8 +2,8 @@ namespace ProjectRiskManagementSim.DataAccess.Models;
 public class IssueLeadTime
 {
     public int Id { get; set; }
-    public int IssueId { get; set; }
-    public string IssueKey { get; set; }
+    public int? IssueId { get; set; }
+    public string? IssueKey { get; set; }
     public double Open { get; set; }
     public double InProgress { get; set; }
     public double Reopened { get; set; }
@@ -33,22 +33,22 @@ public class IssueLeadTime
     public double AwaitingRefinement { get; set; }
     public double OnHold { get; set; }
     public double Created { get; set; }
-    public DateTime LastUpdated { get; set; }
-    public DateTime CreatedDate { get; set; }
-    public DateTime? DoneDate { get; set; }
-    public DateTime? OpenDate { get; set; }
-    public DateTime? ReadyToTestOnProductionDate { get; set; }
+    public string? LastUpdated { get; set; }
+    public string? CreatedDate { get; set; }
+    public string? DoneDate { get; set; }
+    public string? OpenDate { get; set; }
+    public string? ReadyToTestOnProductionDate { get; set; }
     public double? CycleTime { get; set; }
     public double? LeadTime { get; set; }
-    public string CurrentStatus { get; set; }
-    public string PreviousStatus { get; set; }
-    public string IssueType { get; set; }
-    public int Assignee { get; set; }
-    public int Creator { get; set; }
-    public int Reporter { get; set; }
-    public string Epic { get; set; }
-    public string Priority { get; set; }
-    public string Customer { get; set; }
-    public string Project { get; set; }
-    public string Summary { get; set; }
+    public string? CurrentStatus { get; set; }
+    public string? PreviousStatus { get; set; }
+    public string? IssueType { get; set; }
+    public int? Assignee { get; set; }
+    public int? Creator { get; set; }
+    public int? Reporter { get; set; }
+    public string? Epic { get; set; }
+    public string? Priority { get; set; }
+    public string? Customer { get; set; }
+    public string? Project { get; set; }
+    public string? Summary { get; set; }
 }
