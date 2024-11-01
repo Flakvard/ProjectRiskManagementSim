@@ -43,14 +43,14 @@ foreach ($fileType in $fileTypes) {
 # Loop through each first-level folder
 foreach ($folder in $folders) {
     # Skip bin, obj, and node_modules folders
-    if ($folder.Name -in @("bin", "obj", "node_modules")) {
+    if ($folder.Name -in @("bin", "obj", "node_modules", "Migrations")) {
         continue
     }
 
     foreach ($fileType in $fileTypes) {
         # Recursively get all files of the current type within the folder and all its subdirectories
         $files = Get-ChildItem -Path $folder.FullName -Recurse -Include *.$fileType | Where-Object { 
-            $_.FullName -notmatch '\\bin\\|\\obj\\|\\node_modules\\'
+            $_.FullName -notmatch '\\bin\\|\\obj\\|\\node_modules\\|\\Migrations\\'
         }
         
         # If the folder contains files of the current type, count the lines
