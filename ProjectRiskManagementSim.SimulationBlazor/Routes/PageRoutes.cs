@@ -98,19 +98,39 @@ public static class PageRoutes
 
 #nullable disable
             // Extract and parse form data
+            var jiraProjectId = form["JiraProjectId"];
+            var jiraProjectName = form["JiraProjectName"];
             var name = form["Name"];
             var startDate = DateTime.Parse(form["StartDate"]);
             var targetDate = DateTime.Parse(form["TargetDate"]);
             var revenueAmount = double.Parse(form["RevenueAmount"]);
             var cost = double.Parse(form["Cost"]);
             var costDays = double.Parse(form["CostDays"]);
+            var hours = double.Parse(form["hours"]);
+            var wip = int.Parse(form["WIP"]);
+            var deliverableNumber = double.Parse(form["DeliverablesNumber"]);
             var percentageLowBound = double.Parse(form["PercentageLowBound"]);
             var percentageHighBound = double.Parse(form["PercentageHighBound"]);
-            var wip = int.Parse(form["WIP"]);
-            var deliverableNumber = int.Parse(form["DeliverablesNumber"]);
+
+            var columns = new List<ColumnModel>();
+            for (int i = 1; i <= 11; i++)
+            {
+                if (form.ContainsKey($"name{i}"))
+                {
+                    columns.Add(new ColumnModel
+                    {
+                        Name = form[$"name{i}"],
+                        WIP = int.Parse(form[$"wip{i}"]),
+                        WIPMax = int.Parse(form[$"wipMax{i}"]),
+                        EstimatedLowBound = int.Parse(form[$"lowBound{i}"]),
+                        EstimatedHighBound = int.Parse(form[$"highBound{i}"]),
+                        IsBuffer = form[$"isBuffer{i}"] == "on"
+                    });
+                }
+            }
 
             var deliverableModel = new List<DeliverableModel>();
-            for (var i = 1; i < deliverableNumber; i++)
+            for (var i = 1; i <= deliverableNumber; i++)
             {
                 deliverableModel.Add(new DeliverableModel
                 {
@@ -127,12 +147,13 @@ public static class PageRoutes
                 TargetDate = targetDate,
                 Revenue = new RevenueModel { Amount = revenueAmount },
                 Costs = new CostModel { Cost = cost, Days = costDays },
+                // Hours = hours,
                 // Initialize the staff list
                 Staff = new List<StaffModel>
                 {
-                    new StaffModel { Name = "John Doe", Role = Role.ProjectManager, Sale = 1000, Cost = 370, Days = 20 },
-                    new StaffModel { Name = "Jane Doe", Role = Role.FrontendDeveloper, Sale = 1000, Cost = 370, Days = 20 },
-                    new StaffModel { Name = "Jack Doe", Role = Role.BackendDeveloper, Sale = 1000, Cost = 370, Days = 20 }
+            new StaffModel { Name = "John Doe", Role = Role.ProjectManager, Sale = 1000, Cost = 370, Days = 20 },
+            new StaffModel { Name = "Jane Doe", Role = Role.FrontendDeveloper, Sale = 1000, Cost = 370, Days = 20 },
+            new StaffModel { Name = "Jack Doe", Role = Role.BackendDeveloper, Sale = 1000, Cost = 370, Days = 20 }
                 },
                 Backlog = new BacklogModel
                 {
@@ -140,17 +161,7 @@ public static class PageRoutes
                     PercentageLowBound = percentageLowBound,
                     PercentageHighBound = percentageHighBound
                 },
-                Columns = new List<ColumnModel>
-                {
-                  new ColumnModel(wip: wip, wipMax: wip) { Name = "Backlog", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 54 },
-                  new ColumnModel(wip: wip, wipMax: wip) { Name = "Open", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 54 },
-                  new ColumnModel(wip: 5, wipMax: 5) { Name = "In Progress", EstimatedLowBound = 1, EstimatedHighBound = 47 },
-                  new ColumnModel(wip: wip, wipMax: wip) { Name = "Rdy4Test", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 50 },
-                  new ColumnModel(wip: 0, wipMax: 5) { Name = "Test Stage", EstimatedLowBound = 1, EstimatedHighBound = 11 },
-                  new ColumnModel(wip: wip, wipMax: wip) { Name = "Await Dply Prod", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 22 },
-                  new ColumnModel(wip: 0, wipMax: 5) { Name = "Rdy4TestProd", EstimatedLowBound = 1, EstimatedHighBound = 54 },
-                  new ColumnModel(wip: wip, wipMax: wip) { Name = "Done", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 54 }
-                }
+                Columns = columns
             };
 
             var simulationId = Guid.NewGuid(); // Create a unique ID for this simulation session
@@ -165,16 +176,16 @@ public static class PageRoutes
 
             // Prepare simulation result HTML to return
             var htmlContent = $@"
-                <div>
-                    <h2>Simulation Started</h2>
-                    <p>Simulation ID: {simulationId}, is simulation complete? {simulation.IsCompleted}</p>
-                    <p>Project Name: {projectData.Name}</p>
-                    <p>Start Date: {projectData.StartDate.ToShortDateString()}</p>
-                    <p>Target Date: {projectData.TargetDate.ToShortDateString()}</p>
-                    <p>Revenue: {projectData.Revenue.Amount}</p>
-                    <p>Cost: {projectData.Costs.Cost}</p>
-                    <button onclick=""window.location.href='/simulation-progress/{simulationId}'"">View Progress</button>
-                </div>";
+        <div>
+            <h2>Simulation Started</h2>
+            <p>Simulation ID: {simulationId}, is simulation complete? {simulation.IsCompleted}</p>
+            <p>Project Name: {projectData.Name}</p>
+            <p>Start Date: {projectData.StartDate.ToShortDateString()}</p>
+            <p>Target Date: {projectData.TargetDate.ToShortDateString()}</p>
+            <p>Revenue: {projectData.Revenue.Amount}</p>
+            <p>Cost: {projectData.Costs.Cost}</p>
+            <button onclick=""window.location.href='/simulation-progress/{simulationId}'"">View Progress</button>
+        </div>";
             return Results.Content(htmlContent, "text/html");
         });
 
@@ -193,7 +204,6 @@ public static class PageRoutes
                 <h2>Simulation Progress</h2>
                 <p>Simulation ID: {simulationId}</p>
                 <p>Is simulation complete? {simulation.IsCompleted}</p>
-                <p>Days : {simulation.SimTotalDaysResult.Percentile(0.9)}</p>
                 <!-- Add more fields as necessary -->
             </div>";
 
@@ -220,7 +230,6 @@ public static class PageRoutes
                         <p>Is Completed: {sim.IsCompleted}</p>
                         <p>Start Date: {sim.ProjectSimulationModel.StartDate}</p>
                         <p>Target Date: {sim.ProjectSimulationModel.TargetDate}</p>
-                        <p>Days : {sim.SimTotalDaysResult.Percentile(0.9)}</p>
                         <a href='/simulation-progress/{sim.SimulationId}'>View Progress</a>
                     </li>";
             }

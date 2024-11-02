@@ -23,11 +23,11 @@
                         @NewProjectHandler.JiraProjectId
                         <div>
                             <label>JiraProjectId:</label>
-                            <input class="input-border" type="text" name="Name" value="@NewProjectHandler.JiraProjectId" required />
+                            <input class="input-border" type="text" name="JiraProjectId" value="@NewProjectHandler.JiraProjectId" required />
                         </div>
                         <div>
                             <label>Jira Project Name:</label>
-                            <input class="input-border" type="text" name="Name" value="@NewProjectHandler.Name" required />
+                            <input class="input-border" type="text" name="jiraProjectName" value="@NewProjectHandler.Name" required />
                         </div>
                         <div>
                             <label>Name:</label>
@@ -43,11 +43,13 @@
                         </div>
                         <div>
                             <label>Revenue Amount:</label>
-                            <input class="input-border" type="number" name="RevenueAmount" value="@double.Round(NewProjectHandler.TotalRevenue)" required />
+                            <input class="input-border" type="number" name="RevenueAmount"
+                                   value="@double.Round(NewProjectHandler.TotalRevenue)" required />
                         </div>
                         <div>
                             <label>Cost:</label>
-                            <input class="input-border" type="number" name="Cost" value="@double.Round(NewProjectHandler.TotalCost)" required />
+                            <input class="input-border" type="number" name="Cost" value="@double.Round(NewProjectHandler.TotalCost)"
+                                   required />
                         </div>
                         <div>
                             <label>Cost Days:</label>
@@ -55,12 +57,16 @@
                         </div>
                         <div>
                             <label>Hours:</label>
-                            <input class="input-border" type="number" name="hours" value="@double.Round(NewProjectHandler.TotalHours)" required />
+                            <input class="input-border" type="number" name="hours" value="@double.Round(NewProjectHandler.TotalHours)"
+                                   required />
                         </div>
                         <div>
                             <label>Work In Progress (WIP):</label>
                             <input class="input-border" type="number" name="WIP" required />
                         </div>
+                        <button type="submit" class="bg-[#7e44eb] text-white px-4 py-2 rounded hover:bg-blue-600">
+                            Save changes
+                        </button>
                     </div>
                 </div>
 
@@ -380,8 +386,8 @@
             <button id="closeModalFooter" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 mr-2">
                 Close
             </button>
-            <button type="submit" class="bg-[#7e44eb] text-white px-4 py-2 rounded hover:bg-blue-600"
-                    hx-put="/select-project" hx-vals='{ "Open": true }' hx-target="#modal" hx-swap="innerHTML" hx-replace-url="true">
+            <button type="submit" class="bg-[#7e44eb] text-white px-4 py-2 rounded hover:bg-blue-600" hx-put="/select-project"
+                    hx-vals='{ "Open": true }' hx-target="#modal" hx-swap="innerHTML" hx-replace-url="true">
                 Back
             </button>
         </div>
