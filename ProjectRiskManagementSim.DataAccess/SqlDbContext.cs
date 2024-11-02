@@ -5,7 +5,9 @@ using ProjectRiskManagementSim.DataAccess.Models;
 namespace ProjectRiskManagementSim.DataAccess;
 public class OxygenAnalyticsContext : DbContext
 {
-    public OxygenAnalyticsContext(DbContextOptions<OxygenAnalyticsContext> options) : base(options) { }
+    public OxygenAnalyticsContext(DbContextOptions<OxygenAnalyticsContext> options) : base(options) {
+        this.ChangeTracker.LazyLoadingEnabled = false;
+    }
 
     public DbSet<IssueLeadTime> IssueLeadTimes { get; set; }
     public DbSet<Project> Projects { get; set; }
@@ -16,6 +18,7 @@ public class OxygenAnalyticsContext : DbContext
         modelBuilder.Entity<IssueLeadTime>().ToTable("IssueLeadTimes", "dbo");
         modelBuilder.Entity<Project>().ToTable("Projects", "dbo");
         modelBuilder.Entity<IssueModel>().ToTable("Issues", "dbo");
+
 
         // Optional: Define additional configurations if needed (e.g., primary keys, relationships)
     }
@@ -36,11 +39,23 @@ public class OxygenAnalyticsContext : DbContext
         {
             throw new ArgumentNullException(nameof(projectName));
         }
-        var issues = await IssueLeadTimes.Where(i => i.Project == projectName).ToListAsync();
-        if (issues == null)
+
+        // Step 1: Get the Project ID
+        var project = await Projects
+            .Where(p => p.Name == projectName)
+            .Select(p => p.Id)
+            .FirstOrDefaultAsync();
+
+        if (project == default)
         {
-            throw new ArgumentNullException(nameof(issues));
+            throw new ArgumentException("Project not found", nameof(projectName));
         }
+
+        var issues = await IssueLeadTimes
+                            .Include(il => il.Issue)
+                            .Where(il => il.Issue.ProjectId == project)
+                            .AsNoTracking()
+                            .ToListAsync();
         return issues;
     }
     public async Task<IssueModel> GetIssueById(int issueId)

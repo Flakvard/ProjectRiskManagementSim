@@ -107,7 +107,7 @@ public class CreateNewProjectHandler
             }
             if (issueLeadTime.IssueId != null)
             {
-                var issueModel = await context.GetIssueById(issueLeadTime.IssueId.Value);
+                var issueModel = await context.GetIssueById(issueLeadTime.IssueId);
                 if (issueModel != null)
                 {
                     Issues.Add(issueModel);

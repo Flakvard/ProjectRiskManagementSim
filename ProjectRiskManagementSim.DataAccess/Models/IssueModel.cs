@@ -1,4 +1,6 @@
 
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace ProjectRiskManagementSim.DataAccess.Models;
 public class IssueModel
 {
@@ -19,6 +21,9 @@ public class IssueModel
     public int? AssigneeId { get; set; }
     public int? ReporterId { get; set; }
     public int? CreatorId { get; set; }
+
+    [ForeignKey("ProjectId")]
+    public Project Project { get; set; }
     public int ProjectId { get; set; }
     public double TimeRemainingSeconds { get; set; }
 }

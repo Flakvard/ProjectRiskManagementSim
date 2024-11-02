@@ -1,8 +1,12 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace ProjectRiskManagementSim.DataAccess.Models;
 public class IssueLeadTime
 {
     public int Id { get; set; }
-    public int? IssueId { get; set; }
+    [ForeignKey("IssueId")]
+    public IssueModel Issue { get; set; }
+    public int IssueId { get; set; }
     public string? IssueKey { get; set; }
     public double Open { get; set; }
     public double InProgress { get; set; }
