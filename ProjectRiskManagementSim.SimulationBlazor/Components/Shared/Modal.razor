@@ -75,10 +75,19 @@
   [SupplyParameterFromForm]
   public int? ProjectId { get; set; }
 
+  [SupplyParameterFromForm] public bool Open { get; set; }
+
   private bool IsModalVisible { get; set; } = false;
 
   protected override async Task OnInitializedAsync()
   {
+      if(Open == true)
+      {
+          IsModalVisible = true;
+      }else{
+          IsModalVisible = false;
+      }
+
   ProjectsView = await ProjectListViewModelFactory(Guid.NewGuid());
   }
 

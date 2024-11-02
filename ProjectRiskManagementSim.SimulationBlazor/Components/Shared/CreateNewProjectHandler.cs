@@ -9,9 +9,9 @@ public class CreateNewProjectHandler
     public string? Manager { get; set; }
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
-    public string JiraId { get; set; }
-    public string JiraProjectId { get; set; }
-    public List<IssueLeadTime> IssueLeadTimes { get; set; }
+    public string? JiraId { get; set; }
+    public string? JiraProjectId { get; set; }
+    public List<IssueLeadTime>? IssueLeadTimes { get; set; }
     public int IssuesCount { get; set; }
     public int EpicCount { get; set; }
     public int BugCount { get; set; }
@@ -84,6 +84,13 @@ public class CreateNewProjectHandler
         var issuesCount = 0;
         var epicCount = 0;
         var bugCount = 0;
+        if (IssueLeadTimes == null)
+        {
+            IssuesCount = issuesCount;
+            EpicCount = epicCount;
+            BugCount = bugCount;
+            return;
+        }
         foreach (var issueLeadTime in IssueLeadTimes)
         {
             if (issueLeadTime.IssueType == "Task" || issueLeadTime.IssueType == "Sub-task" || issueLeadTime.IssueType == "Subtask" || issueLeadTime.IssueType == "Tech Task")
@@ -98,10 +105,13 @@ public class CreateNewProjectHandler
             {
                 epicCount += 1;
             }
-            var issueModel = await context.GetIssueById(issueLeadTime.IssueId.Value);
-            if (issueModel != null)
+            if (issueLeadTime.IssueId != null)
             {
-                Issues.Add(issueModel);
+                var issueModel = await context.GetIssueById(issueLeadTime.IssueId.Value);
+                if (issueModel != null)
+                {
+                    Issues.Add(issueModel);
+                }
             }
         }
         IssuesCount = issuesCount;
@@ -114,10 +124,13 @@ public class CreateNewProjectHandler
         var totalRevenue = Issues.Sum(x => x.TimeSpentSeconds) / 3600 * 1175;
         TotalRevenue = totalRevenue != null ? (double)totalRevenue : 0.0;
 
-
     }
     private void CalculatePercentiles()
     {
+        if (IssueLeadTimes == null || IssueLeadTimes.Count == 0)
+        {
+            return;
+        }
         OpenPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.Open).ToList());
         InProgressPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.InProgress).ToList());
         ReopenedPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.Reopened).ToList());
