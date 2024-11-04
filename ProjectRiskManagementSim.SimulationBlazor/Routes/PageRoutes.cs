@@ -96,35 +96,80 @@ public static class PageRoutes
         {
             var form = await request.ReadFormAsync();
 
-#nullable disable
             // Extract and parse form data
             var jiraProjectId = form["JiraProjectId"];
             var jiraProjectName = form["JiraProjectName"];
             var name = form["Name"];
-            var startDate = DateTime.Parse(form["StartDate"]);
-            var targetDate = DateTime.Parse(form["TargetDate"]);
-            var revenueAmount = double.Parse(form["RevenueAmount"]);
-            var cost = double.Parse(form["Cost"]);
-            var costDays = double.Parse(form["CostDays"]);
-            var hours = double.Parse(form["hours"]);
-            var wip = int.Parse(form["WIP"]);
-            var deliverableNumber = double.Parse(form["DeliverablesNumber"]);
-            var percentageLowBound = double.Parse(form["PercentageLowBound"]);
-            var percentageHighBound = double.Parse(form["PercentageHighBound"]);
+            string? stringStartDate = form["StartDate"];
+            string? stringLastDate = form["LastDate"];
+            string? stringTargetDate = form["TargetDate"];
+            string? stringRevenueAmount = form["RevenueAmount"];
+            string? stringCost = form["Cost"];
+            string? stringHours = form["Hours"];
+            string? stringDeliverablesNumber = form["DeliverablesNumber"];
+            string? stringPercentageLowBound = form["PercentageLowBound"];
+            string? stringPercentageHighBound = form["PercentageHighBound"];
+            if (stringStartDate == null || stringLastDate == null || stringTargetDate == null || stringRevenueAmount == null || stringCost == null || stringHours == null || stringDeliverablesNumber == null || stringPercentageLowBound == null || stringPercentageHighBound == null)
+            {
+                return Results.BadRequest("Invalid input.");
+            }
+            var percentageLowBound = double.Parse(stringPercentageLowBound);
+            var hours = double.Parse(stringHours);
+            var startDate = DateTime.Parse(stringStartDate);
+            var lastDate = DateTime.Parse(stringLastDate);
+            var targetDate = DateTime.Parse(stringTargetDate);
+            var revenueAmount = double.Parse(stringRevenueAmount);
+            var cost = double.Parse(stringCost);
+            var deliverableNumber = double.Parse(stringDeliverablesNumber);
+            var percentageHighBound = double.Parse(stringPercentageHighBound);
+            if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(jiraProjectId) || string.IsNullOrWhiteSpace(jiraProjectName))
+            {
+                return Results.BadRequest("Invalid input.");
+            }
+
+            if (targetDate < startDate)
+            {
+                return Results.BadRequest("Invalid date range.");
+            }
+            var daysSinceStartInt = 1;
+            if (lastDate < startDate)
+            {
+                var todayDate = DateTime.Now;
+                var daysSinceStart = todayDate - startDate;
+                daysSinceStartInt = daysSinceStart.Days;
+            }
+            else
+            {
+                var daysSinceStart = lastDate - startDate;
+                daysSinceStartInt = daysSinceStart.Days;
+
+            }
+            var costPrDay = cost / daysSinceStartInt;
 
             var columns = new List<ColumnModel>();
             for (int i = 1; i <= 11; i++)
             {
                 if (form.ContainsKey($"name{i}"))
                 {
+                    // Check possible null reference
+                    string? colName = form[$"name{i}"];
+                    string? wip = form[$"wip{i}"];
+                    string? wipMax = form[$"wipMax{i}"];
+                    string? lowBound = form[$"lowBound{i}"];
+                    string? highBound = form[$"highBound{i}"];
+                    string? isBuffer = form[$"isBuffer{i}"];
+                    if (colName == null || wip == null || wipMax == null || lowBound == null || highBound == null || isBuffer == null)
+                    {
+                        break;
+                    }
                     columns.Add(new ColumnModel
                     {
-                        Name = form[$"name{i}"],
-                        WIP = int.Parse(form[$"wip{i}"]),
-                        WIPMax = int.Parse(form[$"wipMax{i}"]),
-                        EstimatedLowBound = int.Parse(form[$"lowBound{i}"]),
-                        EstimatedHighBound = int.Parse(form[$"highBound{i}"]),
-                        IsBuffer = form[$"isBuffer{i}"] == "on"
+                        Name = colName,
+                        WIP = int.Parse(wip),
+                        WIPMax = int.Parse(wipMax),
+                        EstimatedLowBound = int.Parse(lowBound),
+                        EstimatedHighBound = int.Parse(highBound),
+                        IsBuffer = isBuffer == "on"
                     });
                 }
             }
@@ -146,14 +191,14 @@ public static class PageRoutes
                 StartDate = startDate,
                 TargetDate = targetDate,
                 Revenue = new RevenueModel { Amount = revenueAmount },
-                Costs = new CostModel { Cost = cost, Days = costDays },
+                Costs = new CostModel { Cost = costPrDay, Days = daysSinceStartInt },
                 // Hours = hours,
                 // Initialize the staff list
                 Staff = new List<StaffModel>
                 {
-            new StaffModel { Name = "John Doe", Role = Role.ProjectManager, Sale = 1000, Cost = 370, Days = 20 },
-            new StaffModel { Name = "Jane Doe", Role = Role.FrontendDeveloper, Sale = 1000, Cost = 370, Days = 20 },
-            new StaffModel { Name = "Jack Doe", Role = Role.BackendDeveloper, Sale = 1000, Cost = 370, Days = 20 }
+                  new StaffModel { Name = "John Doe", Role = Role.ProjectManager, Sale = 1000, Cost = 370, Days = 20 },
+                  new StaffModel { Name = "Jane Doe", Role = Role.FrontendDeveloper, Sale = 1000, Cost = 370, Days = 20 },
+                  new StaffModel { Name = "Jack Doe", Role = Role.BackendDeveloper, Sale = 1000, Cost = 370, Days = 20 }
                 },
                 Backlog = new BacklogModel
                 {
@@ -175,17 +220,7 @@ public static class PageRoutes
             SimulationManager.AddSimulationToManager(simulationId, simulation);
 
             // Prepare simulation result HTML to return
-            var htmlContent = $@"
-        <div>
-            <h2>Simulation Started</h2>
-            <p>Simulation ID: {simulationId}, is simulation complete? {simulation.IsCompleted}</p>
-            <p>Project Name: {projectData.Name}</p>
-            <p>Start Date: {projectData.StartDate.ToShortDateString()}</p>
-            <p>Target Date: {projectData.TargetDate.ToShortDateString()}</p>
-            <p>Revenue: {projectData.Revenue.Amount}</p>
-            <p>Cost: {projectData.Costs.Cost}</p>
-            <button onclick=""window.location.href='/simulation-progress/{simulationId}'"">View Progress</button>
-        </div>";
+            var htmlContent = $@"Saved!";
             return Results.Content(htmlContent, "text/html");
         });
 
