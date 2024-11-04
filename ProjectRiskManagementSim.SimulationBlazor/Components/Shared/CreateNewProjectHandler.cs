@@ -50,6 +50,8 @@ public class CreateNewProjectHandler
     public double TotalHours { get; set; }
     public double TotalCost { get; set; }
     public double TotalRevenue { get; set; }
+    public DateTime FirstIssueDate { get; set; }
+    public DateTime LastIssueDate { get; set; }
 
 
     public async Task InitializeProjectsAsync(OxygenAnalyticsContext context)
@@ -105,13 +107,28 @@ public class CreateNewProjectHandler
             {
                 epicCount += 1;
             }
-            if (issueLeadTime.IssueId != null)
+            var issueModel = await context.GetIssueById(issueLeadTime.IssueId);
+            if (issueModel != null)
             {
-                var issueModel = await context.GetIssueById(issueLeadTime.IssueId);
-                if (issueModel != null)
-                {
-                    Issues.Add(issueModel);
-                }
+                Issues.Add(issueModel);
+            }
+            var issueCreatedDate = new DateTime();
+            if (issueLeadTime.CreatedDate != null)
+            {
+                issueCreatedDate = DateTime.Parse(issueLeadTime.CreatedDate);
+            }
+            if (FirstIssueDate == DateTime.MinValue || issueCreatedDate < FirstIssueDate)
+            {
+                FirstIssueDate = issueCreatedDate;
+            }
+            var issueUpdatedDate = new DateTime();
+            if (issueLeadTime.LastUpdated != null)
+            {
+                issueUpdatedDate = DateTime.Parse(issueLeadTime.LastUpdated);
+            }
+            if (LastIssueDate == DateTime.MinValue || issueUpdatedDate > LastIssueDate)
+            {
+                LastIssueDate = issueUpdatedDate;
             }
         }
         IssuesCount = issuesCount;
