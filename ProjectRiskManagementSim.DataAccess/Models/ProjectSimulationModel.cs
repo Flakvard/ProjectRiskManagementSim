@@ -17,6 +17,7 @@ public class ProjectSimulationModel
     public DateTime TargetDate { get; set; }
     public double? Revenue { get; set; }
     public double? Costs { get; set; }
+    public double? Hours { get; set; }
 
     // Navigation property for one-to-many relationship
     public ICollection<ColumnModel> Columns { get; set; }
