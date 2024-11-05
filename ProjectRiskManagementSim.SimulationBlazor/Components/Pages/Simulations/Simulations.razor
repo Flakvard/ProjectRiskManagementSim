@@ -1,0 +1,82 @@
+@using ProjectRiskManagementSim.SimulationBlazor.Components.Layout
+@using ProjectRiskManagementSim.SimulationBlazor.Lib
+@using ProjectRiskManagementSim.ProjectSimulation.Interfaces
+@layout SimulationsLayout
+@page "/simulations"
+<div class="flex flex-row my-24 justify-center self-stretch grow shrink">
+    <div id="SimulationsMain" class="flex flex-row gap-4">
+        <!-- Main Content -->
+        <div class="ProjectContent flex overflow-y-auto max-h-[500px] w-full">
+            <table class="table-auto w-full self-stretch grow shrink basis-0 bg-white rounded border border-[#b9b9b9]">
+                <thead class="sticky top-0 bg-[#7e44eb]">
+                    <tr>
+                        <th class="px-3 py-2.5 text-center cell-header-text">Project Name</th>
+                        <th class="px-3 py-2.5 text-center cell-header-text">Project Description</th>
+                        <th class="px-3 py-2.5 text-center cell-header-text">Project Manager</th>
+                        <th class="px-3 py-2.5 text-center cell-header-text">Start Date</th>
+                        <th class="px-3 py-2.5 text-center cell-header-text">End Date</th>
+                        <th class="px-3 py-2.5 text-center cell-header-text">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var project in projects)
+                    {
+                        <tr>
+                            <td class="px-3 py-2.5 text-center cell-text">project.Name</td>
+                            <td class="px-3 py-2.5 text-center cell-text">project.Description</td>
+                            <td class="px-3 py-2.5 text-center cell-text">project.ProjectManager</td>
+                            <td class="px-3 py-2.5 text-center cell-text">project.EndDate</td>
+                            <td class="px-3 py-2.5 text-center cell-text">project.StartDate</td>
+                            <td class="px-3 py-2.5 text-center cell-text">
+                                <button>Open</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+        <div class="SimulationContent flex overflow-y-auto max-h-[500px] w-full">
+            <table class="table-auto w-full self-stretch grow shrink basis-0 bg-white rounded border border-[#b9b9b9]">
+                <thead class="sticky top-0 bg-[#7e44eb]">
+                    <tr>
+                        <th class="px-3 py-2.5 text-center cell-header-text">Simulation Name</th>
+                        <th class="px-3 py-2.5 text-center cell-header-text">Simulation Description</th>
+                        <th class="px-3 py-2.5 text-center cell-header-text">Simulation Manager</th>
+                        <th class="px-3 py-2.5 text-center cell-header-text">Start Date</th>
+                        <th class="px-3 py-2.5 text-center cell-header-text">End Date</th>
+                        <th class="px-3 py-2.5 text-center cell-header-text">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var simulation in simulationManager)
+                    {
+                        <tr>
+                            <td class="px-3 py-2.5 text-center cell-text">@simulation.ProjectSimulationModel.Name</td>
+                            <td class="px-3 py-2.5 text-center cell-text">@simulation.ProjectSimulationModel.Backlog.Deliverables.Count()</td>
+                            <td class="px-3 py-2.5 text-center cell-text">@simulation.ProjectSimulationModel.Costs.Cost</td>
+                            <td class="px-3 py-2.5 text-center cell-text">@simulation.ProjectSimulationModel.StartDate</td>
+                            <td class="px-3 py-2.5 text-center cell-text">@simulation.ProjectSimulationModel.TargetDate</td>
+                            <td class="px-3 py-2.5 text-center cell-text">
+                                <button>Open</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+@code {
+    public List<int> projects { get; set; } = new List<int>();
+    public List<int> simulations { get; set; } = new List<int>();
+    public List<IMonteCarloSimulation> simulationManager { get; set; } = SimulationManager.GetAllSimulations();
+
+    protected override async Task OnInitializedAsync()
+    {
+        projects = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 };
+        simulations = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 };
+    }
+}

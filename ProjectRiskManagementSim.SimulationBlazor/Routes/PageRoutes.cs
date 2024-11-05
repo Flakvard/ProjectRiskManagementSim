@@ -23,9 +23,6 @@ public static class PageRoutes
         app.MapGet("/dashboardMain",
             () => new RazorComponentResult<DashboardMain>());
 
-        app.MapGet("/simulations",
-            () => new RazorComponentResult<Simulations>());
-
         app.MapGet("/run-simulation",
             () => new RazorComponentResult<RunSimulation>());
 
@@ -209,6 +206,7 @@ public static class PageRoutes
                 Columns = columns
             };
 
+            // Initialize the simulation
             var simulationId = Guid.NewGuid(); // Create a unique ID for this simulation session
             var mappedProjectData = ModelMapper.MapToSimProjProjectSimulationModel(projectData);
 
