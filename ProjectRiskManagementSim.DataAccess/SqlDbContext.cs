@@ -90,6 +90,18 @@ public class OxygenSimulationContext : DbContext
                     .WithOne(c => c.ProjectSimulationModel)
                     .HasForeignKey(c => c.ProjectSimulationModelId);
     }
+    public async Task<List<ProjectModel>> GetProjectsAsync()
+    {
+        return await ProjectModel.ToListAsync();
+    }
+    public ProjectModel? GetProjectByIdAsync(string jiraId)
+    {
+        // Check if the project already exists in the database
+        var project = ProjectModel
+            .Include(p => p.ProjectSimulationModels) // Ensure related simulations are loaded
+            .FirstOrDefault(p => p.JiraId == jiraId);
+        return project;
+    }
 }
 
 
