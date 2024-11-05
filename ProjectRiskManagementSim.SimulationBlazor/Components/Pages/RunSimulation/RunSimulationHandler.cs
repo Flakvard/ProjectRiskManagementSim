@@ -7,9 +7,9 @@ namespace ProjectRiskManagementSim.SimulationBlazor.Components.Pages.RunSimulati
 public class RunSimulationHandler
 {
     public IMonteCarloSimulation MCS { get; set; }
-    public List<ColumnModel> columns { get; set; }
+    public List<ViewColumnModel> columns { get; set; }
     public List<DeliverableModel> deliverables { get; set; }
-    public Dictionary<ColumnModel, List<DeliverableModel>> columnDeliverables { get; set; }
+    public Dictionary<ViewColumnModel, List<DeliverableModel>> columnDeliverables { get; set; }
     public int currentDay { get; set; } = 0;
     public bool simulationRunning { get; set; } = false;
     private SimulationManager _simulationManager { get; set; }
@@ -73,7 +73,7 @@ public class RunSimulationHandler
         simulationRunning = false;
     }
 
-    private void UpdateBoard(List<ColumnModel> mappedUpdatedColumns, List<DeliverableModel> updatedDeliverables)
+    private void UpdateBoard(List<ViewColumnModel> mappedUpdatedColumns, List<DeliverableModel> updatedDeliverables)
     {
         // Update the columns
         foreach (var column in mappedUpdatedColumns)

@@ -1,7 +1,7 @@
 namespace ProjectRiskManagementSim.SimulationBlazor.Models;
 
 
-public class ProjectSimulationModel
+public class ViewProjectSimulationModel
 {
     public string? Name { get; set; }
     public List<StaffModel>? Staff { get; set; }
@@ -10,15 +10,15 @@ public class ProjectSimulationModel
     public RevenueModel? Revenue { get; set; }
     public CostModel? Costs { get; set; }
     public BacklogModel? Backlog { get; set; }
-    public List<ColumnModel?>? Columns { get; set; }
+    public List<ViewColumnModel?>? Columns { get; set; }
     // public List<PhaseModel> Phases { get; set; }
     // public List<DefectModel> Defects { get; set; }
     // public List<BlockingEventModel> BlockingEvents { get; set; }
 
     // Function to deep copy a ProjectSimulationModel
-    internal ProjectSimulationModel CloneProjectSimModel(ProjectSimulationModel original, string Name)
+    internal ViewProjectSimulationModel CloneProjectSimModel(ViewProjectSimulationModel original, string Name)
     {
-        return new ProjectSimulationModel
+        return new ViewProjectSimulationModel
         {
             Name = Name,
             Staff = original.Staff!.Select(s => new StaffModel
@@ -49,7 +49,7 @@ public class ProjectSimulationModel
                 PercentageLowBound = original.Backlog.PercentageLowBound,
                 PercentageHighBound = original.Backlog.PercentageHighBound
             },
-            Columns = original.Columns.Select(c => new ColumnModel
+            Columns = original.Columns.Select(c => new ViewColumnModel
             {
                 Name = c.Name,
                 EstimatedLowBound = c.EstimatedLowBound,

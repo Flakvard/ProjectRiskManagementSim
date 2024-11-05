@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
+using ProjectRiskManagementSim.DataAccess;
+using ProjectRiskManagementSim.DataAccess.Models;
 
 namespace ProjectRiskManagementSim.SimulationBlazor.Routes;
 
@@ -89,7 +91,7 @@ public static class PageRoutes
         });
 
 
-        app.MapPost("/create-simulation", async (HttpRequest request, IMonteCarloSimulation MCS) =>
+        app.MapPost("/create-simulation", async (HttpRequest request, IMonteCarloSimulation MCS, OxygenAnalyticsContext _context) =>
         {
             var form = await request.ReadFormAsync();
 
@@ -143,7 +145,7 @@ public static class PageRoutes
             }
             var costPrDay = cost / daysSinceStartInt;
 
-            var columns = new List<ColumnModel>();
+            var columns = new List<ViewColumnModel>();
             for (int i = 1; i <= 11; i++)
             {
                 if (form.ContainsKey($"name{i}"))
@@ -182,7 +184,7 @@ public static class PageRoutes
             }
 
             // Initialize the ProjectSimulationModel
-            var projectData = new ProjectSimulationModel
+            var projectData = new ViewProjectSimulationModel
             {
                 Name = name,
                 StartDate = startDate,
@@ -216,6 +218,16 @@ public static class PageRoutes
 
             // Store the simulation instance with the simulationId for later retrieval
             SimulationManager.AddSimulationToManager(simulationId, simulation);
+
+            // Store simulation in database
+
+            ProjectModel projectModel = new ProjectModel
+            {
+                JiraId = jiraProjectId,
+                JiraProjectId = jiraProjectName,
+                Name = name,
+                ProjectSimulationModels = new List<ProjectSimulationModel> { mappedProjectData }
+            };
 
             // Prepare simulation result HTML to return
             var htmlContent = $@"Saved!";

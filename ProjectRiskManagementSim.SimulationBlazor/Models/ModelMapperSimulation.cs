@@ -1,7 +1,7 @@
 namespace ProjectRiskManagementSim.SimulationBlazor.Models;
 public static class ModelMapper
 {
-    public static ProjectRiskManagementSim.ProjectSimulation.Models.ProjectSimulationModel MapToSimProjProjectSimulationModel(ProjectRiskManagementSim.SimulationBlazor.Models.ProjectSimulationModel source)
+    public static ProjectRiskManagementSim.ProjectSimulation.Models.ProjectSimulationModel MapToSimProjProjectSimulationModel(ProjectRiskManagementSim.SimulationBlazor.Models.ViewProjectSimulationModel source)
     {
         return new ProjectRiskManagementSim.ProjectSimulation.Models.ProjectSimulationModel
         {
@@ -45,7 +45,7 @@ public static class ModelMapper
         };
     }
 
-    public static ProjectRiskManagementSim.ProjectSimulation.Models.ColumnModel MapToSimProjColumnModel(ProjectRiskManagementSim.SimulationBlazor.Models.ColumnModel source)
+    public static ProjectRiskManagementSim.ProjectSimulation.Models.ColumnModel MapToSimProjColumnModel(ProjectRiskManagementSim.SimulationBlazor.Models.ViewColumnModel source)
     {
         return new ProjectRiskManagementSim.ProjectSimulation.Models.ColumnModel
         {
@@ -74,9 +74,9 @@ public static class ModelMapper
         };
     }
 
-    public static ProjectRiskManagementSim.SimulationBlazor.Models.ColumnModel MapToBlazorColumnModel(ProjectRiskManagementSim.ProjectSimulation.Models.ColumnModel source)
+    public static ProjectRiskManagementSim.SimulationBlazor.Models.ViewColumnModel MapToBlazorColumnModel(ProjectRiskManagementSim.ProjectSimulation.Models.ColumnModel source)
     {
-        return new ProjectRiskManagementSim.SimulationBlazor.Models.ColumnModel
+        return new ProjectRiskManagementSim.SimulationBlazor.Models.ViewColumnModel
         {
             Id = source.Id,
             Name = source.Name,
@@ -103,9 +103,9 @@ public static class ModelMapper
         };
     }
 
-    public static ProjectRiskManagementSim.SimulationBlazor.Models.ProjectSimulationModel MapToBlazorProjectSimulationModel(ProjectRiskManagementSim.ProjectSimulation.Models.ProjectSimulationModel source)
+    public static ProjectRiskManagementSim.SimulationBlazor.Models.ViewProjectSimulationModel MapToBlazorProjectSimulationModel(ProjectRiskManagementSim.ProjectSimulation.Models.ProjectSimulationModel source)
     {
-        return new ProjectRiskManagementSim.SimulationBlazor.Models.ProjectSimulationModel
+        return new ProjectRiskManagementSim.SimulationBlazor.Models.ViewProjectSimulationModel
         {
             Name = source.Name,
             Staff = source.Staff?.Select(s => new ProjectRiskManagementSim.SimulationBlazor.Models.StaffModel
@@ -135,7 +135,7 @@ public static class ModelMapper
                 PercentageLowBound = source.Backlog.PercentageLowBound,
                 PercentageHighBound = source.Backlog.PercentageHighBound
             },
-            Columns = source.Columns.Select(c => new ProjectRiskManagementSim.SimulationBlazor.Models.ColumnModel
+            Columns = source.Columns.Select(c => new ProjectRiskManagementSim.SimulationBlazor.Models.ViewColumnModel
             {
                 Name = c.Name,
                 EstimatedLowBound = c.EstimatedLowBound,

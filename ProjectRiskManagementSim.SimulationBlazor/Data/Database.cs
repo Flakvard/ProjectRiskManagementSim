@@ -4,9 +4,9 @@ namespace ProjectRiskManagementSim.SimulationBlazor.Data;
 
 public static class Database
 {
-    public static List<ProjectSimulationModel> ProjectSimulations { get; set; } = new List<ProjectSimulationModel>();
+    public static List<ViewProjectSimulationModel> ProjectSimulations { get; set; } = new List<ViewProjectSimulationModel>();
 
-    public static ProjectSimulationModel ProjectModelInit()
+    public static ViewProjectSimulationModel ProjectModelInit()
     {
 
         var deliverableModel = new List<DeliverableModel>();
@@ -20,7 +20,7 @@ public static class Database
         }
         var backLogModel = new BacklogModel { Deliverables = deliverableModel, PercentageLowBound = 0.0, PercentageHighBound = 1 };
         var wip = 30;
-        ProjectSimulationModel projectData = new ProjectSimulationModel
+        ViewProjectSimulationModel projectData = new ViewProjectSimulationModel
         {
             Name = "Baseline",
             Staff = new List<StaffModel>
@@ -38,20 +38,20 @@ public static class Database
             Costs = new CostModel { Cost = 177600, Days = 20 },
             Backlog = backLogModel,
             // Bech Bruun model
-            Columns = new List<ColumnModel>
+            Columns = new List<ViewColumnModel>
                   {
-                  new ColumnModel(wip: backLogModel.Deliverables.Count) { Name = "Backlog", IsBuffer=true, EstimatedLowBound = 1,
+                  new ViewColumnModel(wip: backLogModel.Deliverables.Count) { Name = "Backlog", IsBuffer=true, EstimatedLowBound = 1,
                   EstimatedHighBound = 54 },
-                  new ColumnModel(wip: wip, wipMax: wip) { Name = "Open", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound
+                  new ViewColumnModel(wip: wip, wipMax: wip) { Name = "Open", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound
                   = 54 },
-                  new ColumnModel(wip: 5, wipMax: 5) { Name = "In Progress", EstimatedLowBound = 1, EstimatedHighBound = 47 },
-                  new ColumnModel(wip: wip, wipMax: wip) { Name = "Rdy4Test", IsBuffer=true, EstimatedLowBound = 1,
+                  new ViewColumnModel(wip: 5, wipMax: 5) { Name = "In Progress", EstimatedLowBound = 1, EstimatedHighBound = 47 },
+                  new ViewColumnModel(wip: wip, wipMax: wip) { Name = "Rdy4Test", IsBuffer=true, EstimatedLowBound = 1,
                   EstimatedHighBound = 50 },
-                  new ColumnModel(wip: 0, wipMax: 2) { Name = "Test Stage", EstimatedLowBound = 1, EstimatedHighBound = 11 },
-                  new ColumnModel(wip: wip, wipMax: wip) { Name = "Await Dply Prod", IsBuffer=true, EstimatedLowBound = 1,
+                  new ViewColumnModel(wip: 0, wipMax: 2) { Name = "Test Stage", EstimatedLowBound = 1, EstimatedHighBound = 11 },
+                  new ViewColumnModel(wip: wip, wipMax: wip) { Name = "Await Dply Prod", IsBuffer=true, EstimatedLowBound = 1,
                   EstimatedHighBound = 22 },
-                  new ColumnModel(wip: 0, wipMax: 2) { Name = "Rdy4TestProd", EstimatedLowBound = 1, EstimatedHighBound = 54 },
-                  new ColumnModel(wip: backLogModel.Deliverables.Count) { Name = "Done", IsBuffer=true, EstimatedLowBound = 1,
+                  new ViewColumnModel(wip: 0, wipMax: 2) { Name = "Rdy4TestProd", EstimatedLowBound = 1, EstimatedHighBound = 54 },
+                  new ViewColumnModel(wip: backLogModel.Deliverables.Count) { Name = "Done", IsBuffer=true, EstimatedLowBound = 1,
                   EstimatedHighBound = 54 }
                   },
         };
