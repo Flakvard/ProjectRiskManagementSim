@@ -91,14 +91,16 @@ public static class PageRoutes
         });
 
 
-        app.MapPost("/create-simulation", async (HttpRequest request, IMonteCarloSimulation MCS, OxygenAnalyticsContext _context) =>
+        app.MapPost("/create-simulation", async (HttpRequest request, IMonteCarloSimulation MCS, OxygenSimulationContext _context) =>
         {
             var form = await request.ReadFormAsync();
 
             // Extract and parse form data
-            var jiraProjectId = form["JiraProjectId"];
-            var jiraProjectName = form["JiraProjectName"];
-            var name = form["Name"];
+            string? jiraProjectId = form["JiraProjectId"];
+            string? jiraId = form["JiraId"];
+            string? jiraProjectName = form["JiraProjectName"];
+            string? name = form["Name"];
+
             string? stringStartDate = form["StartDate"];
             string? stringLastDate = form["LastDate"];
             string? stringTargetDate = form["TargetDate"];
@@ -108,7 +110,18 @@ public static class PageRoutes
             string? stringDeliverablesNumber = form["DeliverablesNumber"];
             string? stringPercentageLowBound = form["PercentageLowBound"];
             string? stringPercentageHighBound = form["PercentageHighBound"];
-            if (stringStartDate == null || stringLastDate == null || stringTargetDate == null || stringRevenueAmount == null || stringCost == null || stringHours == null || stringDeliverablesNumber == null || stringPercentageLowBound == null || stringPercentageHighBound == null)
+            if (jiraProjectName == null
+                || jiraId == null
+                || jiraProjectId == null
+                || stringStartDate == null
+                || stringLastDate == null
+                || stringTargetDate == null
+                || stringRevenueAmount == null
+                || stringCost == null
+                || stringHours == null
+                || stringDeliverablesNumber == null
+                || stringPercentageLowBound == null
+                || stringPercentageHighBound == null)
             {
                 return Results.BadRequest("Invalid input.");
             }
@@ -157,11 +170,11 @@ public static class PageRoutes
                     string? lowBound = form[$"lowBound{i}"];
                     string? highBound = form[$"highBound{i}"];
                     string? isBuffer = form[$"isBuffer{i}"];
-                    if (colName == null || wip == null || wipMax == null || lowBound == null || highBound == null || isBuffer == null)
+                    if (colName == null || wip == null || wipMax == null || lowBound == null || highBound == null)
                     {
-                        break;
+                        continue;
                     }
-                    columns.Add(new ColumnModel
+                    columns.Add(new ViewColumnModel
                     {
                         Name = colName,
                         WIP = int.Parse(wip),
@@ -221,13 +234,93 @@ public static class PageRoutes
 
             // Store simulation in database
 
-            ProjectModel projectModel = new ProjectModel
+            // Check if the project already exists in the database
+            var existingProject = _context.GetProjectByIdAsync(jiraId);
+            if (existingProject == null)
             {
-                JiraId = jiraProjectId,
-                JiraProjectId = jiraProjectName,
-                Name = name,
-                ProjectSimulationModels = new List<ProjectSimulationModel> { mappedProjectData }
-            };
+                ProjectModel projectModel = new ProjectModel
+                {
+                    JiraId = jiraId,
+                    JiraProjectId = jiraProjectId,
+                    Name = jiraProjectName,
+                    ProjectSimulationModels = new List<ProjectSimulationModel>()
+                };
+
+                ProjectSimulationModel projectSimulationModel = new ProjectSimulationModel
+                {
+                    Name = name,
+                    StartDate = startDate,
+                    TargetDate = targetDate,
+                    Revenue = revenueAmount,
+                    Costs = cost,
+                    Hours = hours,
+                    DeliverablesCount = deliverableNumber,
+                    PercentageLowBound = percentageLowBound,
+                    PercentageHighBound = percentageHighBound,
+                    Columns = new List<ColumnModel>()
+                };
+                // Log the number of columns
+
+                foreach (var column in columns)
+                {
+                    ColumnModel columnModel = new ColumnModel
+                    {
+                        Name = column.Name,
+                        EstimatedLowBound = column.EstimatedLowBound,
+                        EstimatedHighBound = column.EstimatedHighBound,
+                        WIP = column.WIP,
+                        WIPMax = column.WIPMax,
+                        IsBuffer = column.IsBuffer,
+                    };
+                    projectSimulationModel.Columns.Add(columnModel);
+                }
+                // Add ProjectSimulationModel to ProjectModel
+                projectModel.ProjectSimulationModels.Add(projectSimulationModel);
+
+                // Add ProjectModel (and related entities) to the context
+                _context.ProjectModel.Add(projectModel);
+
+                // Save all changes at once
+                _context.SaveChanges();
+            }
+            else if (existingProject != null)
+            {
+
+                ProjectSimulationModel projectSimulationModel = new ProjectSimulationModel
+                {
+                    Name = name,
+                    StartDate = startDate,
+                    TargetDate = targetDate,
+                    Revenue = revenueAmount,
+                    Costs = cost,
+                    Hours = hours,
+                    DeliverablesCount = deliverableNumber,
+                    PercentageLowBound = percentageLowBound,
+                    PercentageHighBound = percentageHighBound,
+                    Columns = new List<ColumnModel>()
+                };
+                // Log the number of columns
+
+                foreach (var column in columns)
+                {
+                    ColumnModel columnModel = new ColumnModel
+                    {
+                        Name = column.Name,
+                        EstimatedLowBound = column.EstimatedLowBound,
+                        EstimatedHighBound = column.EstimatedHighBound,
+                        WIP = column.WIP,
+                        WIPMax = column.WIPMax,
+                        IsBuffer = column.IsBuffer,
+                    };
+                    projectSimulationModel.Columns.Add(columnModel);
+                }
+                // Add ProjectSimulationModel to ProjectModel
+                existingProject.ProjectSimulationModels.Add(projectSimulationModel);
+
+                // Save all changes at once
+                _context.SaveChanges();
+            }
+
 
             // Prepare simulation result HTML to return
             var htmlContent = $@"Saved!";
