@@ -19,6 +19,9 @@ public class ProjectSimulationModel
     public double? Costs { get; set; }
     public double? Hours { get; set; }
 
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
+
     // Navigation property for one-to-many relationship
     public ICollection<ColumnModel> Columns { get; set; }
 
