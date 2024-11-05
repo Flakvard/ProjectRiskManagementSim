@@ -1,34 +1,37 @@
+using System.IO;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 using ProjectRiskManagementSim.DataAccess.Models;
-
 
 namespace ProjectRiskManagementSim.DataAccess;
 public class OxygenAnalyticsContext : DbContext
 {
-    public OxygenAnalyticsContext(DbContextOptions<OxygenAnalyticsContext> options) : base(options) {
+    public OxygenAnalyticsContext(DbContextOptions<OxygenAnalyticsContext> options) : base(options)
+    {
         this.ChangeTracker.LazyLoadingEnabled = false;
     }
 
     public DbSet<IssueLeadTime> IssueLeadTimes { get; set; }
-    public DbSet<Project> Projects { get; set; }
+    public DbSet<ProjectJira> Projects { get; set; }
     public DbSet<IssueModel> Issues { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<IssueLeadTime>().ToTable("IssueLeadTimes", "dbo");
-        modelBuilder.Entity<Project>().ToTable("Projects", "dbo");
+        modelBuilder.Entity<ProjectJira>().ToTable("Projects", "dbo");
         modelBuilder.Entity<IssueModel>().ToTable("Issues", "dbo");
 
 
         // Optional: Define additional configurations if needed (e.g., primary keys, relationships)
     }
     // Get all projects
-    public async Task<List<Project>> GetProjectsAsync()
+    public async Task<List<ProjectJira>> GetProjectsAsync()
     {
         return await Projects.ToListAsync();
     }
     // Get a specific project by Id
-    public async Task<Project> GetProjectByIdAsync(int id)
+    public async Task<ProjectJira> GetProjectByIdAsync(int id)
     {
         return await Projects.FirstOrDefaultAsync(p => p.Id == id);
     }
@@ -69,5 +72,39 @@ public class OxygenSimulationContext : DbContext
     public OxygenSimulationContext(DbContextOptions<OxygenSimulationContext> options) : base(options) { }
 
     // Define DbSets for simulation data, e.g.
-    // public DbSet<SimulationResult> SimulationResults { get; set; }
+    public DbSet<ProjectModel> ProjectModel { get; set; }
+    public DbSet<ProjectSimulationModel> ProjectSimulationModel { get; set; }
+    public DbSet<ColumnModel> ColumnModel { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        // Configure ProjectModel to ProjectSimulationModel (one-to-many)
+        modelBuilder.Entity<ProjectModel>()
+                    .HasMany(p => p.ProjectSimulationModels)
+                    .WithOne(ps => ps.Project)
+                    .HasForeignKey(ps => ps.ProjectId);
+
+        // Configure ProjectSimulationModel to ColumnModel (one-to-many)
+        modelBuilder.Entity<ProjectSimulationModel>()
+                    .HasMany(ps => ps.Columns)
+                    .WithOne(c => c.ProjectSimulationModel)
+                    .HasForeignKey(c => c.ProjectSimulationModelId);
+    }
+}
+
+
+public class OxygenSimulationContextFactory : IDesignTimeDbContextFactory<OxygenSimulationContext>
+{
+    public OxygenSimulationContext CreateDbContext(string[] args)
+    {
+        IConfigurationRoot configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile(@Directory.GetCurrentDirectory() + "/../ProjectRiskManagementSim.SimulationBlazor/appsettings.development.json")
+            .Build();
+        var connectionString = configuration.GetConnectionString("EfCoreSqlDbConnectionWindows");
+        var optionsBuilder = new DbContextOptionsBuilder<OxygenSimulationContext>();
+        optionsBuilder.UseSqlServer(connectionString);
+
+        return new OxygenSimulationContext(optionsBuilder.Options);
+    }
 }

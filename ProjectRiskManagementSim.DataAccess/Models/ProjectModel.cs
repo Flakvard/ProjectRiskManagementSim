@@ -1,10 +1,16 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace ProjectRiskManagementSim.DataAccess.Models;
-public class Project
+public class ProjectModel
 {
+    [Key]
     public int Id { get; set; }
-    public string Name { get; set; }
-    public string JiraId { get; set; }
-    public string ProjectCategory { get; set; }
-    public string JiraProjectId { get; set; }
-    public int? AccountId { get; set; }
+
+    public required string Name { get; set; }
+    public required string JiraId { get; set; }
+    public required string JiraProjectId { get; set; }
+
+    // Navigation property for one-to-many relationship
+    public ICollection<ProjectSimulationModel> ProjectSimulationModels { get; set; } = null!;
 }

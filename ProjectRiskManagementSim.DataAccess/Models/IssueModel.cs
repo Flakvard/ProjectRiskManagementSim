@@ -23,7 +23,7 @@ public class IssueModel
     public int? CreatorId { get; set; }
 
     [ForeignKey("ProjectId")]
-    public Project Project { get; set; }
+    public ProjectJira Project { get; set; }
     public int ProjectId { get; set; }
     public double TimeRemainingSeconds { get; set; }
 }

@@ -10,11 +10,11 @@ public class ProjectService
         _context = context;
     }
 
-    public async Task<List<Project>> GetProjectsAsync()
+    public async Task<List<ProjectJira>> GetProjectsAsync()
     {
         return await _context.Projects.ToListAsync();
     }
-    public async Task<List<Project>> GetAllProjectsAsync()
+    public async Task<List<ProjectJira>> GetAllProjectsAsync()
     {
         return await _context.GetProjectsAsync();
     }
