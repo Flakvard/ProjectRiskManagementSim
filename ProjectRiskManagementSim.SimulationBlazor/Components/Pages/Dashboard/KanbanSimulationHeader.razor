@@ -4,9 +4,14 @@
   </div>
   <div
     class="SimHeadName w-full flex justify-between items-center text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
-    <span>Phase II of Bech Bruun project</span>
+    <span>@SimulationName.ToString()</span>
     <span class="inline-block">
       <Editbutton />
     </span>
   </div>
 </div>
+
+@code {
+    [Parameter]
+    public string SimulationName { get; set; } = "test";
+}

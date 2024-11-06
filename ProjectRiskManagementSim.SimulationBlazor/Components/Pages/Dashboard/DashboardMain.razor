@@ -9,7 +9,7 @@
         <div
           class="LeftsideFrame grow shrink basis-0 self-stretch p-4 bg-[#ffb4ba]/25 rounded-2xl flex-col justify-start items-start gap-2.5 inline-flex">
           <div class="overflow-hidden">
-            <KanbanSimulationHeader />
+            <KanbanSimulationHeader SimulationName="Phase II of Bech Bruun project" />
             <KanbanDeliverableTable />
             <div class="hover:overflow-y-scroll">
               <KanbanColumnTable />
@@ -63,3 +63,7 @@
     </div>
   </div>
 </div>
+
+@code {
+[Parameter] public int ProjectSimulationId { get; set; }
+}

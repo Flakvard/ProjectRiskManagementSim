@@ -1,10 +1,16 @@
+@using ProjectRiskManagementSim.DataAccess.Models
+
 <div class="self-stretch shrink basis-0 p-1 flex-col justify-start items-start gap-1 flex">
   <div class="SimulationHeader self-stretch p-1 flex-col justify-start items-start gap-1 flex">
     <div class="SimHeadContainer self-stretch p-1 rounded-[22px] flex-col justify-center items-center gap-2.5 flex">
       <div class="CostDelaySection px-2.5 py-[5px] justify-start items-start gap-2.5 inline-flex">
         <div
           class="CostDelayValue w-[113px] text-right text-white text-base font-bold font-['Outfit'] capitalize leading-tight">
-          Bech-Bruun</div>
+          @if(@Project != null )
+          {
+          @Project.Name;
+          }
+        </div>
         <Editbutton />
       </div>
     </div>
@@ -15,7 +21,11 @@
       </div>
     </div>
     <div class="StartDateValue text-right text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
-      01-02-2024</div>
+      @if(@Simulation != null && @Simulation.StartDate != null )
+      {
+      @Simulation.StartDate;
+      }
+    </div>
   </div>
   <div class="TargetDateSection self-stretch px-2.5 py-[5px] justify-end items-start gap-2.5 inline-flex">
     <div class="Frame11 grow shrink basis-0 justify-start items-center gap-2.5 flex">
@@ -23,14 +33,22 @@
       </div>
     </div>
     <div class="TargetDateValue text-right text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
-      09-11-2024</div>
+      @if(@Simulation != null && @Simulation.TargetDate != null )
+      {
+      @Simulation.TargetDate;
+      }
+    </div>
   </div>
   <div class="EndDateSection self-stretch px-2.5 py-[5px] justify-end items-start gap-2.5 inline-flex">
     <div class="Frame12 grow shrink basis-0 justify-start items-center gap-2.5 flex">
       <div class="EndDateName text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">End:</div>
     </div>
     <div class="EndDateValue text-right text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
-      19-11-2024</div>
+      @if(@Simulation != null )
+      {
+      }
+      19-11-2024
+    </div>
   </div>
   <div class="BudgetSection self-stretch px-2.5 py-[5px] justify-end items-start gap-2.5 inline-flex">
     <div class="Frame13 grow shrink basis-0 justify-start items-center gap-2.5 flex">
@@ -38,14 +56,22 @@
       </div>
     </div>
     <div class="BudgetValue text-right text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
-      1.100.000</div>
+      @if(@Simulation != null )
+      {
+      }
+      0
+    </div>
   </div>
   <div class="CostSection self-stretch px-2.5 py-[5px] justify-end items-start gap-2.5 inline-flex">
     <div class="Frame14 grow shrink basis-0 justify-start items-center gap-2.5 flex">
       <div class="CostName text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">Cost:</div>
     </div>
     <div class="CostValue text-right text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
-      1.070.000</div>
+      @if(@Simulation != null && @Simulation.Costs != null )
+      {
+      @Simulation.Costs;
+      }
+    </div>
   </div>
   <div class="CostDelaySection self-stretch px-2.5 py-[5px] justify-end items-start gap-2.5 inline-flex">
     <div class="Frame15 grow shrink basis-0 justify-start items-center gap-2.5 flex">
@@ -53,6 +79,14 @@
       </div>
     </div>
     <div class="CostDelayValue text-right text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
-      5.320</div>
+      @if(@Simulation != null )
+      {
+      }
+      0
+    </div>
   </div>
 </div>
+@code {
+[Parameter] public ProjectSimulationModel Simulation { get; set; }
+[Parameter] public ProjectModel Project { get; set; }
+}

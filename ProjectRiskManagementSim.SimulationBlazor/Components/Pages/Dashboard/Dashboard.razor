@@ -1,6 +1,11 @@
 @using ProjectRiskManagementSim.SimulationBlazor.Components.Layout
 <SidebarNav ProjectSimulationId=@ProjectSimulationId />
 @layout DashboardLayout
-@page "/dashboard"
+@page "/dashboard/{projectSimulationId:int}"
 <PageTitle>Dashboard</PageTitle>
-<DashboardMain />
+<DashboardMain ProjectSimulationId=@ProjectSimulationId />
+
+@code {
+[Parameter] public int ProjectSimulationId { get; set; }
+
+}
