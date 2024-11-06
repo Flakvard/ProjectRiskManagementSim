@@ -1,35 +1,41 @@
 @using ProjectRiskManagementSim.DataAccess.Models
 
-<div
-  class="LowerSidebarNav self-stretch grow shrink basis-0 px-2.5 pt-2.5 pb-6 flex-col justify-start items-start gap-2.5 flex">
-  <div class="SimulationsHeadlines self-stretch py-1 flex-col justify-start items-start gap-2.5 flex">
-    <div class="Frame6 w-[198px] px-4 justify-center items-center gap-2.5 inline-flex">
-      <div class="Simulations text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
-        Simulations
-      </div>
-      <div class="ExternalLink w-6 h-6 p-[3px] justify-center items-center flex"></div>
-    </div>
-  </div>
-  <div
-    class="TableOfSimulations self-stretch grow shrink basis-0 p-2.5 border border-[#ff7c87] flex-col justify-start items-start gap-2.5 flex">
-    @if (Simulations != null)
-    {
-    @foreach (var simulation in Simulations)
-    {
-
-    <div
-      class="SimRow self-stretch px-[18px] py-1 border-b border-[#ff7c87] justify-center items-center gap-2.5 inline-flex">
-      <div class="SimName grow shrink basis-0 text-white text-base font-bold font-['Outfit'] leading-tight">
-        @simulation.Name
-      </div>
-      <button>
-        <a href="/dashboard/@simulation.Id">
+<div class=" ">
+  <div class="LowerSidebarNav px-2.5 pt-2.5 pb-6 flex-col justify-start items-start gap-2.5 flex">
+    <div class="SimulationsHeadlines self-stretch py-1 flex-col justify-start items-start gap-2.5 flex">
+      <div class="Frame6 w-[198px] px-4 justify-center items-center gap-2.5 inline-flex">
+        <div class="Simulations text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
+          Simulations
+        </div>
+        <a href="/simulations">
           <Openbutton />
         </a>
-      </button>
+      </div>
     </div>
-    }
-    }
+    <div class="TableOfSimulations p-2.5 border border-[#ff7c87] flex-col justify-start items-start gap-2.5 flex">
+      <div class="h-[220px] overflow-hidden hover:overflow-y-auto">
+        <div class="flex flex-col justify-start items-start">
+          @if (Simulations != null)
+          {
+          @foreach (var simulation in Simulations)
+          {
+
+          <div
+            class="SimRow self-stretch px-[18px] py-1 border-b border-[#ff7c87] justify-center items-center gap-2.5 inline-flex">
+            <div class="SimName grow shrink basis-0 text-white text-base font-bold font-['Outfit'] leading-tight">
+              @simulation.Name
+            </div>
+            <button>
+              <a href="/dashboard/@simulation.Id">
+                <Openbutton />
+              </a>
+            </button>
+          </div>
+          }
+          }
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 @code {
