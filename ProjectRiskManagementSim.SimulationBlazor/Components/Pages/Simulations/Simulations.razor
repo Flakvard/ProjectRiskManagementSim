@@ -7,87 +7,89 @@
 @layout SimulationsLayout
 @page "/simulations"
 <div id="simulationspage" class="flex flex-row my-24 justify-center self-stretch grow shrink">
-    <div id="SimulationsMain" class="flex flex-row gap-4">
-        <!-- Main Content -->
-        <div class="ProjectContent overflow-y-auto max-h-[500px] w-full">
-            <table class="table-auto w-full self-stretch grow shrink basis-0 bg-white rounded border border-[#b9b9b9]">
-                <thead class="sticky top-0 bg-[#7e44eb]">
-                    <tr>
-                        <th class="px-3 py-2.5 text-center cell-header-text">Project Id</th>
-                        <th class="px-3 py-2.5 text-center cell-header-text">Project Name</th>
-                        <th class="px-3 py-2.5 text-center cell-header-text">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    @if (listSimulationsHandler != null && listSimulationsHandler._projects != null)
-                    {
+  <div id="SimulationsMain" class="flex flex-row gap-4">
+    <!-- Main Content -->
+    <div class="ProjectContent overflow-y-auto max-h-[500px] w-full">
+      <table class="table-auto w-full self-stretch grow shrink basis-0 bg-white rounded border border-[#b9b9b9]">
+        <thead class="sticky top-0 bg-[#7e44eb]">
+          <tr>
+            <th class="px-3 py-2.5 text-center cell-header-text">Project Id</th>
+            <th class="px-3 py-2.5 text-center cell-header-text">Project Name</th>
+            <th class="px-3 py-2.5 text-center cell-header-text">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          @if (listSimulationsHandler != null && listSimulationsHandler._projects != null)
+          {
 
-                        @foreach (var project in listSimulationsHandler._projects)
-                        {
-                            var activeTdClass = (project.ProjectSelected == true ? "bg-[#7e44eb] text-white border-b border-gray-300" :
-                            "border-b border-gray-300");
-                            <tr id="@project.Id" hx-put="/simulations" hx-trigger="click" hx-target="#simulationspage"
-                                hx-vals='{ "ProjectId": @(project.Id) }' hx-swap="outerHTML" @onput="HandleProjectSelection">
+          @foreach (var project in listSimulationsHandler._projects)
+          {
+          var activeTdClass = (project.ProjectSelected == true ? "bg-[#7e44eb] text-white border-b border-gray-300" :
+          "border-b border-gray-300");
+          <tr id="@project.Id" hx-put="/simulations" hx-trigger="click" hx-target="#simulationspage"
+            hx-vals='{ "ProjectId": @(project.Id) }' hx-swap="outerHTML" @onput="HandleProjectSelection">
 
-                                <td class="@activeTdClass px-3 py-2.5 text-center cell-text">@project.JiraId</td>
-                                <td class="@activeTdClass px-3 py-2.5 text-center cell-text">@project.Name</td>
-                                <td class="@activeTdClass px-3 py-2.5 text-center cell-text">
-                                    <button>Open</button>
-                                </td>
-                            </tr>
-                        }
-                    }
-                </tbody>
+            <td class="@activeTdClass px-3 py-2.5 text-center cell-text">@project.JiraId</td>
+            <td class="@activeTdClass px-3 py-2.5 text-center cell-text">@project.Name</td>
+            <td class="@activeTdClass px-3 py-2.5 text-center cell-text">
+              <button>Open</button>
+            </td>
+          </tr>
+          }
+          }
+        </tbody>
 
-            </table>
+      </table>
 
-        </div>
-        <div class="SimulationContent overflow-y-auto max-h-[500px] w-full">
-            <table class="table-auto w-full self-stretch grow shrink basis-0 bg-white rounded border border-[#b9b9b9]">
-                <thead class="sticky top-0 bg-[#7e44eb]">
-                    <tr>
-                        <th class="px-3 py-2.5 text-center cell-header-text">Simulation Name</th>
-                        <th class="px-3 py-2.5 text-center cell-header-text">Created Date</th>
-                        <th class="px-3 py-2.5 text-center cell-header-text">Last Update Date</th>
-                        <th class="px-3 py-2.5 text-center cell-header-text">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (listSimulationsHandler != null && listSimulationsHandler._simulations != null)
-                    {
-                        @foreach (var simulation in listSimulationsHandler._simulations)
-                        {
-                            <tr>
-                                <td class="px-3 py-2.5 text-center cell-text">@simulation.Name</td>
-                                <td class="px-3 py-2.5 text-center cell-text">@simulation.CreatedAt</td>
-                                <td class="px-3 py-2.5 text-center cell-text">@simulation.UpdatedAt</td>
-                                <td class="px-3 py-2.5 text-center cell-text">
-                                    <button>Open</button>
-                                </td>
-                            </tr>
-                        }
-                    }
-                </tbody>
-            </table>
-
-        </div>
     </div>
+    <div class="SimulationContent overflow-y-auto max-h-[500px] w-full">
+      <table class="table-auto w-full self-stretch grow shrink basis-0 bg-white rounded border border-[#b9b9b9]">
+        <thead class="sticky top-0 bg-[#7e44eb]">
+          <tr>
+            <th class="px-3 py-2.5 text-center cell-header-text">Simulation Name</th>
+            <th class="px-3 py-2.5 text-center cell-header-text">Created Date</th>
+            <th class="px-3 py-2.5 text-center cell-header-text">Last Update Date</th>
+            <th class="px-3 py-2.5 text-center cell-header-text">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (listSimulationsHandler != null && listSimulationsHandler._simulations != null)
+          {
+          @foreach (var simulation in listSimulationsHandler._simulations)
+          {
+          <tr>
+            <td class="px-3 py-2.5 text-center cell-text">@simulation.Name</td>
+            <td class="px-3 py-2.5 text-center cell-text">@simulation.CreatedAt</td>
+            <td class="px-3 py-2.5 text-center cell-text">@simulation.UpdatedAt</td>
+            <td class="px-3 py-2.5 text-center cell-text">
+              <button class="bg-[#ff7c87] rounded-lg p-1">
+                <a href="/dashboard/@simulation.Id"
+                  class="px-3 py-2.5 text-white text-center cell-text hover:text-purple-100">Open</a></button>
+            </td>
+          </tr>
+          }
+          }
+        </tbody>
+      </table>
+
+    </div>
+  </div>
 </div>
 @code {
 
-    public ListSimulationsHandler listSimulationsHandler { get; set; }
+public ListSimulationsHandler listSimulationsHandler { get; set; }
 
-    [SupplyParameterFromForm]
-    public int ProjectId { get; set; }
+[SupplyParameterFromForm]
+public int ProjectId { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
-        listSimulationsHandler = new ListSimulationsHandler(_context);
-        await listSimulationsHandler.InitializeSimulationsAsync();
+protected override async Task OnInitializedAsync()
+{
+listSimulationsHandler = new ListSimulationsHandler(_context);
+await listSimulationsHandler.InitializeSimulationsAsync();
 
-    }
-    private async Task HandleProjectSelection(HtmxEventArgs args)
-    {
-        await listSimulationsHandler.HandleProjectSelection(ProjectId);
-    }
+}
+private async Task HandleProjectSelection(HtmxEventArgs args)
+{
+await listSimulationsHandler.HandleProjectSelection(ProjectId);
+}
 }

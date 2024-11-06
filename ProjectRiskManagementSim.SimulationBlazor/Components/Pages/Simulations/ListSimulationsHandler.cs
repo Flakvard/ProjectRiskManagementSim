@@ -27,6 +27,7 @@ public class ListSimulationsHandler
         var simulations = await _context.GetProjectSimulationsAsync();
         _simulations = simulations.Select(s => new ViewSimulation
         {
+            Id = s.Id,
             Name = s.Name!,
             CreatedAt = s.CreatedAt,
             UpdatedAt = s.UpdatedAt,
@@ -56,6 +57,7 @@ public class ListSimulationsHandler
         {
             _simulations = simulations.Select(s => new ViewSimulation
             {
+                Id = s.Id,
                 Name = s.Name!,
                 CreatedAt = s.CreatedAt,
                 UpdatedAt = s.UpdatedAt,
@@ -73,6 +75,7 @@ public class ViewProject
 }
 public class ViewSimulation
 {
+    public required int Id { get; set; }
     public required string Name { get; set; }
     public required DateTime CreatedAt { get; set; }
     public required DateTime UpdatedAt { get; set; }
