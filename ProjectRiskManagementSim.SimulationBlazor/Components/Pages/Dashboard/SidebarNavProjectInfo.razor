@@ -1,11 +1,12 @@
 @using ProjectRiskManagementSim.DataAccess.Models
+@using System.Globalization
 
 <div class="self-stretch shrink basis-0 p-1 flex-col justify-start items-start gap-1 flex">
   <div class="SimulationHeader self-stretch p-1 flex-col justify-start items-start gap-1 flex">
     <div class="SimHeadContainer self-stretch p-1 rounded-[22px] flex-col justify-center items-center gap-2.5 flex">
       <div class="CostDelaySection px-2.5 py-[5px] justify-start items-start gap-2.5 inline-flex">
         <div
-          class="CostDelayValue w-[113px] text-right text-white text-base font-bold font-['Outfit'] capitalize leading-tight">
+          class="CostDelayValue w-[113px] text-right text-white text-base font-bold font-['Outfit'] capitalize leading-none">
           @if(@Project != null )
           {
           @Project.Name;
@@ -23,7 +24,7 @@
     <div class="StartDateValue text-right text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
       @if(@Simulation != null && @Simulation.StartDate != null )
       {
-      @Simulation.StartDate;
+      @Simulation.StartDate.ToShortDateString();
       }
     </div>
   </div>
@@ -35,7 +36,7 @@
     <div class="TargetDateValue text-right text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
       @if(@Simulation != null && @Simulation.TargetDate != null )
       {
-      @Simulation.TargetDate;
+      @Simulation.TargetDate.ToShortDateString();
       }
     </div>
   </div>
@@ -69,7 +70,7 @@
     <div class="CostValue text-right text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
       @if(@Simulation != null && @Simulation.Costs != null )
       {
-      @Simulation.Costs;
+                @Simulation.Costs.Value.ToString("N0", new CultureInfo("da-DK"))
       }
     </div>
   </div>
