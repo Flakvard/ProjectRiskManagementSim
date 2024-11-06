@@ -102,6 +102,18 @@ public class OxygenSimulationContext : DbContext
             .FirstOrDefault(p => p.JiraId == jiraId);
         return project;
     }
+    public async Task<List<ProjectSimulationModel>> GetProjectSimulationsAsync(int projectId)
+    {
+        return await ProjectSimulationModel
+            .Include(p => p.Project)
+            .Where(ps => ps.ProjectId == projectId)
+            .ToListAsync();
+    }
+    public async Task<List<ProjectSimulationModel>> GetProjectSimulationsAsync()
+    {
+        return await ProjectSimulationModel
+            .ToListAsync();
+    }
 }
 
 
