@@ -1,3 +1,7 @@
+@using ProjectRiskManagementSim.DataAccess
+@using ProjectRiskManagementSim.DataAccess.Models
+@inject IServiceScopeFactory ServiceScopeFactory;
+
 <!-- Dashboard -->
 <div id="dashboardMain" class="flex flex-row">
   <!-- Main Content -->
@@ -65,5 +69,16 @@
 </div>
 
 @code {
+private OxygenSimulationContext _context;
+
 [Parameter] public int ProjectSimulationId { get; set; }
-}
+public DashboardInfoHandler dashboardInfoHandler { get; set; }
+protected override async Task OnInitializedAsync()
+{
+using var scope = ServiceScopeFactory.CreateScope();
+_context = scope.ServiceProvider.GetRequiredService<OxygenSimulationContext>();
+  dashboardInfoHandler = new DashboardInfoHandler(ProjectSimulationId);
+  await dashboardInfoHandler.InitializeProjectsAsync(_context);
+  }
+  }
+  }
