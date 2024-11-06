@@ -113,6 +113,18 @@ public class OxygenSimulationContext : DbContext
         return await ProjectSimulationModel
             .ToListAsync();
     }
+    public async Task<ProjectSimulationModel?> GetSimulationByIdAsync(int simulationProjectId)
+    {
+        return await ProjectSimulationModel
+            .Include(p => p.Project)
+            .FirstOrDefaultAsync(p => p.Id == simulationProjectId);
+    }
+    public async Task<ProjectModel?> GetProjectBySimulationIdAsync(int simulationProjectId)
+    {
+        return await ProjectModel
+            .Include(p => p.ProjectSimulationModels)
+            .FirstOrDefaultAsync(p => p.Id == simulationProjectId);
+    }
 }
 
 
