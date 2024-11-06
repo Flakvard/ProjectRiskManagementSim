@@ -1,4 +1,3 @@
-using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
@@ -121,13 +120,20 @@ public class OxygenSimulationContextFactory : IDesignTimeDbContextFactory<Oxygen
 {
     public OxygenSimulationContext CreateDbContext(string[] args)
     {
-        IConfigurationRoot configuration = new ConfigurationBuilder()
+        IConfigurationRoot configBuilder = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile(@Directory.GetCurrentDirectory() + "/../ProjectRiskManagementSim.SimulationBlazor/appsettings.development.json")
             .Build();
-        var connectionString = configuration.GetConnectionString("EfCoreSqlDbConnectionWindows");
+
+        var useWindowsAuthSection = configBuilder.GetSection("UseWindowsAuth");
+        var useWindowsAuth = bool.Parse(useWindowsAuthSection.Value!);
+
+        var connectionStringSimulation = useWindowsAuth
+            ? configBuilder.GetConnectionString("EfCoreSqlDbConnectionWindows")
+            : configBuilder.GetConnectionString("EfCoreSqlDbConnection");
+
         var optionsBuilder = new DbContextOptionsBuilder<OxygenSimulationContext>();
-        optionsBuilder.UseSqlServer(connectionString);
+        optionsBuilder.UseSqlServer(connectionStringSimulation);
 
         return new OxygenSimulationContext(optionsBuilder.Options);
     }
