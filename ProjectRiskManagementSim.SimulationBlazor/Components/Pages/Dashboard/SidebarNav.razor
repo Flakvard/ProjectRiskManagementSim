@@ -1,6 +1,6 @@
 @using ProjectRiskManagementSim.DataAccess
 @using ProjectRiskManagementSim.DataAccess.Models
-@inject OxygenSimulationContext _context;
+@inject IServiceScopeFactory ServiceScopeFactory;
 
 <!-- Dashboard sidebar -->
 <!-- Sidebar (fixed width, only grows vertically) -->
@@ -36,11 +36,14 @@
   </div>
 </nav>
 @code {
+private OxygenSimulationContext _context;
 [Parameter] public int ProjectSimulationId { get; set; }
 public SidebarInfoHandler sidebarInfoHandler { get; set; }
 protected override async Task OnInitializedAsync()
 {
-sidebarInfoHandler = new SidebarInfoHandler(ProjectSimulationId);
-await sidebarInfoHandler.InitializeProjectsAsync(_context);
-}
-}
+using var scope = ServiceScopeFactory.CreateScope();
+_context = scope.ServiceProvider.GetRequiredService<OxygenSimulationContext>();
+  sidebarInfoHandler = new SidebarInfoHandler(ProjectSimulationId);
+  await sidebarInfoHandler.InitializeProjectsAsync(_context);
+  }
+  }
