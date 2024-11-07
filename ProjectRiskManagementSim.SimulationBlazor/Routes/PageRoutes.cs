@@ -107,6 +107,9 @@ public static class PageRoutes
             string? stringRevenueAmount = form["RevenueAmount"];
             string? stringCost = form["Cost"];
             string? stringBudget = form["Budget"];
+            string? stringBackendDevs = form["BackendDevs"];
+            string? stringFrontendDevs = form["FrontendDevs"];
+            string? stringTesters = form["Testers"];
             string? stringHours = form["Hours"];
             string? stringDeliverablesNumber = form["DeliverablesNumber"];
             string? stringFeatureNumber = form["FeatureNumber"];
@@ -121,6 +124,9 @@ public static class PageRoutes
                 || stringRevenueAmount == null
                 || stringCost == null
                 || stringBudget == null
+                || stringBackendDevs == null
+                || stringFrontendDevs == null
+                || stringTesters == null
                 || stringHours == null
                 || stringDeliverablesNumber == null
                 || stringFeatureNumber == null
@@ -137,6 +143,9 @@ public static class PageRoutes
             var revenueAmount = double.Parse(stringRevenueAmount);
             var cost = double.Parse(stringCost);
             var budget = double.Parse(stringBudget);
+            var backendDevs = double.Parse(stringBackendDevs);
+            var frontendDevs = double.Parse(stringFrontendDevs);
+            var testers = double.Parse(stringTesters);
             var deliverableNumber = double.Parse(stringDeliverablesNumber);
             var featureNumber = double.Parse(stringFeatureNumber);
             var percentageHighBound = double.Parse(stringPercentageHighBound);
@@ -192,52 +201,6 @@ public static class PageRoutes
                 }
             }
 
-            var deliverableModel = new List<DeliverableModel>();
-            for (var i = 1; i <= deliverableNumber; i++)
-            {
-                deliverableModel.Add(new DeliverableModel
-                {
-                    Id = Guid.NewGuid(),
-                    Nr = i
-                });
-            }
-
-            // Initialize the ProjectSimulationModel
-            var projectData = new ViewProjectSimulationModel
-            {
-                Name = name,
-                StartDate = startDate,
-                TargetDate = targetDate,
-                Revenue = new RevenueModel { Amount = revenueAmount },
-                Costs = new CostModel { Cost = costPrDay, Days = daysSinceStartInt },
-                // Hours = hours,
-                // Initialize the staff list
-                Staff = new List<StaffModel>
-                {
-                  new StaffModel { Name = "John Doe", Role = Role.ProjectManager, Sale = 1000, Cost = 370, Days = 20 },
-                  new StaffModel { Name = "Jane Doe", Role = Role.FrontendDeveloper, Sale = 1000, Cost = 370, Days = 20 },
-                  new StaffModel { Name = "Jack Doe", Role = Role.BackendDeveloper, Sale = 1000, Cost = 370, Days = 20 }
-                },
-                Backlog = new BacklogModel
-                {
-                    Deliverables = deliverableModel,
-                    PercentageLowBound = percentageLowBound,
-                    PercentageHighBound = percentageHighBound
-                },
-                Columns = columns
-            };
-
-            // Initialize the simulation
-            var simulationId = Guid.NewGuid(); // Create a unique ID for this simulation session
-            var mappedProjectData = ModelMapper.MapToSimProjProjectSimulationModel(projectData);
-
-            // Use the injected IMonteCarloSimulation instance to get a new simulation instance
-            var simulation = MCS.GetSimulationInstance();
-            simulation.InitiateSimulation(mappedProjectData, simulationId);
-
-            // Store the simulation instance with the simulationId for later retrieval
-            SimulationManager.AddSimulationToManager(simulationId, simulation);
-
             // Store simulation in database
 
             var targetTimeSpan = targetDate - startDate;
@@ -265,6 +228,10 @@ public static class PageRoutes
                     ActualRevenue = revenueAmount,
                     ActualCosts = cost,
                     BudgetCosts = budget,
+                    CostPrDay = costPrDay,
+                    BackendDevs = backendDevs,
+                    FrontendDevs = frontendDevs,
+                    Testers = testers,
                     ActualHours = hours,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now,
@@ -312,6 +279,10 @@ public static class PageRoutes
                     ActualRevenue = revenueAmount,
                     ActualCosts = cost,
                     BudgetCosts = budget,
+                    CostPrDay = costPrDay,
+                    BackendDevs = backendDevs,
+                    FrontendDevs = frontendDevs,
+                    Testers = testers,
                     ActualHours = hours,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now,
@@ -345,6 +316,20 @@ public static class PageRoutes
             }
 
 
+            if (existingProject != null)
+            {
+                var proj = ModelMapper.MapDBProjectSimulationModelToViewProjectSimulationModel(existingProject.ProjectSimulationModels.Last());
+                // Initialize the simulation
+                var simulationId = Guid.NewGuid(); // Create a unique ID for this simulation session
+                var mappedProjectData = ModelMapper.MapToSimProjProjectSimulationModel(proj);
+
+                // Use the injected IMonteCarloSimulation instance to get a new simulation instance
+                var simulation = MCS.GetSimulationInstance();
+                simulation.InitiateSimulation(mappedProjectData, simulationId);
+
+                // Store the simulation instance with the simulationId for later retrieval
+                SimulationManager.AddSimulationToManager(simulationId, simulation);
+            }
             // Prepare simulation result HTML to return
             var htmlContent = $@"Saved!";
             return Results.Content(htmlContent, "text/html");
