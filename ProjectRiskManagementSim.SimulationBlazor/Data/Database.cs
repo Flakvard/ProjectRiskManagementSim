@@ -45,12 +45,12 @@ public static class Database
                   new ViewColumnModel(wip: wip, wipMax: wip) { Name = "Open", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound
                   = 54 },
                   new ViewColumnModel(wip: 5, wipMax: 5) { Name = "In Progress", EstimatedLowBound = 1, EstimatedHighBound = 47 },
-                  new ViewColumnModel(wip: wip, wipMax: wip) { Name = "Rdy4Test", IsBuffer=true, EstimatedLowBound = 1,
+                  new ViewColumnModel(wip: wip, wipMax: wip) { Name = "Ready to test on Development", IsBuffer=true, EstimatedLowBound = 1,
                   EstimatedHighBound = 50 },
-                  new ViewColumnModel(wip: 0, wipMax: 2) { Name = "Test Stage", EstimatedLowBound = 1, EstimatedHighBound = 11 },
-                  new ViewColumnModel(wip: wip, wipMax: wip) { Name = "Await Dply Prod", IsBuffer=true, EstimatedLowBound = 1,
+                  new ViewColumnModel(wip: 0, wipMax: 2) { Name = "Testing on Development", EstimatedLowBound = 1, EstimatedHighBound = 11 },
+                  new ViewColumnModel(wip: wip, wipMax: wip) { Name = "Waiting Deployment on Production", IsBuffer=true, EstimatedLowBound = 1,
                   EstimatedHighBound = 22 },
-                  new ViewColumnModel(wip: 0, wipMax: 2) { Name = "Rdy4TestProd", EstimatedLowBound = 1, EstimatedHighBound = 54 },
+                  new ViewColumnModel(wip: 0, wipMax: 2) { Name = "Ready to test on Production", EstimatedLowBound = 1, EstimatedHighBound = 54 },
                   new ViewColumnModel(wip: backLogModel.Deliverables.Count) { Name = "Done", IsBuffer=true, EstimatedLowBound = 1,
                   EstimatedHighBound = 54 }
                   },
