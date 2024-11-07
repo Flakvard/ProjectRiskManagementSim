@@ -16,9 +16,14 @@ public interface IMonteCarloSimulation
     public Task ColumnEstimateAnalysis(ProjectSimulationModel projectSimModel, int projectSimulationsCount);
     public Task WIPAnalysis(ProjectSimulationModel projectSimModel, int projectSimulationsCount);
     public Task BlockWIPAnalysis(ProjectSimulationModel projectSimModel, int projectSimulationsCount);
+
     public void PrintSimulationResults(ProjectSimulationModel projectSimulationModel, int simulationCount);
+
     public void InitiateAndRunSimulation(ProjectSimulationModel projectSimulationModel, int simulationCount, Guid simulationId);
+
     public IMonteCarloSimulation GetSimulationInstance();
+
+    // Used for visualization of the simulation
     public (List<ColumnModel>, List<DeliverableModel>) RunSimulationStep(ProjectSimulationModel projectSimulationModel, int currentDay);
     public void InitiateSimulation(ProjectSimulationModel projectSimulationModel, Guid simulationId);
     public void ResetSimulation();

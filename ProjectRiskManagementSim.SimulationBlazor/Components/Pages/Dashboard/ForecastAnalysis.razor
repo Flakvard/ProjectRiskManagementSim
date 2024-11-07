@@ -1,6 +1,11 @@
+@using ProjectRiskManagementSim.DataAccess
+@using ProjectRiskManagementSim.DataAccess.Models
+@inject IServiceScopeFactory ServiceScopeFactory
 @using ProjectRiskManagementSim.SimulationBlazor.Components.Pages.Dashboard
+@using ProjectRiskManagementSim.ProjectSimulation.Interfaces
+@page "/dashboard/{projectSimulationId:int}/forecast-analysis"
 <!-- ForecastAnalysis in Upper Right Content -->
-<div
+<div id="forecastAnalysis"
   class="SimulationResults self-stretch grow shrink basis-0 p-4 bg-[#ffb4ba]/25 rounded-2xl flex-col justify-start items-start gap-2.5 flex">
   <div class="Header self-stretch h-[50px] p-2.5 justify-start items-start gap-2.5 inline-flex">
     <div class="HeaderSection w-[479px] self-stretch px-4 justify-center items-center gap-[30px] flex">
@@ -27,7 +32,7 @@
           </tr>
         </thead>
         <tbody>
-          @foreach (var result in simulationResults)
+          @foreach (var result in simulationResults.ForecastAnalysis)
           {
           <tr class="bg-white/0 border-l border-t border-[#b9b9b9]">
             <td class="px-3 py-2.5 text-center cell-text">
@@ -49,7 +54,19 @@
 </div>
 
 @code {
-[Parameter]
-public List<ForecastAnalysisModel> simulationResults { get; set; } =
-  ForecastAnalysisModel.InitialSimulationResults();
+public ListForeCastAnalysis simulationResults { get; set; }
+private IMonteCarloSimulation _MCS;
+[Parameter] public ProjectSimulationModel Simulation { get; set; }
+
+protected override async Task OnInitializedAsync()
+{
+
+ForecastAnalysisModel.InitialSimulationResults();
+
+using var scope = ServiceScopeFactory.CreateScope();
+_MCS = scope.ServiceProvider.GetRequiredService<IMonteCarloSimulation>();
+  simulationResults = new ListForeCastAnalysis(Simulation, _MCS);
+
+  }
+
   }

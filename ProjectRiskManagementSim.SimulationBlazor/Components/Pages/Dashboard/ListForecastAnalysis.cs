@@ -1,5 +1,20 @@
+using ProjectRiskManagementSim.DataAccess.Models;
+using ProjectRiskManagementSim.ProjectSimulation.Interfaces;
+
 namespace ProjectRiskManagementSim.SimulationBlazor.Components.Pages.Dashboard;
 
+public class ListForeCastAnalysis
+{
+    public List<ForecastAnalysisModel> ForecastAnalysis { get; set; }
+    public ProjectSimulationModel? Simulation { get; set; }
+    public IMonteCarloSimulation MonteCarloSimulation { get; set; }
+    public ListForeCastAnalysis(ProjectSimulationModel? simulation, IMonteCarloSimulation monteCarloSimulation)
+    {
+        ForecastAnalysis = ForecastAnalysisModel.InitialSimulationResults();
+        Simulation = simulation;
+        MonteCarloSimulation = monteCarloSimulation;
+    }
+}
 public class ForecastAnalysisModel
 {
     public string Percentage { get; set; }

@@ -56,11 +56,6 @@ public class MonteCarloSimulation : IMonteCarloSimulation
         var estimatedRevenuePerDay = revenue.Amount / totalDays;
         var estimatedCostPerDay = cost.Cost / totalDays;
 
-        // Console.WriteLine($"Total Days: {totalDays}");
-        // Console.WriteLine($"Total Revenue: {totalRevenue}");
-        // Console.WriteLine($"Total Cost: {totalCost}");
-        // Console.WriteLine($"Total Deliverables: {backlog.Deliverables.Count}");
-
         var simulationList = new List<DeliverableModel>();
         var simulationListofList = new List<List<DeliverableModel>>();
         var simulationDays = new List<double>();

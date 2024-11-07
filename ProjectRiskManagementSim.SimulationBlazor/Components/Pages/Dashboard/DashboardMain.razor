@@ -13,9 +13,10 @@
         <div
           class="LeftsideFrame grow shrink basis-0 self-stretch p-4 bg-[#ffb4ba]/25 rounded-2xl flex-col justify-start items-start gap-2.5 inline-flex">
           <div class="overflow-hidden">
-            @if(@dashboardInfoHandler._simulation != null && !string.IsNullOrEmpty(@dashboardInfoHandler._simulation.Name))
+            @if(@dashboardInfoHandler._simulation != null &&
+            !string.IsNullOrEmpty(@dashboardInfoHandler._simulation.Name))
             {
-                <KanbanSimulationHeader SimulationName="@dashboardInfoHandler._simulation.Name" />
+            <KanbanSimulationHeader SimulationName="@dashboardInfoHandler._simulation.Name" />
             }
             <KanbanDeliverableTable />
             <div class="hover:overflow-y-scroll">
@@ -29,7 +30,10 @@
         class="RightsideFrame grow shrink basis-0 self-stretch p-[15px] flex-col justify-start items-start inline-flex">
         <div
           class="UpperRightFrame self-stretch grow shrink basis-0 rounded-[40px] flex-col justify-start items-start gap-[30px] flex">
-          <ForecastAnalysis />
+          @if(@dashboardInfoHandler._simulation != null)
+          {
+          <ForecastAnalysis Simulation=@dashboardInfoHandler._simulation />
+          }
           <!-- Two Analysis in Lower Right Content -->
           <div class="TwoAnalysis self-stretch grow shrink basis-0 justify-start items-start gap-[30px] inline-flex">
             <SensitivityAnalysis />
