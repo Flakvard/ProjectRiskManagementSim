@@ -146,5 +146,152 @@ public static class ModelMapper
             }).ToList()
         };
     }
+    public static ProjectRiskManagementSim.ProjectSimulation.Models.ProjectSimulationModel MapDBProjectSimulationModelToProjectSimulationModel(ProjectRiskManagementSim.DataAccess.Models.ProjectSimulationModel source)
+    {
+        List<ProjectRiskManagementSim.ProjectSimulation.Models.DeliverableModel> deliverables = new();
+        for (var i = 0; i < source.DeliverablesCount; i++)
+        {
+            var dev = new ProjectRiskManagementSim.ProjectSimulation.Models.DeliverableModel
+            {
+                Id = new Guid(),
+                Nr = i,
+            };
+            deliverables.Add(dev);
+        }
+
+        var staff = new List<ProjectRiskManagementSim.ProjectSimulation.Models.StaffModel>();
+        for (var i = 1; i <= source.BackendDevs; i++)
+        {
+            staff.Add(new ProjectRiskManagementSim.ProjectSimulation.Models.StaffModel
+            {
+                Name = $"Backend Dev {i}",
+                Role = ProjectRiskManagementSim.ProjectSimulation.Models.Role.BackendDeveloper,
+                Sale = 1000,
+                Cost = 370,
+                Days = 20
+            });
+        }
+        for (var i = 1; i <= source.FrontendDevs; i++)
+        {
+            staff.Add(new ProjectRiskManagementSim.ProjectSimulation.Models.StaffModel
+            {
+                Name = $"Frontend Dev {i}",
+                Role = ProjectRiskManagementSim.ProjectSimulation.Models.Role.FrontendDeveloper,
+                Sale = 1000,
+                Cost = 370,
+                Days = 20
+            });
+        }
+        for (var i = 1; i <= source.Testers; i++)
+        {
+            staff.Add(new ProjectRiskManagementSim.ProjectSimulation.Models.StaffModel
+            {
+                Name = $"Tester {i}",
+                Role = ProjectRiskManagementSim.ProjectSimulation.Models.Role.SoftwareTester,
+                Sale = 1000,
+                Cost = 370,
+                Days = 20
+            });
+        }
+
+        return new ProjectRiskManagementSim.ProjectSimulation.Models.ProjectSimulationModel
+        {
+            Name = source.Name != null ? source.Name : "",
+            StartDate = source.StartDate,
+            TargetDate = source.TargetDate,
+            Revenue = new ProjectRiskManagementSim.ProjectSimulation.Models.RevenueModel { Amount = (double)source.ActualRevenue },
+            Costs = new ProjectRiskManagementSim.ProjectSimulation.Models.CostModel { Cost = (double)source.BudgetCosts, Days = source.TargetDays },
+            Staff = staff,
+            Backlog = new ProjectRiskManagementSim.ProjectSimulation.Models.BacklogModel
+            {
+                Deliverables = deliverables,
+                PercentageLowBound = source.PercentageLowBound,
+                PercentageHighBound = source.PercentageHighBound
+            },
+            Columns = source.Columns.Select(c => new ProjectRiskManagementSim.ProjectSimulation.Models.ColumnModel
+            {
+                Name = c.Name,
+                EstimatedLowBound = c.EstimatedLowBound,
+                EstimatedHighBound = c.EstimatedHighBound,
+                WIP = c.WIP,
+                WIPMax = c.WIPMax,
+                IsBuffer = c.IsBuffer
+            }).ToList()
+        };
+    }
+    public static ProjectRiskManagementSim.SimulationBlazor.Models.ViewProjectSimulationModel MapDBProjectSimulationModelToViewProjectSimulationModel(ProjectRiskManagementSim.DataAccess.Models.ProjectSimulationModel source)
+    {
+        List<ProjectRiskManagementSim.SimulationBlazor.Models.DeliverableModel> deliverables = new();
+        for (var i = 0; i < source.DeliverablesCount; i++)
+        {
+            var dev = new ProjectRiskManagementSim.SimulationBlazor.Models.DeliverableModel
+            {
+                Id = new Guid(),
+                Nr = i,
+            };
+            deliverables.Add(dev);
+        }
+
+        var staff = new List<StaffModel>();
+        for (var i = 1; i <= source.BackendDevs; i++)
+        {
+            staff.Add(new StaffModel
+            {
+                Name = $"Backend Dev {i}",
+                Role = Role.BackendDeveloper,
+                Sale = 1000,
+                Cost = 370,
+                Days = 20
+            });
+        }
+        for (var i = 1; i <= source.FrontendDevs; i++)
+        {
+            staff.Add(new StaffModel
+            {
+                Name = $"Frontend Dev {i}",
+                Role = Role.FrontendDeveloper,
+                Sale = 1000,
+                Cost = 370,
+                Days = 20
+            });
+        }
+        for (var i = 1; i <= source.Testers; i++)
+        {
+            staff.Add(new StaffModel
+            {
+                Name = $"Tester {i}",
+                Role = Role.SoftwareTester,
+                Sale = 1000,
+                Cost = 370,
+                Days = 20
+            });
+        }
+
+
+        return new ProjectRiskManagementSim.SimulationBlazor.Models.ViewProjectSimulationModel
+        {
+            Name = source.Name != null ? source.Name : "",
+            StartDate = source.StartDate,
+            TargetDate = source.TargetDate,
+            Revenue = new ProjectRiskManagementSim.SimulationBlazor.Models.RevenueModel { Amount = (double)source.ActualRevenue },
+            Costs = new ProjectRiskManagementSim.SimulationBlazor.Models.CostModel { Cost = (double)source.BudgetCosts, Days = source.TargetDays },
+            Staff = staff,
+            Backlog = new ProjectRiskManagementSim.SimulationBlazor.Models.BacklogModel
+            {
+                Deliverables = deliverables,
+                PercentageLowBound = source.PercentageLowBound,
+                PercentageHighBound = source.PercentageHighBound
+            },
+            Columns = source.Columns.Select(c => new ProjectRiskManagementSim.SimulationBlazor.Models.ViewColumnModel
+            {
+                Name = c.Name,
+                EstimatedLowBound = c.EstimatedLowBound,
+                EstimatedHighBound = c.EstimatedHighBound,
+                WIP = c.WIP,
+                WIPMax = c.WIPMax,
+                IsBuffer = c.IsBuffer
+            }).ToList()
+        };
+    }
 }
 
