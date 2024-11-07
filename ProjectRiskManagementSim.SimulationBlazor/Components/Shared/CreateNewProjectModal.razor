@@ -21,18 +21,18 @@
         <div class="flex flex-col gap-2 h-full flex-grow">
           <h2>Project details</h2>
           <div class="flex flex-col h-full gap-2">
-            <div>
-              <label>JiraProjectId:</label>
+            <div class="hidden">
+              <label>JiraProjectId: @NewProjectHandler.JiraProjectId</label>
               <input class="input-border" type="text" name="JiraProjectId" value="@NewProjectHandler.JiraProjectId"
                 required />
             </div>
             <div>
-              <label>JiraId:</label>
-              <input class="input-border" type="text" name="JiraId" value="@NewProjectHandler.JiraId" required />
+               <label>JiraId: @NewProjectHandler.JiraId</label>
+               <input class="hidden input-border" type="text" name="JiraId" value="@NewProjectHandler.JiraId" required />
             </div>
             <div>
-              <label>Jira Project Name:</label>
-              <input class="input-border" type="text" name="jiraProjectName" value="@NewProjectHandler.Name" required />
+              <label>Jira Project Name: @NewProjectHandler.Name</label>
+              <input class="hidden input-border" type="text" name="jiraProjectName" value="@NewProjectHandler.Name" required />
             </div>
             <div>
               <label>Name:</label>

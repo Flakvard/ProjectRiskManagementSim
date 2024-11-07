@@ -173,6 +173,8 @@ public static class PageRoutes
             }
             var costPrDay = cost / daysSinceStartInt;
 
+            // TODO: Staff logic to non blocking column
+            // if(staff != null) do something
             var columns = new List<ViewColumnModel>();
             for (int i = 1; i <= 11; i++)
             {
