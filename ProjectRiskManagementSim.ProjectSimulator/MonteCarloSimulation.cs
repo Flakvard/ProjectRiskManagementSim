@@ -9,6 +9,14 @@ namespace ProjectRiskManagementSim.ProjectSimulation;
 public class MonteCarloSimulation : IMonteCarloSimulation
 {
     public ProjectSimulationModel ProjectSimulationModel { get; set; }
+
+    private const string Rdy4TestProd = "Ready to test on Production";
+    private const string Backlog = "Backlog";
+    private const string TestStage = "Testing on Development";
+    private const string InProgress = "In Progress";
+    private const string Open = "Open";
+    private const string Rdy4Test = "Ready to test on Development";
+    private const string AwaitDplyProd = "Waiting Deployment on Production";
     private readonly Random _random = new Random();
     public List<double>? SimTotalDaysResult { get; set; }
     public List<double>? SimTotalCostsResult { get; set; }
@@ -115,9 +123,9 @@ public class MonteCarloSimulation : IMonteCarloSimulation
 
         double currentDay = 0;
         const int developersHelping = 1;
-        int originalTestingProdWIP = columns.First(c => c.Name == "Rdy4TestProd").WIP;
-        int originalTestingDevWIP = columns.First(c => c.Name == "Test Stage").WIP;
-        int originalDevelopersWIP = columns.First(c => c.Name == "In Progress").WIP;
+        int originalTestingProdWIP = columns.First(c => c.Name == Rdy4TestProd).WIP;
+        int originalTestingDevWIP = columns.First(c => c.Name == TestStage).WIP;
+        int originalDevelopersWIP = columns.First(c => c.Name == InProgress).WIP;
 
         // While there are deliverables in the system
         while (columnDeliverables.Any(kvp => kvp.Value.Count > 0))
@@ -130,15 +138,15 @@ public class MonteCarloSimulation : IMonteCarloSimulation
                 var wipQueue = columnDeliverables[column];
                 var wipStack = new List<DeliverableModel>();
 
-                var backlogColumn = columns.FirstOrDefault(c => c.Name == "Backlog");
-                var openColumn = columns.FirstOrDefault(c => c.Name == "Open");
-                var testingProdColumn = columns.FirstOrDefault(c => c.Name == "Rdy4TestProd");
-                var testingDevColumn = columns.FirstOrDefault(c => c.Name == "Test Stage");
-                var developerColumn = columns.FirstOrDefault(c => c.Name == "In Progress");
+                var backlogColumn = columns.FirstOrDefault(c => c.Name == Backlog);
+                var openColumn = columns.FirstOrDefault(c => c.Name == Open);
+                var testingProdColumn = columns.FirstOrDefault(c => c.Name == Rdy4TestProd);
+                var testingDevColumn = columns.FirstOrDefault(c => c.Name == TestStage);
+                var developerColumn = columns.FirstOrDefault(c => c.Name == InProgress);
 
                 // Check if the "Ready for Test Stage" column is full
                 // if so allocate developers to help testing
-                var readyForTestDevColumn = columns.FirstOrDefault(c => c.Name == "Rdy4Test");
+                var readyForTestDevColumn = columns.FirstOrDefault(c => c.Name == Rdy4Test);
                 if (readyForTestDevColumn != null
                     && IsBottleneck(readyForTestDevColumn, columnDeliverables[readyForTestDevColumn])
                     && testingDevColumn?.WIP <= testingDevColumn?.WIPMax
@@ -150,7 +158,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
 
                 // Check if the "Ready for Test on Prod" column is full
                 // if so allocate developers to help testing
-                var readyForTestProdColumn = columns.FirstOrDefault(c => c.Name == "Await Dply Prod");
+                var readyForTestProdColumn = columns.FirstOrDefault(c => c.Name == AwaitDplyProd);
                 if (readyForTestProdColumn != null
                     && IsBottleneck(readyForTestProdColumn, columnDeliverables[readyForTestProdColumn])
                     && testingProdColumn?.WIP <= testingProdColumn?.WIPMax
@@ -335,9 +343,9 @@ public class MonteCarloSimulation : IMonteCarloSimulation
 
         double currentDay = 0;
         const int developersHelping = 1;
-        int originalTestingProdWIP = columns.First(c => c.Name == "Rdy4TestProd").WIP;
-        int originalTestingDevWIP = columns.First(c => c.Name == "Test Stage").WIP;
-        int originalDevelopersWIP = columns.First(c => c.Name == "In Progress").WIP;
+        int originalTestingProdWIP = columns.First(c => c.Name == Rdy4TestProd).WIP;
+        int originalTestingDevWIP = columns.First(c => c.Name == TestStage).WIP;
+        int originalDevelopersWIP = columns.First(c => c.Name == InProgress).WIP;
 
         // While there are deliverables in the system
         while (columnDeliverables.Any(kvp => kvp.Value.Count > 0))
@@ -350,15 +358,15 @@ public class MonteCarloSimulation : IMonteCarloSimulation
                 var wipQueue = columnDeliverables[column];
                 var wipStack = new List<DeliverableModel>();
 
-                var backlogColumn = columns.FirstOrDefault(c => c.Name == "Backlog");
-                var openColumn = columns.FirstOrDefault(c => c.Name == "Open");
-                var testingProdColumn = columns.FirstOrDefault(c => c.Name == "Rdy4TestProd");
-                var testingDevColumn = columns.FirstOrDefault(c => c.Name == "Test Stage");
-                var developerColumn = columns.FirstOrDefault(c => c.Name == "In Progress");
+                var backlogColumn = columns.FirstOrDefault(c => c.Name == Backlog);
+                var openColumn = columns.FirstOrDefault(c => c.Name == Open);
+                var testingProdColumn = columns.FirstOrDefault(c => c.Name == Rdy4TestProd);
+                var testingDevColumn = columns.FirstOrDefault(c => c.Name == TestStage);
+                var developerColumn = columns.FirstOrDefault(c => c.Name == InProgress);
 
                 // Check if the "Ready for Test Stage" column is full
                 // if so allocate developers to help testing
-                var readyForTestDevColumn = columns.FirstOrDefault(c => c.Name == "Rdy4Test");
+                var readyForTestDevColumn = columns.FirstOrDefault(c => c.Name == Rdy4Test);
                 if (readyForTestDevColumn != null
                     && IsBottleneck(readyForTestDevColumn, columnDeliverables[readyForTestDevColumn])
                     && testingDevColumn?.WIP <= testingDevColumn?.WIPMax
@@ -370,7 +378,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
 
                 // Check if the "Ready for Test on Prod" column is full
                 // if so allocate developers to help testing
-                var readyForTestProdColumn = columns.FirstOrDefault(c => c.Name == "Await Dply Prod");
+                var readyForTestProdColumn = columns.FirstOrDefault(c => c.Name == AwaitDplyProd);
                 if (readyForTestProdColumn != null
                     && IsBottleneck(readyForTestProdColumn, columnDeliverables[readyForTestProdColumn])
                     && testingProdColumn?.WIP <= testingProdColumn?.WIPMax
@@ -851,9 +859,9 @@ public class MonteCarloSimulation : IMonteCarloSimulation
         // Increment the current day for each iteration
         double currentSimDay = currentDay;
         const int developersHelping = 1;
-        int originalTestingProdWIP = columns.First(c => c.Name == "Rdy4TestProd").WIP;
-        int originalTestingDevWIP = columns.First(c => c.Name == "Test Stage").WIP;
-        int originalDevelopersWIP = columns.First(c => c.Name == "In Progress").WIP;
+        int originalTestingProdWIP = columns.First(c => c.Name == Rdy4TestProd).WIP;
+        int originalTestingDevWIP = columns.First(c => c.Name == TestStage).WIP;
+        int originalDevelopersWIP = columns.First(c => c.Name == InProgress).WIP;
 
         // While there are deliverables in the system
         if (columnDeliverables.Any(kvp => kvp.Value.Count > 0))
@@ -863,15 +871,15 @@ public class MonteCarloSimulation : IMonteCarloSimulation
                 var wipQueue = columnDeliverables[column];
                 var wipStack = new List<DeliverableModel>();
 
-                var backlogColumn = columns.FirstOrDefault(c => c.Name == "Backlog");
-                var openColumn = columns.FirstOrDefault(c => c.Name == "Open");
-                var testingProdColumn = columns.FirstOrDefault(c => c.Name == "Rdy4TestProd");
-                var testingDevColumn = columns.FirstOrDefault(c => c.Name == "Test Stage");
-                var developerColumn = columns.FirstOrDefault(c => c.Name == "In Progress");
+                var backlogColumn = columns.FirstOrDefault(c => c.Name == Backlog);
+                var openColumn = columns.FirstOrDefault(c => c.Name == Open);
+                var testingProdColumn = columns.FirstOrDefault(c => c.Name == Rdy4TestProd);
+                var testingDevColumn = columns.FirstOrDefault(c => c.Name == TestStage);
+                var developerColumn = columns.FirstOrDefault(c => c.Name == InProgress);
 
                 // Check if the "Ready for Test Stage" column is full
                 // if so allocate developers to help testing
-                var readyForTestDevColumn = columns.FirstOrDefault(c => c.Name == "Rdy4Test");
+                var readyForTestDevColumn = columns.FirstOrDefault(c => c.Name == Rdy4Test);
                 if (readyForTestDevColumn != null
                     && IsBottleneck(readyForTestDevColumn, columnDeliverables[readyForTestDevColumn])
                     && testingDevColumn?.WIP <= testingDevColumn?.WIPMax
@@ -883,7 +891,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
 
                 // Check if the "Ready for Test on Prod" column is full
                 // if so allocate developers to help testing
-                var readyForTestProdColumn = columns.FirstOrDefault(c => c.Name == "Await Dply Prod");
+                var readyForTestProdColumn = columns.FirstOrDefault(c => c.Name == AwaitDplyProd);
                 if (readyForTestProdColumn != null
                     && IsBottleneck(readyForTestProdColumn, columnDeliverables[readyForTestProdColumn])
                     && testingProdColumn?.WIP <= testingProdColumn?.WIPMax
