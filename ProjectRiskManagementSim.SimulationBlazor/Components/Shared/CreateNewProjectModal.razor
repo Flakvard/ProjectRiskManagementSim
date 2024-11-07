@@ -4,422 +4,454 @@
 
 
 <form class="bg-white rounded-lg shadow-lg w-1/3 h-5/6 flex flex-col" id="start-simulation-form"
-  hx-post="/create-simulation" hx-target="#simulation-result" hx-swap="innerHTML">
+      hx-post="/create-simulation" hx-target="#simulation-result" hx-swap="innerHTML">
 
-  <!-- Modal Header -->
-  <div class="px-4 py-2 bg-[#7e44eb] rounded-t-lg flex justify-between items-center border-b">
-    <h2 class="text-white text-lg font-semibold">New Simulation</h2>
-    <button id="closeModal" class="text-white hover:text-black">&times;</button>
-  </div>
+    <!-- Modal Header -->
+    <div class="px-4 py-2 bg-[#7e44eb] rounded-t-lg flex justify-between items-center border-b">
+        <h2 class="text-white text-lg font-semibold">New Simulation</h2>
+        <button id="closeModal" class="text-white hover:text-black">&times;</button>
+    </div>
 
-  <!-- Modal Body -->
-  <div class="flex flex-col p-4 flex-grow overflow-hidden">
-    <div class="overflow-hidden">
-      <div class="flex flex-row gap-4 h-full">
+    <!-- Modal Body -->
+    <div class="flex flex-col p-4 flex-grow overflow-hidden">
+        <div class="overflow-hidden">
+            <div class="flex flex-row gap-4 h-full">
 
-        <!-- Simulation Details -->
-        <div class="flex flex-col gap-2 h-full flex-grow">
-          <h2>Project details</h2>
-          <div class="flex flex-col h-full gap-2">
-            <div class="hidden">
-              <label>JiraProjectId: @NewProjectHandler.JiraProjectId</label>
-              <input class="input-border" type="text" name="JiraProjectId" value="@NewProjectHandler.JiraProjectId"
-                required />
+                <!-- Simulation Details -->
+                <div class="flex flex-col gap-2 h-full flex-grow">
+                    <h2>Project details</h2>
+                    <div class="flex flex-col h-full gap-2">
+                        <div class="hidden">
+                            <label>JiraProjectId: @NewProjectHandler.JiraProjectId</label>
+                            <input class="input-border" type="text" name="JiraProjectId" value="@NewProjectHandler.JiraProjectId"
+                                   required />
+                        </div>
+                        <div>
+                            <label>JiraId: @NewProjectHandler.JiraId</label>
+                            <input class="hidden input-border" type="text" name="JiraId" value="@NewProjectHandler.JiraId" required />
+                        </div>
+                        <div>
+                            <label>Jira Project Name: @NewProjectHandler.Name</label>
+                            <input class="hidden input-border" type="text" name="jiraProjectName" value="@NewProjectHandler.Name"
+                                   required />
+                        </div>
+                        <div>
+                            <label>Name:</label>
+                            <input class="input-border" type="text" name="Name" required />
+                        </div>
+                        <div>
+                            <label>Start Date:</label>
+                            <input class="input-border" type="date" name="StartDate" required value="@NewProjectHandler.FirstIssueDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)" />
+                        </div>
+                        <div class="hidden">
+                            <label>Last Updated Date:</label>
+                            <input class="input-border" type="date" name="LastDate" required value="@NewProjectHandler.LastIssueDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)" />
+                        </div>
+                        <div>
+                            <label>Target Date:</label>
+                            <input class="input-border" type="date" name="TargetDate" required />
+                        </div>
+                        <div>
+                            <label>Budget:</label>
+                            <input class="input-border" type="number" name="Budget" value="0" required />
+                        </div>
+                        <div>
+                            <label>BackendDevs:</label>
+                            <input class="input-border" type="number" name="BackendDevs" value="0" required />
+                        </div>
+                        <div>
+                            <label>FrontendDevs:</label>
+                            <input class="input-border" type="number" name="FrontendDevs" value="0" required />
+                        </div>
+                        <div>
+                            <label>Testers:</label>
+                            <input class="input-border" type="number" name="Testers" value="0" required />
+                        </div>
+                        <div class="hidden">
+                            <label>Revenue Amount:</label>
+                            <input class="input-border" type="number" name="RevenueAmount"
+                                   value="@double.Round(NewProjectHandler.TotalRevenue)" required />
+                        </div>
+                        <div class="hidden">
+                            <label>Cost:</label>
+                            <input class="input-border" type="number" name="Cost" value="@double.Round(NewProjectHandler.TotalCost)"
+                                   required />
+                        </div>
+                        <div class="hidden">
+                            <label>Hours:</label>
+                            <input class="input-border" type="number" name="hours" value="@double.Round(NewProjectHandler.TotalHours)"
+                                   required />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contianer for Column Details and Deliverables Details -->
+                <div class="flex flex-col flex-grow gap-2">
+
+                    <!-- Column Details -->
+                    <div class="flex flex-col h-full flex-grow overflow-hidden">
+                        <h2>Columns</h2>
+                        <div class="flex flex-col border border-[#b9b9b9] p-4 gap-2 h-full overflow-y-auto">
+                            <div id="kanbanForm" class="flex flex-col gap-2">
+                                <!-- Column 0 -->
+                                <div class="column-input-border">
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="name0">Name:</label>
+                                        <input class="input-border" type="text" id="name0" name="name0" value="Backlog">
+                                    </div>
+
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="wip0">WIP:</label>
+                                        <input class="input-border" type="number" id="wip0" name="wip0"
+                                               value="@double.Round(NewProjectHandler.IssuesCount)">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="wipMax0">WIP Max:</label>
+                                        <input class="input-border" type="number" id="wipMax0" name="wipMax0"
+                                               value="@double.Round(NewProjectHandler.IssuesCount)">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="lowBound0">Estimated Low Bound:</label>
+                                        <input class="input-border" type="number" id="lowBound0" name="lowBound0" value="0">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="highBound0">Estimated High Bound:</label>
+                                        <input class="input-border" type="number" id="highBound0" name="highBound0" value="0">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="isBuffer0">Is Buffer:</label>
+                                        <input class="input-border" type="checkbox" id="isBuffer0" name="isBuffer0" checked>
+                                    </div>
+                                </div>
+                                <!-- Column 1 -->
+                                <div class="column-input-border">
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="name1">Name:</label>
+                                        <input class="input-border" type="text" id="name1" name="name1" value="Open">
+                                    </div>
+
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="wip1">WIP:</label>
+                                        <input class="input-border" type="number" id="wip1" name="wip1" value="20">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="wipMax1">WIP Max:</label>
+                                        <input class="input-border" type="number" id="wipMax1" name="wipMax1" value="20">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="lowBound1">Estimated Low Bound:</label>
+                                        <input class="input-border" type="number" id="lowBound1" name="lowBound1"
+                                               value="@double.Round(NewProjectHandler.OpenPercentiles[0])">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="highBound1">Estimated High Bound:</label>
+                                        <input class="input-border" type="number" id="highBound1" name="highBound1"
+                                               value="@double.Round(NewProjectHandler.OpenPercentiles[1])">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="isBuffer1">Is Buffer:</label>
+                                        <input class="input-border" type="checkbox" id="isBuffer1" name="isBuffer1" checked>
+                                    </div>
+                                </div>
+                                <!-- Column 2 -->
+                                <div class="column-input-border">
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="name2">Name:</label>
+                                        <input class="input-border" type="text" id="name2" name="name2" value="In Progress">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="wip2">WIP:</label>
+                                        <input class="input-border" type="number" id="wip2" name="wip2" value="3">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="wipMax2">WIP Max:</label>
+                                        <input class="input-border" type="number" id="wipMax2" name="wipMax2" value="3">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="lowBound2">Estimated Low Bound:</label>
+                                        <input class="input-border" type="number" id="lowBound2" name="lowBound2"
+                                               value="@double.Round(NewProjectHandler.InProgressPercentiles[0])">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="highBound2">Estimated High Bound:</label>
+                                        <input class="input-border" type="number" id="highBound2" name="highBound2"
+                                               value="@double.Round(NewProjectHandler.InProgressPercentiles[1])">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="isBuffer2">Is Buffer:</label>
+                                        <input class="input-border" type="checkbox" id="isBuffer2" name="isBuffer2">
+                                    </div>
+                                </div>
+                                <!-- Column 3 -->
+                                <div class="column-input-border">
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="name3">Name:</label>
+                                        <input class="input-border" type="text" id="name3" name="name3" value="Stuck">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="wip3">WIP:</label>
+                                        <input class="input-border" type="number" id="wip3" name="wip3" value="17">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="wipMax3">WIP Max:</label>
+                                        <input class="input-border" type="number" id="wipMax3" name="wipMax3" value="17">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="lowBound3">Estimated Low Bound:</label>
+                                        <input class="input-border" type="number" id="lowBound3" name="lowBound3"
+                                               value="@double.Round(NewProjectHandler.AwaitingCustomerPercentiles[0])">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="highBound3">Estimated High Bound:</label>
+                                        <input class="input-border" type="number" id="highBound3" name="highBound3"
+                                               value="@double.Round(NewProjectHandler.AwaitingCustomerPercentiles[1])">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="isBuffer3">Is Buffer:</label>
+                                        <input class="input-border" type="checkbox" id="isBuffer3" name="isBuffer3" checked>
+                                    </div>
+                                </div>
+                                <!-- Column 4 -->
+                                <div class="column-input-border">
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="name4">Name:</label>
+                                        <input class="input-border" type="text" id="name4" name="name4" value="Finished">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="wip4">WIP:</label>
+                                        <input class="input-border" type="number" id="wip4" name="wip4" value="20">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="wipMax4">WIP Max:</label>
+                                        <input class="input-border" type="number" id="wipMax4" name="wipMax4" value="20">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="lowBound4">Estimated Low Bound:</label>
+                                        <input class="input-border" type="number" id="lowBound4" name="lowBound4"
+                                               value="@double.Round(NewProjectHandler.FinishedPercentiles[0])">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="highBound4">Estimated High Bound:</label>
+                                        <input class="input-border" type="number" id="highBound4" name="highBound4"
+                                               value="@double.Round(NewProjectHandler.FinishedPercentiles[1])">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="isBuffer4">Is Buffer:</label>
+                                        <input class="input-border" type="checkbox" id="isBuffer4" name="isBuffer4" checked>
+                                    </div>
+                                </div>
+                                <!-- Column 5 -->
+                                <div class="column-input-border">
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="name5">Name:</label>
+                                        <input class="input-border" type="text" id="name5" name="name5"
+                                               value="Ready to test on Development">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="wip5">WIP:</label>
+                                        <input class="input-border" type="number" id="wip5" name="wip5" value="17">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="wipMax5">WIP Max:</label>
+                                        <input class="input-border" type="number" id="wipMax5" name="wipMax5" value="17">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="lowBound5">Estimated Low Bound:</label>
+                                        <input class="input-border" type="number" id="lowBound5" name="lowBound5"
+                                               value="@double.Round(NewProjectHandler.ReadyForTestOnStagePercentiles[0])">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="highBound5">Estimated High Bound:</label>
+                                        <input class="input-border" type="number" id="highBound5" name="highBound5"
+                                               value="@double.Round(NewProjectHandler.ReadyForTestOnStagePercentiles[1])">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="isBuffer5">Is Buffer:</label>
+                                        <input class="input-border" type="checkbox" id="isBuffer5" name="isBuffer5" checked>
+                                    </div>
+                                </div>
+                                <!-- Column 6 -->
+                                <div class="column-input-border">
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="name6">Name:</label>
+                                        <input class="input-border" type="text" id="name6" name="name6" value="Testing on Development">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="wip6">WIP:</label>
+                                        <input class="input-border" type="number" id="wip6" name="wip6" value="0">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="wipMax6">WIP Max:</label>
+                                        <input class="input-border" type="number" id="wipMax6" name="wipMax6" value="2">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="lowBound6">Estimated Low Bound:</label>
+                                        <input class="input-border" type="number" id="lowBound6" name="lowBound6"
+                                               value="@double.Round(NewProjectHandler.TestingOnStagePercentiles[0])">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="highBound6">Estimated High Bound:</label>
+                                        <input class="input-border" type="number" id="highBound6" name="highBound6"
+                                               value="@double.Round(NewProjectHandler.TestingOnStagePercentiles[1])">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="isBuffer6">Is Buffer:</label>
+                                        <input class="input-border" type="checkbox" id="isBuffer6" name="isBuffer6">
+                                    </div>
+                                </div>
+                                <!-- Column 7 -->
+                                <div class="column-input-border">
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="name7">Name:</label>
+                                        <input class="input-border" type="text" id="name7" name="name7"
+                                               value="Waiting Deployment on Production">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="wip7">WIP:</label>
+                                        <input class="input-border" type="number" id="wip7" name="wip7" value="20">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="wipMax7">WIP Max:</label>
+                                        <input class="input-border" type="number" id="wipMax7" name="wipMax7" value="20">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="lowBound7">Estimated Low Bound:</label>
+                                        <input class="input-border" type="number" id="lowBound7" name="lowBound7"
+                                               value="@double.Round(NewProjectHandler.WaitingForDeploymentToProductionPercentiles[0])">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="highBound7">Estimated High Bound:</label>
+                                        <input class="input-border" type="number" id="highBound7" name="highBound7"
+                                               value="@double.Round(NewProjectHandler.WaitingForDeploymentToProductionPercentiles[1])">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="isBuffer7">Is Buffer:</label>
+                                        <input class="input-border" type="checkbox" id="isBuffer7" name="isBuffer7" checked>
+                                    </div>
+                                </div>
+                                <!-- Column 8 -->
+                                <div class="column-input-border">
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="name8">Name:</label>
+                                        <input class="input-border" type="text" id="name8" name="name8" value="Ready to test on Production">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="wip8">WIP:</label>
+                                        <input class="input-border" type="number" id="wip8" name="wip8" value="0">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="wipMax8">WIP Max:</label>
+                                        <input class="input-border" type="number" id="wipMax8" name="wipMax8" value="2">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="lowBound8">Estimated Low Bound:</label>
+                                        <input class="input-border" type="number" id="lowBound8" name="lowBound8"
+                                               value="@double.Round(NewProjectHandler.ReadyToTestOnProductionPercentiles[0])">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="highBound8">Estimated High Bound:</label>
+                                        <input class="input-border" type="number" id="highBound8" name="highBound8"
+                                               value="@double.Round(NewProjectHandler.ReadyToTestOnProductionPercentiles[1])">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="isBuffer8">Is Buffer:</label>
+                                        <input class="input-border" type="checkbox" id="isBuffer8" name="isBuffer8">
+                                    </div>
+                                </div>
+                     
+                                <!-- Column 9 -->
+                                <div class="column-input-border">
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="name9">Name:</label>
+                                        <input class="input-border" type="text" id="name9" name="name9" value="Done">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="wip9">WIP:</label>
+                                        <input class="input-border" type="number" id="wip9" name="wip9" value="@double.Round(NewProjectHandler.IssuesCount)">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="wipMax9">WIP Max:</label>
+                                        <input class="input-border" type="number" id="wipMax9" name="wipMax9" value="@double.Round(NewProjectHandler.IssuesCount)">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="lowBound9">Estimated Low Bound:</label>
+                                        <input class="input-border" type="number" id="lowBound9" name="lowBound9"
+                                               value="@double.Round(NewProjectHandler.DonePercentiles[0])">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="highBound9">Estimated High Bound:</label>
+                                        <input class="input-border" type="number" id="highBound9" name="highBound9"
+                                               value="@double.Round(NewProjectHandler.DonePercentiles[1])">
+                                    </div>
+                                    <div class="flex flex-row gap-2 justify-center items-center">
+                                        <label class="label-input" for="isBuffer9">Is Buffer:</label>
+                                        <input class="input-border" type="checkbox" id="isBuffer9" name="isBuffer9" checked>
+                                    </div>
+                                </div>
+                                <div id="addColumnButton" class="w-fit bg-[#7e44eb] text-white px-4 py-2 rounded hover:bg-blue-600">
+                                    <button type="button" onclick="addColumn()">Add Column</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Deliverables Details -->
+                    <div class="flex flex-col h-full flex-grow overflow-hidden">
+                        <h2>Deliverables</h2>
+                        <div class="flex flex-col border border-[#b9b9b9] p-4 gap-2 flex-grow">
+                            <div>
+                                <label>Deliverable Number:</label>
+                                <input class="input-border" type="number" step="1" name="FeatureNumber" required
+                                       value="@NewProjectHandler.EpicCount" />
+                            </div>
+                            <div>
+                                <label>Issues Number:</label>
+                                <input class="input-border" type="number" step="1" name="DeliverablesNumber" required
+                                       value="@NewProjectHandler.IssuesCount" />
+                            </div>
+                            <div>
+                                <label>Percentage Low Bound:</label>
+                                <input class="input-border" type="number" step="1" name="PercentageLowBound" required value="0" />
+                            </div>
+                            <div>
+                                <label>Percentage High Bound:</label>
+                                <input class="input-border" type="number" step="1" name="PercentageHighBound" required value="100" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div>
-               <label>JiraId: @NewProjectHandler.JiraId</label>
-               <input class="hidden input-border" type="text" name="JiraId" value="@NewProjectHandler.JiraId" required />
-            </div>
-            <div>
-              <label>Jira Project Name: @NewProjectHandler.Name</label>
-              <input class="hidden input-border" type="text" name="jiraProjectName" value="@NewProjectHandler.Name" required />
-            </div>
-            <div>
-              <label>Name:</label>
-              <input class="input-border" type="text" name="Name" required />
-            </div>
-            <div>
-              <label>Start Date:</label>
-              <input class="input-border" type="date" name="StartDate" required value="@NewProjectHandler.FirstIssueDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)" />
-            </div>
-            <div class="hidden">
-              <label>Last Updated Date:</label>
-              <input class="input-border" type="date" name="LastDate" required value="@NewProjectHandler.LastIssueDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)" />
-            </div>
-            <div>
-              <label>Target Date:</label>
-              <input class="input-border" type="date" name="TargetDate" required />
-            </div>
-            <div>
-              <label>Budget:</label>
-              <input class="input-border" type="number" name="Budget" value="0" required />
-            </div>
-            <div>
-              <label>BackendDevs:</label>
-              <input class="input-border" type="number" name="BackendDevs" value="0" required />
-            </div>
-            <div>
-              <label>FrontendDevs:</label>
-              <input class="input-border" type="number" name="FrontendDevs" value="0" required />
-            </div>
-            <div>
-              <label>Testers:</label>
-              <input class="input-border" type="number" name="Testers" value="0" required />
-            </div>
-            <div class="hidden">
-              <label>Revenue Amount:</label>
-              <input class="input-border" type="number" name="RevenueAmount"
-                value="@double.Round(NewProjectHandler.TotalRevenue)" required />
-            </div>
-            <div class="hidden">
-              <label>Cost:</label>
-              <input class="input-border" type="number" name="Cost" value="@double.Round(NewProjectHandler.TotalCost)"
-                required />
-            </div>
-            <div class="hidden">
-              <label>Hours:</label>
-              <input class="input-border" type="number" name="hours" value="@double.Round(NewProjectHandler.TotalHours)"
-                required />
-            </div>
-          </div>
+
         </div>
+    </div>
 
-        <!-- Contianer for Column Details and Deliverables Details -->
-        <div class="flex flex-col flex-grow gap-2">
-
-          <!-- Column Details -->
-          <div class="flex flex-col h-full flex-grow overflow-hidden">
-            <h2>Columns</h2>
-            <div class="flex flex-col border border-[#b9b9b9] p-4 gap-2 h-full overflow-y-auto">
-              <div id="kanbanForm" class="flex flex-col gap-2">
-                <!-- Column 1 -->
-                <div class="column-input-border">
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="name1">Name:</label>
-                    <input class="input-border" type="text" id="name1" name="name1" value="Open">
-                  </div>
-
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="wip1">WIP:</label>
-                    <input class="input-border" type="number" id="wip1" name="wip1" value="20">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="wipMax1">WIP Max:</label>
-                    <input class="input-border" type="number" id="wipMax1" name="wipMax1" value="20">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="lowBound1">Estimated Low Bound:</label>
-                    <input class="input-border" type="number" id="lowBound1" name="lowBound1"
-                      value="@double.Round(NewProjectHandler.OpenPercentiles[0])">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="highBound1">Estimated High Bound:</label>
-                    <input class="input-border" type="number" id="highBound1" name="highBound1"
-                      value="@double.Round(NewProjectHandler.OpenPercentiles[1])">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="isBuffer1">Is Buffer:</label>
-                    <input class="input-border" type="checkbox" id="isBuffer1" name="isBuffer1" checked>
-                  </div>
-                </div>
-                <!-- Column 2 -->
-                <div class="column-input-border">
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="name2">Name:</label>
-                    <input class="input-border" type="text" id="name2" name="name2" value="In Progress">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="wip2">WIP:</label>
-                    <input class="input-border" type="number" id="wip2" name="wip2" value="3">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="wipMax2">WIP Max:</label>
-                    <input class="input-border" type="number" id="wipMax2" name="wipMax2" value="3">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="lowBound2">Estimated Low Bound:</label>
-                    <input class="input-border" type="number" id="lowBound2" name="lowBound2"
-                      value="@double.Round(NewProjectHandler.InProgressPercentiles[0])">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="highBound2">Estimated High Bound:</label>
-                    <input class="input-border" type="number" id="highBound2" name="highBound2"
-                      value="@double.Round(NewProjectHandler.InProgressPercentiles[1])">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="isBuffer2">Is Buffer:</label>
-                    <input class="input-border" type="checkbox" id="isBuffer2" name="isBuffer2">
-                  </div>
-                </div>
-                <!-- Column 3 -->
-                <div class="column-input-border">
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="name3">Name:</label>
-                    <input class="input-border" type="text" id="name3" name="name3" value="Stuck">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="wip3">WIP:</label>
-                    <input class="input-border" type="number" id="wip3" name="wip3" value="17">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="wipMax3">WIP Max:</label>
-                    <input class="input-border" type="number" id="wipMax3" name="wipMax3" value="17">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="lowBound3">Estimated Low Bound:</label>
-                    <input class="input-border" type="number" id="lowBound3" name="lowBound3"
-                      value="@double.Round(NewProjectHandler.AwaitingCustomerPercentiles[0])">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="highBound3">Estimated High Bound:</label>
-                    <input class="input-border" type="number" id="highBound3" name="highBound3"
-                      value="@double.Round(NewProjectHandler.AwaitingCustomerPercentiles[1])">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="isBuffer3">Is Buffer:</label>
-                    <input class="input-border" type="checkbox" id="isBuffer3" name="isBuffer3" checked>
-                  </div>
-                </div>
-                <!-- Column 4 -->
-                <div class="column-input-border">
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="name4">Name:</label>
-                    <input class="input-border" type="text" id="name4" name="name4" value="Finished">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="wip4">WIP:</label>
-                    <input class="input-border" type="number" id="wip4" name="wip4" value="20">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="wipMax4">WIP Max:</label>
-                    <input class="input-border" type="number" id="wipMax4" name="wipMax4" value="20">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="lowBound4">Estimated Low Bound:</label>
-                    <input class="input-border" type="number" id="lowBound4" name="lowBound4"
-                      value="@double.Round(NewProjectHandler.FinishedPercentiles[0])">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="highBound4">Estimated High Bound:</label>
-                    <input class="input-border" type="number" id="highBound4" name="highBound4"
-                      value="@double.Round(NewProjectHandler.FinishedPercentiles[1])">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="isBuffer4">Is Buffer:</label>
-                    <input class="input-border" type="checkbox" id="isBuffer4" name="isBuffer4" checked>
-                  </div>
-                </div>
-                <!-- Column 5 -->
-                <div class="column-input-border">
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="name5">Name:</label>
-                    <input class="input-border" type="text" id="name5" name="name5"
-                      value="Ready to test on Development">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="wip5">WIP:</label>
-                    <input class="input-border" type="number" id="wip5" name="wip5" value="17">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="wipMax5">WIP Max:</label>
-                    <input class="input-border" type="number" id="wipMax5" name="wipMax5" value="17">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="lowBound5">Estimated Low Bound:</label>
-                    <input class="input-border" type="number" id="lowBound5" name="lowBound5"
-                      value="@double.Round(NewProjectHandler.ReadyForTestOnStagePercentiles[0])">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="highBound5">Estimated High Bound:</label>
-                    <input class="input-border" type="number" id="highBound5" name="highBound5"
-                      value="@double.Round(NewProjectHandler.ReadyForTestOnStagePercentiles[1])">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="isBuffer5">Is Buffer:</label>
-                    <input class="input-border" type="checkbox" id="isBuffer5" name="isBuffer5" checked>
-                  </div>
-                </div>
-                <!-- Column 6 -->
-                <div class="column-input-border">
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="name6">Name:</label>
-                    <input class="input-border" type="text" id="name6" name="name6" value="Testing on Development">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="wip6">WIP:</label>
-                    <input class="input-border" type="number" id="wip6" name="wip6" value="0">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="wipMax6">WIP Max:</label>
-                    <input class="input-border" type="number" id="wipMax6" name="wipMax6" value="2">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="lowBound6">Estimated Low Bound:</label>
-                    <input class="input-border" type="number" id="lowBound6" name="lowBound6"
-                      value="@double.Round(NewProjectHandler.TestingOnStagePercentiles[0])">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="highBound6">Estimated High Bound:</label>
-                    <input class="input-border" type="number" id="highBound6" name="highBound6"
-                      value="@double.Round(NewProjectHandler.TestingOnStagePercentiles[1])">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="isBuffer6">Is Buffer:</label>
-                    <input class="input-border" type="checkbox" id="isBuffer6" name="isBuffer6">
-                  </div>
-                </div>
-                <!-- Column 7 -->
-                <div class="column-input-border">
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="name7">Name:</label>
-                    <input class="input-border" type="text" id="name7" name="name7" value="Ready to test on Production">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="wip7">WIP:</label>
-                    <input class="input-border" type="number" id="wip7" name="wip7" value="10">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="wipMax7">WIP Max:</label>
-                    <input class="input-border" type="number" id="wipMax7" name="wipMax7" value="10">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="lowBound7">Estimated Low Bound:</label>
-                    <input class="input-border" type="number" id="lowBound7" name="lowBound7"
-                      value="@double.Round(NewProjectHandler.ReadyToTestOnProductionPercentiles[0])">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="highBound7">Estimated High Bound:</label>
-                    <input class="input-border" type="number" id="highBound7" name="highBound7"
-                      value="@double.Round(NewProjectHandler.ReadyToTestOnProductionPercentiles[1])">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="isBuffer7">Is Buffer:</label>
-                    <input class="input-border" type="checkbox" id="isBuffer7" name="isBuffer7" checked>
-                  </div>
-                </div>
-                <!-- Column 10 -->
-                <div class="column-input-border">
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="name10">Name:</label>
-                    <input class="input-border" type="text" id="name10" name="name10"
-                      value="Waiting Deployment on Production">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="wip10">WIP:</label>
-                    <input class="input-border" type="number" id="wip10" name="wip10" value="0">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="wipMax10">WIP Max:</label>
-                    <input class="input-border" type="number" id="wipMax10" name="wipMax10" value="2">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="lowBound10">Estimated Low Bound:</label>
-                    <input class="input-border" type="number" id="lowBound10" name="lowBound10"
-                      value="@double.Round(NewProjectHandler.WaitingForDeploymentToProductionPercentiles[0])">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="highBound10">Estimated High Bound:</label>
-                    <input class="input-border" type="number" id="highBound10" name="highBound10"
-                      value="@double.Round(NewProjectHandler.WaitingForDeploymentToProductionPercentiles[1])">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="isBuffer10">Is Buffer:</label>
-                    <input class="input-border" type="checkbox" id="isBuffer10" name="isBuffer10">
-                  </div>
-                </div>
-                <!-- Column 11 -->
-                <div class="column-input-border">
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="name11">Name:</label>
-                    <input class="input-border" type="text" id="name11" name="name11" value="Done">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="wip11">WIP:</label>
-                    <input class="input-border" type="number" id="wip11" name="wip11" value="20">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="wipMax11">WIP Max:</label>
-                    <input class="input-border" type="number" id="wipMax11" name="wipMax11" value="20">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="lowBound11">Estimated Low Bound:</label>
-                    <input class="input-border" type="number" id="lowBound11" name="lowBound11"
-                      value="@double.Round(NewProjectHandler.DonePercentiles[0])">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="highBound11">Estimated High Bound:</label>
-                    <input class="input-border" type="number" id="highBound11" name="highBound11"
-                      value="@double.Round(NewProjectHandler.DonePercentiles[1])">
-                  </div>
-                  <div class="flex flex-row gap-2 justify-center items-center">
-                    <label class="label-input" for="isBuffer11">Is Buffer:</label>
-                    <input class="input-border" type="checkbox" id="isBuffer11" name="isBuffer11" checked>
-                  </div>
-                </div>
-                <div id="addColumnButton" class="w-fit bg-[#7e44eb] text-white px-4 py-2 rounded hover:bg-blue-600">
-                  <button type="button" onclick="addColumn()">Add Column</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Deliverables Details -->
-          <div class="flex flex-col h-full flex-grow overflow-hidden">
-            <h2>Deliverables</h2>
-            <div class="flex flex-col border border-[#b9b9b9] p-4 gap-2 flex-grow">
-              <div>
-                <label>Deliverable Number:</label>
-                <input class="input-border" type="number" step="1" name="FeatureNumber" required
-                  value="@NewProjectHandler.EpicCount" />
-              </div>
-              <div>
-                <label>Issues Number:</label>
-                <input class="input-border" type="number" step="1" name="DeliverablesNumber" required
-                  value="@NewProjectHandler.IssuesCount" />
-              </div>
-              <div>
-                <label>Percentage Low Bound:</label>
-                <input class="input-border" type="number" step="1" name="PercentageLowBound" required value="0" />
-              </div>
-              <div>
-                <label>Percentage High Bound:</label>
-                <input class="input-border" type="number" step="1" name="PercentageHighBound" required value="100" />
-              </div>
-            </div>
-          </div>
+    <!-- Modal Footer -->
+    <div class="px-4 py-2 border-t h-fit flex justify-between">
+        <div class="flex justify-start">
+            <button id="closeModalFooter" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 mr-2">
+                Close
+            </button>
+            <button type="submit" class="bg-[#7e44eb] text-white px-4 py-2 rounded hover:bg-blue-600" hx-put="/select-project"
+                    hx-vals='{ "Open": true }' hx-target="#modal" hx-swap="innerHTML" hx-replace-url="true">
+                Back
+            </button>
         </div>
-      </div>
-
+        <div class="flex justify-end">
+            <button type="submit" class="bg-[#7e44eb] text-white px-4 py-2 rounded hover:bg-blue-600">
+                <div id="simulation-result">Save changes</div>
+            </button>
+        </div>
     </div>
-  </div>
-
-  <!-- Modal Footer -->
-  <div class="px-4 py-2 border-t h-fit flex justify-between">
-    <div class="flex justify-start">
-      <button id="closeModalFooter" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 mr-2">
-        Close
-      </button>
-      <button type="submit" class="bg-[#7e44eb] text-white px-4 py-2 rounded hover:bg-blue-600" hx-put="/select-project"
-        hx-vals='{ "Open": true }' hx-target="#modal" hx-swap="innerHTML" hx-replace-url="true">
-        Back
-      </button>
-    </div>
-    <div class="flex justify-end">
-      <button type="submit" class="bg-[#7e44eb] text-white px-4 py-2 rounded hover:bg-blue-600">
-        <div id="simulation-result">Save changes</div>
-      </button>
-    </div>
-  </div>
 </form>
 
 
 @code {
 
-[Parameter] public int ProjectId { get; set; }
-public CreateNewProjectHandler NewProjectHandler { get; set; } = new CreateNewProjectHandler();
-protected override async Task OnInitializedAsync()
-{
-NewProjectHandler.ProjectId = ProjectId;
-await NewProjectHandler.InitializeProjectsAsync(Context);
-}
+    [Parameter] public int ProjectId { get; set; }
+    public CreateNewProjectHandler NewProjectHandler { get; set; } = new CreateNewProjectHandler();
+    protected override async Task OnInitializedAsync()
+    {
+        NewProjectHandler.ProjectId = ProjectId;
+        await NewProjectHandler.InitializeProjectsAsync(Context);
+    }
 }

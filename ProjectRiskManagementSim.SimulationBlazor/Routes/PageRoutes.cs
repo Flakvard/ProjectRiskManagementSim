@@ -135,7 +135,6 @@ public static class PageRoutes
             {
                 return Results.BadRequest("Invalid input.");
             }
-            var percentageLowBound = double.Parse(stringPercentageLowBound);
             var hours = double.Parse(stringHours);
             var startDate = DateTime.Parse(stringStartDate);
             var lastDate = DateTime.Parse(stringLastDate);
@@ -148,7 +147,8 @@ public static class PageRoutes
             var testers = double.Parse(stringTesters);
             var deliverableNumber = double.Parse(stringDeliverablesNumber);
             var featureNumber = double.Parse(stringFeatureNumber);
-            var percentageHighBound = double.Parse(stringPercentageHighBound);
+            var percentageLowBound = double.Parse(stringPercentageLowBound) / 100;
+            var percentageHighBound = double.Parse(stringPercentageHighBound) / 100;
             if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(jiraProjectId) || string.IsNullOrWhiteSpace(jiraProjectName))
             {
                 return Results.BadRequest("Invalid input.");
@@ -157,6 +157,11 @@ public static class PageRoutes
             if (targetDate < startDate)
             {
                 return Results.BadRequest("Invalid date range.");
+            }
+            // check if percentageLowBound is less than percentageHighBound and with 0 and 100
+            if (percentageLowBound < 0 || percentageLowBound > 1 || percentageHighBound < 0 || percentageHighBound > 1 || percentageLowBound > percentageHighBound)
+            {
+                return Results.BadRequest("Invalid percentage range.");
             }
             var daysSinceStartInt = 1;
             if (lastDate < startDate)
@@ -176,7 +181,7 @@ public static class PageRoutes
             // TODO: Staff logic to non blocking column
             // if(staff != null) do something
             var columns = new List<ViewColumnModel>();
-            for (int i = 1; i <= 11; i++)
+            for (int i = 0; i <= 11; i++)
             {
                 if (form.ContainsKey($"name{i}"))
                 {
