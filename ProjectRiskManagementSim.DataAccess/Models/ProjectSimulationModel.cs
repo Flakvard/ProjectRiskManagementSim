@@ -15,9 +15,19 @@ public class ProjectSimulationModel
     public string? Name { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime TargetDate { get; set; }
-    public double? Revenue { get; set; }
-    public double? Costs { get; set; }
-    public double? Hours { get; set; }
+    public DateTime? SimEndDate { get; set; }
+
+    public double? ActualRevenue { get; set; }
+
+    public double? BudgetCosts { get; set; }
+    public double? ActualCosts { get; set; }
+    public double? SimulationCosts { get; set; }
+
+    public double? ActualDays { get; set; }
+    public double TargetDays { get; set; }
+    public double? SimulationDays { get; set; }
+
+    public double? ActualHours { get; set; }
 
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
@@ -28,6 +38,7 @@ public class ProjectSimulationModel
 
     // Deliverables info
     public double DeliverablesCount { get; set; }
+    public double FeaturesCount { get; set; }
     public double PercentageLowBound { get; set; }
     public double PercentageHighBound { get; set; }
 }

@@ -68,9 +68,9 @@
       <div class="CostName text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">Cost:</div>
     </div>
     <div class="CostValue text-right text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
-      @if(@Simulation != null && @Simulation.Costs != null )
+      @if(@Simulation != null && @Simulation.ActualCosts != null )
       {
-                @Simulation.Costs.Value.ToString("N0", new CultureInfo("da-DK"))
+                @Simulation.ActualCosts.Value.ToString("N0", new CultureInfo("da-DK"))
       }
     </div>
   </div>
