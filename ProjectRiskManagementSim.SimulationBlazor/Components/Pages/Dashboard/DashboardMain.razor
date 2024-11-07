@@ -13,7 +13,10 @@
         <div
           class="LeftsideFrame grow shrink basis-0 self-stretch p-4 bg-[#ffb4ba]/25 rounded-2xl flex-col justify-start items-start gap-2.5 inline-flex">
           <div class="overflow-hidden">
-            <KanbanSimulationHeader SimulationName="Phase II of Bech Bruun project" />
+            @if(@dashboardInfoHandler._simulation != null && !string.IsNullOrEmpty(@dashboardInfoHandler._simulation.Name))
+            {
+                <KanbanSimulationHeader SimulationName="@dashboardInfoHandler._simulation.Name" />
+            }
             <KanbanDeliverableTable />
             <div class="hover:overflow-y-scroll">
               <KanbanColumnTable />
