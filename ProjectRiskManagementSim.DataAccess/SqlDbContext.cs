@@ -117,6 +117,7 @@ public class OxygenSimulationContext : DbContext
     {
         return await ProjectSimulationModel
             .Include(p => p.Project)
+            .Include(p => p.Columns)
             .FirstOrDefaultAsync(p => p.Id == simulationProjectId);
     }
     public async Task<ProjectModel?> GetProjectBySimulationIdAsync(int simulationProjectId)
