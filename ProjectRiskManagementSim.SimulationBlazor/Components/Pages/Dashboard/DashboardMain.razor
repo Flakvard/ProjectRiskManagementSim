@@ -32,7 +32,7 @@
           class="UpperRightFrame self-stretch grow shrink basis-0 rounded-[40px] flex-col justify-start items-start gap-[30px] flex">
           @if(@dashboardInfoHandler._simulation != null)
           {
-          <ForecastAnalysis Simulation=@dashboardInfoHandler._simulation />
+          <ForecastAnalysis ProjectSimulationId=@ProjectSimulationId Simulation=@dashboardInfoHandler._simulation />
           }
           <!-- Two Analysis in Lower Right Content -->
           <div class="TwoAnalysis self-stretch grow shrink basis-0 justify-start items-start gap-[30px] inline-flex">
