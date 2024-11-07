@@ -23,6 +23,12 @@ public class ProjectSimulationModel
     public double? ActualCosts { get; set; }
     public double? SimulationCosts { get; set; }
 
+    public double? CostPrDay { get; set; }
+
+    public double FrontendDevs { get; set; }
+    public double BackendDevs { get; set; }
+    public double Testers { get; set; }
+
     public double? ActualDays { get; set; }
     public double TargetDays { get; set; }
     public double? SimulationDays { get; set; }
