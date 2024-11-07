@@ -43,6 +43,13 @@ builder.Services.AddDbContext<OxygenSimulationContext>(options =>
         sqlOptions.EnableRetryOnFailure();
     }));
 
+// Ensure database migration
+using (var serviceScope = builder.Services.BuildServiceProvider().CreateScope())
+{
+    var dbContext = serviceScope.ServiceProvider.GetRequiredService<OxygenSimulationContext>();
+    dbContext.Database.Migrate();
+}
+
 // Register as Scoped or Transient depending on how you want the lifecycle to work
 builder.Services.AddScoped<SimulationManager>();
 builder.Services.AddScoped<IMonteCarloSimulation, MonteCarloSimulation>();
