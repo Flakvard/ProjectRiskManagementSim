@@ -51,16 +51,20 @@
                             <input class="input-border" type="date" name="TargetDate" required />
                         </div>
                         <div>
+                            <label>Budget:</label>
+                            <input class="input-border" type="number" name="Budget" value="0" required />
+                        </div>
+                        <div class="hidden">
                             <label>Revenue Amount:</label>
                             <input class="input-border" type="number" name="RevenueAmount"
                                    value="@double.Round(NewProjectHandler.TotalRevenue)" required />
                         </div>
-                        <div>
+                        <div class="hidden">
                             <label>Cost:</label>
                             <input class="input-border" type="number" name="Cost" value="@double.Round(NewProjectHandler.TotalCost)"
                                    required />
                         </div>
-                        <div>
+                        <div class="hidden">
                             <label>Hours:</label>
                             <input class="input-border" type="number" name="hours" value="@double.Round(NewProjectHandler.TotalHours)"
                                    required />
@@ -353,7 +357,7 @@
                         <div class="flex flex-col border border-[#b9b9b9] p-4 gap-2 flex-grow">
                             <div>
                                 <label>Deliverable Number:</label>
-                                <input class="input-border" type="number" step="1" name="DeliverablesNumber" required
+                                <input class="input-border" type="number" step="1" name="FeatureNumber" required
                                        value="@NewProjectHandler.EpicCount" />
                             </div>
                             <div>

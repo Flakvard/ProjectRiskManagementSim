@@ -106,8 +106,10 @@ public static class PageRoutes
             string? stringTargetDate = form["TargetDate"];
             string? stringRevenueAmount = form["RevenueAmount"];
             string? stringCost = form["Cost"];
+            string? stringBudget = form["Budget"];
             string? stringHours = form["Hours"];
             string? stringDeliverablesNumber = form["DeliverablesNumber"];
+            string? stringFeatureNumber = form["FeatureNumber"];
             string? stringPercentageLowBound = form["PercentageLowBound"];
             string? stringPercentageHighBound = form["PercentageHighBound"];
             if (jiraProjectName == null
@@ -118,8 +120,10 @@ public static class PageRoutes
                 || stringTargetDate == null
                 || stringRevenueAmount == null
                 || stringCost == null
+                || stringBudget == null
                 || stringHours == null
                 || stringDeliverablesNumber == null
+                || stringFeatureNumber == null
                 || stringPercentageLowBound == null
                 || stringPercentageHighBound == null)
             {
@@ -132,7 +136,9 @@ public static class PageRoutes
             var targetDate = DateTime.Parse(stringTargetDate);
             var revenueAmount = double.Parse(stringRevenueAmount);
             var cost = double.Parse(stringCost);
+            var budget = double.Parse(stringBudget);
             var deliverableNumber = double.Parse(stringDeliverablesNumber);
+            var featureNumber = double.Parse(stringFeatureNumber);
             var percentageHighBound = double.Parse(stringPercentageHighBound);
             if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(jiraProjectId) || string.IsNullOrWhiteSpace(jiraProjectName))
             {
@@ -234,6 +240,9 @@ public static class PageRoutes
 
             // Store simulation in database
 
+            var targetTimeSpan = targetDate - startDate;
+            double targetDays = targetTimeSpan.Days;
+
             // Check if the project already exists in the database
             var existingProject = _context.GetProjectByIdAsync(jiraId);
             if (existingProject == null)
@@ -251,12 +260,17 @@ public static class PageRoutes
                     Name = name,
                     StartDate = startDate,
                     TargetDate = targetDate,
+                    TargetDays = targetDays,
+                    ActualDays = daysSinceStartInt,
                     ActualRevenue = revenueAmount,
                     ActualCosts = cost,
+                    BudgetCosts = budget,
                     ActualHours = hours,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now,
                     DeliverablesCount = deliverableNumber,
+                    FeaturesCount = featureNumber,
+
                     PercentageLowBound = percentageLowBound,
                     PercentageHighBound = percentageHighBound,
                     Columns = new List<ColumnModel>()
@@ -293,12 +307,17 @@ public static class PageRoutes
                     Name = name,
                     StartDate = startDate,
                     TargetDate = targetDate,
+                    TargetDays = targetDays,
+                    ActualDays = daysSinceStartInt,
                     ActualRevenue = revenueAmount,
                     ActualCosts = cost,
+                    BudgetCosts = budget,
                     ActualHours = hours,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now,
                     DeliverablesCount = deliverableNumber,
+                    FeaturesCount = featureNumber,
+
                     PercentageLowBound = percentageLowBound,
                     PercentageHighBound = percentageHighBound,
                     Columns = new List<ColumnModel>()
