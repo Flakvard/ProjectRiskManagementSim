@@ -1,5 +1,8 @@
+using ProjectRiskManagementSim.DataAccess;
 using ProjectRiskManagementSim.DataAccess.Models;
 using ProjectRiskManagementSim.ProjectSimulation.Interfaces;
+using ProjectRiskManagementSim.SimulationBlazor.Lib;
+using ProjectRiskManagementSim.SimulationBlazor.Models;
 
 namespace ProjectRiskManagementSim.SimulationBlazor.Components.Pages.Dashboard;
 
@@ -8,13 +11,74 @@ public class ListForeCastAnalysis
     public List<ForecastAnalysisModel> ForecastAnalysis { get; set; }
     public ProjectSimulationModel? Simulation { get; set; }
     public IMonteCarloSimulation MonteCarloSimulation { get; set; }
+    public Guid SimulationId { get; set; }
     public ListForeCastAnalysis(ProjectSimulationModel? simulation, IMonteCarloSimulation monteCarloSimulation)
     {
         ForecastAnalysis = ForecastAnalysisModel.InitialSimulationResults();
         Simulation = simulation;
         MonteCarloSimulation = monteCarloSimulation;
     }
+    // Run the simulation forcast analysis
+    public async Task RunSimulationAnalysis(OxygenSimulationContext context, int dbSimulationId)
+    {
+        Simulation = await context.GetSimulationByIdAsync(dbSimulationId);
+        var mappedProjectData = ModelMapper.MapDBProjectSimulationModelToProjectSimulationModel(Simulation!);
+        var simulationId = Guid.NewGuid(); // Create a unique ID for this simulation session
+        SimulationId = simulationId; // Store the simulationId for later  
+
+        // Use the injected IMonteCarloSimulation instance to get a new simulation instance
+        MonteCarloSimulation.InitiateAndRunSimulation(mappedProjectData, 5000, simulationId);
+
+        // Store the simulation instance with the simulationId for later retrieval
+        SimulationManager.AddSimulationToManager(simulationId, MonteCarloSimulation);
+        UpdateForecastAnalysis();
+
+    }
+    public void UpdateForecastAnalysis()
+    {
+        var simulation = ModelMapper.MapDBProjectSimulationModelToProjectSimulationModel(Simulation!);
+        var simulationResults = SimulationManager.GetSimulation(SimulationId);
+
+        if (simulationResults == null)
+        {
+            return;
+        }
+
+        var listOfPercentileMarks = new List<double>
+        {
+          0.99,
+          0.95,
+          0.90,
+          0.85,
+          0.80,
+          0.75,
+          0.70,
+          0.65,
+          0.60
+        };
+
+        var listOfDayPercentileMarks = listOfPercentileMarks.Select(percentile => simulationResults.SimTotalDaysResult.Percentile(percentile)).ToList();
+        var listOfEndDays = listOfDayPercentileMarks.Select(days => simulation.StartDate.AddDays((int)days)).ToList();
+        var listOfCosts = listOfPercentileMarks.Select(percentile => simulationResults.SimTotalCostsResult.Percentile(percentile)).ToList();
+        var listOfCostOfDelays = listOfPercentileMarks.Select(percentile => (double)Simulation.CostPrDay * (listOfEndDays[listOfPercentileMarks.IndexOf(percentile)] - simulation.TargetDate).Days).ToList();
+
+        var forecastAnalysis = new List<ForecastAnalysisModel>();
+        for (int i = 0; i < 9; i++)
+        {
+            var forecastAnalysisModel = new ForecastAnalysisModel
+            {
+                Percentage = listOfPercentileMarks[i].ToString("P0"),
+                EndDate = listOfEndDays[i].ToString("MMM yyyy"),
+                Days = (int)listOfDayPercentileMarks[i],
+                Cost = listOfCosts[i].ToString("C0"),
+                CostOfDelay = listOfCostOfDelays[i].ToString("C0")
+            };
+            forecastAnalysis.Add(forecastAnalysisModel);
+        }
+        ForecastAnalysis = forecastAnalysis;
+    }
 }
+
 public class ForecastAnalysisModel
 {
     public string Percentage { get; set; }
