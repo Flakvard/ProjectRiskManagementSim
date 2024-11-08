@@ -51,15 +51,7 @@ public class SimulationManager
     {
         if (!Simulations.ContainsKey(simulationId))
         {
-            var projectData = Database.ProjectModelInit();
-            var mappedProjectData = ModelMapper.MapToSimProjProjectSimulationModel(projectData);
-
-            // Use the injected IMonteCarloSimulation instance to get a new simulation instance
-            var simulation = _monteCarloSimulation.GetSimulationInstance();
-            simulation.InitiateSimulation(mappedProjectData, simulationId);
-
-            // Store the simulation instance with the simulationId for later retrieval
-            Simulations[simulationId] = simulation;
+            throw new ArgumentException();
         }
 
         return Simulations[simulationId];
