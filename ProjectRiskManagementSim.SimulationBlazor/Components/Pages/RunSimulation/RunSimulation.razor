@@ -1,108 +1,137 @@
+@using ProjectRiskManagementSim.DataAccess
 @using ProjectRiskManagementSim.SimulationBlazor.Components.Layout
 @using ProjectRiskManagementSim.SimulationBlazor.Lib
 @using ProjectRiskManagementSim.SimulationBlazor.Models
 @using ProjectRiskManagementSim.ProjectSimulation.Interfaces;
 @using ProjectRiskManagementSim.SimulationBlazor.Components.Pages.RunSimulation;
-@page "/run-simulation"
+@page "/run-simulation/{projectSimulationId:int}"
 @inject RunSimulationHandler runSimulationHandler
+@inject IServiceScopeFactory ServiceScopeFactory
+@inject Func<Guid, RunSimulationHandler> handlerFactory
+@code {
+
+    [Parameter] public int ProjectSimulationId { get; set; }
+
+    private OxygenSimulationContext _context;
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var scope = ServiceScopeFactory.CreateScope();
+        _context = scope.ServiceProvider.GetRequiredService<OxygenSimulationContext>();
+        await runSimulationHandler.InitializeSimulation(_context, ProjectSimulationId);
+    }
+}
 <div>
-  @if (!runSimulationHandler.simulationRunning)
-  {
-  <div class="flex flex-row gap-2">
-    <div class="bg-[#7e44eb] rounded-md w-fit p-2">
-      <button hx-get="/running-simulation/@runSimulationHandler.SimulationId" hx-trigger="click" class="btn text-white">
-        Start Simulation
-      </button>
-    </div>
-    <div class="bg-[#7e44eb] rounded-md w-fit p-2">
-      <button hx-post="/reset-simulation/@runSimulationHandler.SimulationId" hx-swap="none" hx-trigger="click"
-        class="btn text-white">
-        Reset Simulation
-      </button>
-    </div>
-  </div>
-  }
-  else
-  {
-  <div class="flex flex-row gap-2">
-    <div class="bg-gray-400 rounded-md">
-      <p>Simulation is running...</p>
-    </div>
-    <div class="bg-gray-400 rounded-md w-fit p-2">
-      <button>Start Simulation</button>
-    </div>
-    <div class="bg-gray-400 rounded-md w-fit p-2">
-      <button>Reset Simulation</button>
-    </div>
-  </div>
-  }
-  <div class="overflow-auto">
-    <div hx-get="/kanban-simulation/@runSimulationHandler.SimulationId" hx-trigger="every 100ms" hx-target="this"
-      hx-swap="innerHTML">
-      <div>
-        <h3 class="text-white border border-white w-full p-2">
-          Kanban Board Simulation - Day
-          @runSimulationHandler.currentDay
-        </h3>
-        <div class="Runsimulation h-full flex-col justify-start items-start gap-2.5 inline-flex">
-          <table class="min-w-full table-auto border-collapse border border-white">
-            <thead class="bg-[#ffb4ba]/50">
-              <tr>
-                @foreach (var column in runSimulationHandler.columns)
-                {
-                <th class="border border-white">
-                  <div class="p-4 shrink h-full">
-                    <div class="text-white text-base font-extrabold font-['Outfit']">
-                      @column.Name
-                    </div>
-                    <div class="WipContent justify-start items-center gap-0.5 inline-flex shrink">
-                      @if (!column.IsBuffer)
-                      {
-                      @for (int i = 0; i < @column.WIP; i++) { <div>
-                        <WIPSVGIconWhite />
-                    </div>
-                    }
-                    @for (int i = @column.WIP; i < @column.WIPMax; i++) { <div>
-                      <WIPSVGIconBlack />
-                  </div>
-                  }
-                  }
-                  else
-                  {
-                  <div class="text-white text-base font-extrabold font-['Outfit']">
-                    WIP: @column.WIP
-                    Max: @column.WIPMax
-                  </div>
-                  }
-        </div>
-      </div>
-      </th>
-      }
-      </tr>
-      </thead>
-      <tbody>
-        <tr class="align-top">
-          @foreach (var column in runSimulationHandler.columns)
-          {
-          <td class="border border-white align-top p-2">
-            <div class="flex flex-col gap-2">
-              @foreach (var deliverable in runSimulationHandler.columnDeliverables[column])
-              {
-              <div class="bg-[#7e44eb] w-f h-f p-2 text-white">
-                <strong>Task: @deliverable.Nr</strong><br />
-                Completion Days: @Math.Round(deliverable.CompletionDays)<br />
-                Wait Time: @Math.Round(deliverable.WaitTime)<br />
-                Stopped Time: @Math.Round(deliverable.StoppedWorkingTime)
-              </div>
-              }
+    @if (!runSimulationHandler.simulationRunning)
+    {
+        <div class="flex flex-row gap-2">
+            <div class="bg-[#7e44eb] rounded-md w-fit p-2">
+                <button hx-get="/running-simulation/@runSimulationHandler.SimulationId" hx-trigger="click"
+                        class="btn text-white">
+                    Start Simulation
+                </button>
             </div>
-          </td>
-          }
-        </tr>
-      </tbody>
-      </table>
+            <div class="bg-[#7e44eb] rounded-md w-fit p-2">
+                <button hx-post="/reset-simulation/@runSimulationHandler.SimulationId" hx-swap="none"
+                        hx-trigger="click" class="btn text-white">
+                    Reset Simulation
+                </button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="flex flex-row gap-2">
+            <div class="bg-gray-400 rounded-md">
+                <p>Simulation is running...</p>
+            </div>
+            <div class="bg-gray-400 rounded-md w-fit p-2">
+                <button>Start Simulation</button>
+            </div>
+            <div class="bg-gray-400 rounded-md w-fit p-2">
+                <button>Reset Simulation</button>
+            </div>
+        </div>
+    }
+    <div class="overflow-auto">
+        <div hx-get="/kanban-simulation/@runSimulationHandler.SimulationId/@ProjectSimulationId" hx-trigger="every 100ms"
+             hx-target="this" hx-swap="innerHTML">
+            <div>
+                <h3 class="text-white border border-white w-full p-2">
+                    Kanban Board Simulation - Day
+                    @runSimulationHandler.currentDay
+                </h3>
+                @if (runSimulationHandler.columns != null)
+                {
+                    <div class="Runsimulation h-full flex-col justify-start items-start gap-2.5 inline-flex">
+                        <table class="min-w-full table-auto border-collapse border border-white">
+                            <thead class="bg-[#ffb4ba]/50">
+                                <tr>
+                                    @foreach (var column in runSimulationHandler.columns)
+                                    {
+                                        <th class="border border-white">
+                                            <div class="p-4 shrink h-full">
+                                                <div class="text-white text-base font-extrabold font-['Outfit']">
+                                                    @column.Name
+                                                </div>
+                                                <div class="WipContent justify-start items-center gap-0.5 inline-flex shrink">
+                                                    @if (!column.IsBuffer)
+                                                    {
+                                                        @for (int i = 0; i < @column.WIP; i++)
+                                                        {
+                                                            <div>
+                                                                <WIPSVGIconWhite />
+                                                            </div>
+                                                        }
+                                                        @for (int i = @column.WIP; i < @column.WIPMax; i++)
+                                                        {
+                                                            <div>
+                                                                <WIPSVGIconBlack />
+                                                            </div>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="text-white text-base font-extrabold font-['Outfit']">
+                                                            WIP: @column.WIP
+                                                            Max: @column.WIPMax
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="align-top">
+                                    @foreach (var column in runSimulationHandler.columns)
+                                    {
+                                        <td class="border border-white align-top p-2">
+                                            <div class="flex flex-col gap-2">
+                                                @if (runSimulationHandler.columnDeliverables != null )
+                                                {
+
+                                                
+                                                @foreach (var deliverable in runSimulationHandler.columnDeliverables[column])
+                                                {
+                                                    <div class="bg-[#7e44eb] w-f h-f p-2 text-white">
+                                                        <strong>Task: @deliverable.Nr</strong><br />
+                                                        Completion Days: @Math.Round(deliverable.CompletionDays)<br />
+                                                        Wait Time: @Math.Round(deliverable.WaitTime)<br />
+                                                        Stopped Time: @Math.Round(deliverable.StoppedWorkingTime)
+                                                    </div>
+                                                }
+                                                }
+                                            </div>
+                                        </td>
+                                    }
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
     </div>
-  </div>
-</div>
-</div>
 </div>

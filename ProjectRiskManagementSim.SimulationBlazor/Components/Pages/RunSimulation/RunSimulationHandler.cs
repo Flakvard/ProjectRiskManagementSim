@@ -1,4 +1,6 @@
+using ProjectRiskManagementSim.DataAccess;
 using ProjectRiskManagementSim.ProjectSimulation.Interfaces;
+using ProjectRiskManagementSim.SimulationBlazor.Components.Pages.Simulations;
 using ProjectRiskManagementSim.SimulationBlazor.Lib;
 using ProjectRiskManagementSim.SimulationBlazor.Models;
 
@@ -16,21 +18,29 @@ public class RunSimulationHandler
     public Guid SimulationId { get; private set; }
 
     // Inject SimulationManager via constructor
-    public RunSimulationHandler(SimulationManager simulationManager)
+    public RunSimulationHandler(SimulationManager simulationManager, IMonteCarloSimulation monteCarloSimulation)
     {
         _simulationManager = simulationManager;
         SimulationId = Guid.NewGuid(); // Generate a new ID for each instance
-        InitializeSimulation();
+        MCS = monteCarloSimulation;
+        // await InitializeSimulation(OxygenSimulationContext context, int dbSimulationId);
     }
 
     public void SetSimulationId(Guid id)
     {
         SimulationId = id;
-        InitializeSimulation();
+        // InitializeSimulation();
     }
 
-    private void InitializeSimulation()
+    public async Task InitializeSimulation(OxygenSimulationContext context, int dbSimulationId)
     {
+        var simulation = await context.GetSimulationByIdAsync(dbSimulationId);
+        var mappedProjectData = ModelMapper.MapDBProjectSimulationModelToProjectSimulationModel(simulation!);
+        var simulationId = Guid.NewGuid(); // Create a unique ID for this simulation session
+        SimulationId = simulationId; // Store the simulationId for later  
+        MCS.InitiateSimulation(mappedProjectData, simulationId);
+        SimulationManager.AddSimulationToManager(simulationId, MCS);
+
         // Initialize from the Monte Carlo simulation, this is shared throughout the simulation
         MCS = _simulationManager.GetFirstSimulation(SimulationId); // Pass the simulation ID to get the unique simulation instance
         columns = MCS.ProjectSimulationModel.Columns
@@ -39,8 +49,14 @@ public class RunSimulationHandler
         deliverables = MCS.ProjectSimulationModel.Backlog.Deliverables
           .Select(ModelMapper.MapToBlazorDeliverableModel)
           .ToList();
-        // Initialize columnDeliverables as empty for now
-        columnDeliverables = columns.ToDictionary(c => c, c => new List<DeliverableModel>());
+
+    }
+
+    public void RunningSimulation()
+    {
+        MCS = _simulationManager.GetFirstSimulation(SimulationId); // Pass the simulation ID to get the unique simulation instance
+        SimulationManager.AddSimulationToManager(SimulationId, MCS);
+
     }
 
 
@@ -62,6 +78,9 @@ public class RunSimulationHandler
             var mappedUpdatedColumns = updatedColumns
                 .Select(ModelMapper.MapToBlazorColumnModel)
                 .ToList();
+            columns = mappedUpdatedColumns;
+            deliverables = mappedUpdatedDeliverables;
+            columnDeliverables = columns.ToDictionary(c => c, c => new List<DeliverableModel>());
 
             // Update the UI
             UpdateBoard(mappedUpdatedColumns, mappedUpdatedDeliverables);
@@ -92,7 +111,11 @@ public class RunSimulationHandler
         // Clear only the deliverables inside the columns, not the columns themselves
         foreach (var column in columns)
         {
-            columnDeliverables[column].Clear();
+            if (columnDeliverables.ContainsKey(column))
+            {
+                columnDeliverables[column].Clear();
+            }
+
         }
 
         // Place updated deliverables into their respective columns
