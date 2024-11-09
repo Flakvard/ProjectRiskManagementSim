@@ -42,98 +42,27 @@
             </div>
           </div>
         </div>
-        <div class="Row self-stretch justify-center items-start inline-flex">
+        @foreach (var result in listSensitivityAnalysis.SensitivityAnalysisList)
+        {
+        <div class="Row self-stretch justify-start items-start inline-flex">
           <div
-            class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-            <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
+            class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
+            <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
               <div
                 class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-                1.
-              </div>
+                @result.Priority</div>
             </div>
           </div>
           <div
-            class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-            <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
+            class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
+            <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
               <div
                 class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-                Bugs
-              </div>
+                @result.SensitivityName</div>
             </div>
           </div>
         </div>
-        <div class="Row self-stretch justify-center items-start inline-flex">
-          <div
-            class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-            <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
-              <div
-                class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-                2.
-              </div>
-            </div>
-          </div>
-          <div
-            class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-            <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
-              <div class="Text w-24 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-                Testing on Production
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="Row self-stretch justify-center items-start inline-flex">
-          <div
-            class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-            <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
-              <div
-                class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-                3.
-              </div>
-            </div>
-          </div>
-          <div
-            class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-            <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
-              <div class="Text w-24 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-                Testing on Development
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="Row self-stretch justify-center items-start inline-flex">
-          <div
-            class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-            <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
-              <div
-                class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-                4.
-              </div>
-            </div>
-          </div>
-          <div
-            class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-            <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
-              <div
-                class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-                Awaiting Customer
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="Row self-stretch justify-center items-start inline-flex">
-          <div
-            class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-            <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
-              <div class="Text grow shrink basis-0"></div>
-            </div>
-          </div>
-          <div
-            class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-            <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
-              <div class="Text grow shrink basis-0"></div>
-            </div>
-          </div>
-        </div>
+        }
       </div>
     </div>
   </div>
@@ -141,6 +70,12 @@
 @code {
 public string SelectedSim { get; set; } = "Sensitivity Analysis";
 [Parameter] public int ProjectSimulationId { get; set; }
+public ListSensitivityAnalysis listSensitivityAnalysis { get; set; }
+protected override async Task OnInitializedAsync()
+{
+listSensitivityAnalysis = new ListSensitivityAnalysis();
+
+}
 private async Task HandleSensitivityAnalysis(HtmxEventArgs args)
 {
 await Task.Delay(5000);
