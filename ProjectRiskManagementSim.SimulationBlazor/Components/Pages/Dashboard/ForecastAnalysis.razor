@@ -5,14 +5,12 @@
 @using ProjectRiskManagementSim.ProjectSimulation.Interfaces
 @page "/dashboard/{projectSimulationId:int}/forecast-analysis"
 <!-- ForecastAnalysis in Upper Right Content -->
-
 <ForecastAnalysisSkeleton />
 <div id="forecastAnalysis"
      class="forecastAnalysis self-stretch grow shrink basis-0 p-4 bg-[#ffb4ba]/25 rounded-2xl flex-col justify-start items-start gap-2.5 flex">
     <div class="Header self-stretch h-[50px] p-2.5 justify-start items-start gap-2.5 inline-flex">
         <div class="HeaderSection w-[479px] self-stretch px-4 justify-center items-center gap-[30px] flex">
             <div class="ForecastAnalysis text-white text-2xl font-bold font-['Inter'] tracking-widest">Forecast Analysis</div>
-            <SimDropdown />
         </div>
         <div class="ButtonSection grow shrink basis-0 self-stretch flex-col justify-center items-center inline-flex">
             <div hx-trigger="click" hx-indicator=".forecast-indicator,.forecastAnalysis"

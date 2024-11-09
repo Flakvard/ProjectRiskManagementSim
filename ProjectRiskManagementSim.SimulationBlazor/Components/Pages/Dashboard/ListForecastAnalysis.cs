@@ -100,6 +100,7 @@ public class ForecastAnalysisModel
             new ForecastAnalysisModel { Percentage = "85%", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0" },
             new ForecastAnalysisModel { Percentage = "80%", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0" },
             new ForecastAnalysisModel { Percentage = "75%", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0" },
+            new ForecastAnalysisModel { Percentage = "70%", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0" },
         };
     }
 }

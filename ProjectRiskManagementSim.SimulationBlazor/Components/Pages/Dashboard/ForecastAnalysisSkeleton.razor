@@ -1,46 +1,65 @@
-<div id="forecast-indicator" class="forecast-indicator htmx-indicator">
-  <div
-    class="relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent self-stretch grow shrink basis-0 p-4 bg-[#ffb4ba]/25 rounded-2xl flex-col justify-start items-start gap-2.5">
-    <div class="Header self-stretch h-[50px] p-2.5 justify-start items-start gap-2.5 inline-flex">
-      <div class="HeaderSection w-[479px] self-stretch px-4 justify-center items-center gap-[30px] flex">
-        <div class="ForecastAnalysis text-white text-2xl font-bold font-['Inter'] tracking-widest">
-          Forecast Analysis
-        </div>
-      </div>
-      <div class="ButtonSection grow shrink basis-0 self-stretch flex-col justify-center items-center inline-flex">
-        <RunSimButton />
-      </div>
-    </div>
-
-    <!-- Grid-based table replacement -->
-    <div
-      class="Table self-stretch grow shrink basis-0 bg-white rounded border border-[#b9b9b9] flex-col justify-start items-start flex">
-      <div class="overflow-auto max-h-[300px] w-full">
-        <!-- Header Row -->
-        <div class="grid grid-cols-5 bg-[#7e44eb] border-t border-[#b9b9b9]">
-          <div class="px-3 py-2.5 text-center cell-header-text">%</div>
-          <div class="px-3 py-2.5 text-center cell-header-text">End date</div>
-          <div class="px-3 py-2.5 text-center cell-header-text">Days</div>
-          <div class="px-3 py-2.5 text-center cell-header-text">Cost</div>
-          <div class="px-3 py-2.5 text-center cell-header-text">Cost of Delay</div>
+<div id="forecast-indicator"
+     class="htmx-indicator relative forecast-indicator self-stretch grow shrink basis-0 flex-col justify-start items-start">
+    <div class="relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent self-stretch grow shrink basis-0 p-4 bg-[#ffb4ba]/25 rounded-2xl flex-col justify-start items-start gap-2.5">
+        <div class="Header self-stretch h-[50px] p-2.5 justify-start items-start gap-2.5 inline-flex">
+            <div class="HeaderSection w-[479px] self-stretch px-4 justify-center items-center gap-[30px] flex">
+                <div class="ForecastAnalysis text-white text-2xl font-bold font-['Inter'] tracking-widest">
+                    Forecast Analysis
+                </div>
+            </div>
+            <div class="ButtonSection grow shrink basis-0 self-stretch flex-col justify-center items-center inline-flex">
+                <RunSimButtonSkeleton />
+            </div>
         </div>
 
-        <!-- Data Rows -->
-        @foreach (var result in simulationResults.ForecastAnalysis)
-        {
-        <div class="grid grid-cols-5 border-t border-[#b9b9b9]">
-          <div class="px-3 py-2.5 text-center cell-text">@result.Percentage</div>
-          <div class="px-3 py-2.5 text-center cell-text">@result.EndDate</div>
-          <div class="px-3 py-2.5 text-center cell-text">@result.Days</div>
-          <div class="px-3 py-2.5 text-right cell-text">@result.Cost</div>
-          <div class="px-3 py-2.5 text-right cell-text">@result.CostOfDelay</div>
+        <!-- Grid-based table replacement -->
+        <div class="Table self-stretch grow shrink basis-0 bg-white rounded border border-[#b9b9b9] w-full flex-col justify-start items-start flex">
+            <div class="overflow-auto max-h-[300px] w-full">
+                <!-- Header Row -->
+                <div class="grid grid-cols-5 bg-[#7e44eb] border-t border-[#b9b9b9]">
+                    <div class="px-3 py-2.5 text-center cell-header-text">%</div>
+                    <div class="px-3 py-2.5 text-center cell-header-text">End date</div>
+                    <div class="px-3 py-2.5 text-center cell-header-text">Days</div>
+                    <div class="px-3 py-2.5 text-center cell-header-text">Cost</div>
+                    <div class="px-3 py-2.5 text-center cell-header-text">Cost of Delay</div>
+                </div>
+
+                <!-- Data Rows -->
+                @foreach (var result in simulationResults.ForecastAnalysis)
+                {
+                    <div class="grid grid-cols-5 border-t border-[#b9b9b9]">
+                        <div class='px-3 py-2.5 flex space-x-1 justify-center items-center bg-white dark:invert'>
+                            <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+                            <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+                            <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce'></div>
+                        </div>
+                        <div class='px-3 py-2.5 flex space-x-1 justify-center items-center bg-white dark:invert'>
+                            <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+                            <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+                            <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce'></div>
+                        </div>
+                        <div class='px-3 py-2.5 flex space-x-1 justify-center items-center bg-white dark:invert'>
+                            <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+                            <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+                            <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce'></div>
+                        </div>
+                        <div class='px-3 py-2.5 flex space-x-1 justify-center items-center bg-white dark:invert'>
+                            <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+                            <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+                            <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce'></div>
+                        </div>
+                        <div class='px-3 py-2.5 flex space-x-1 justify-center items-center bg-white dark:invert'>
+                            <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+                            <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+                            <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce'></div>
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
-        }
-      </div>
     </div>
-  </div>
 </div>
 
 @code {
-public ListForeCastAnalysis simulationResults { get; set; } = new ListForeCastAnalysis();
+    public ListForeCastAnalysis simulationResults { get; set; } = new ListForeCastAnalysis();
 }
