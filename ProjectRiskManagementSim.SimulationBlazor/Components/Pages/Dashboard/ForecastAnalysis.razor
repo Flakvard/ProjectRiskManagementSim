@@ -5,65 +5,67 @@
 @using ProjectRiskManagementSim.ProjectSimulation.Interfaces
 @page "/dashboard/{projectSimulationId:int}/forecast-analysis"
 <!-- ForecastAnalysis in Upper Right Content -->
-<ForecastAnalysisSkeleton />
-<div id="forecastAnalysis"
-     class="forecastAnalysis self-stretch grow shrink basis-0 p-4 bg-[#ffb4ba]/25 rounded-2xl flex-col justify-start items-start gap-2.5 flex">
-    <div class="Header self-stretch h-[50px] p-2.5 justify-start items-start gap-2.5 inline-flex">
-        <div class="HeaderSection w-[479px] self-stretch px-4 justify-center items-center gap-[30px] flex">
-            <div class="ForecastAnalysis text-white text-2xl font-bold font-['Inter'] tracking-widest">Forecast Analysis</div>
+<div id="forecastAnalysis">
+    <ForecastAnalysisSkeleton />
+    <div class="forecastAnalysis self-stretch grow shrink basis-0 p-4 bg-[#ffb4ba]/25 rounded-2xl flex-col justify-start items-start gap-2.5 flex">
+        <div class="Header self-stretch h-[50px] p-2.5 justify-start items-start gap-2.5 inline-flex">
+            <div class="HeaderSection w-[479px] self-stretch px-4 justify-center items-center gap-[30px] flex">
+                <div class="ForecastAnalysis text-white text-2xl font-bold font-['Inter'] tracking-widest">
+                    Forecast Analysis
+                </div>
+            </div>
+            <div class="ButtonSection grow shrink basis-0 self-stretch flex-col justify-center items-center inline-flex">
+                <div hx-trigger="click" hx-indicator=".forecast-indicator,.forecastAnalysis"
+                     hx-put="/dashboard/@ProjectSimulationId/forecast-analysis" hx-target="#forecastAnalysis" hx-swap="OuterHTML"
+                     @onput="HandleForecastAnalysis">
+                    <RunSimButton />
+                </div>
+            </div>
         </div>
-        <div class="ButtonSection grow shrink basis-0 self-stretch flex-col justify-center items-center inline-flex">
-            <div hx-trigger="click" hx-indicator=".forecast-indicator,.forecastAnalysis"
-                 hx-put="/dashboard/@ProjectSimulationId/forecast-analysis" hx-target="#forecastAnalysis" hx-swap="innerHTML"
-                 @onput="HandleForecastAnalysis">
-                <RunSimButton />
+        <div class="Table self-stretch grow shrink basis-0 bg-white rounded border border-[#b9b9b9] flex-col justify-start items-start flex">
+            <div class="overflow-auto max-h-[300px] w-full">
+                <table class="table-auto w-full self-stretch grow shrink basis-0 bg-white rounded border border-[#b9b9b9]">
+                    <thead class="sticky top-0 bg-[#7e44eb]">
+                        <tr class="border-l border-t border-[#b9b9b9]">
+                            <th class="px-3 py-2.5 text-center cell-header-text">%</th>
+                            <th class="px-3 py-2.5 text-center cell-header-text">
+                                End date
+                            </th>
+                            <th class="px-3 py-2.5 text-center cell-header-text">Days</th>
+                            <th class="px-3 py-2.5 text-center cell-header-text">Cost</th>
+                            <th class="px-3 py-2.5 text-center cell-header-text">
+                                Cost of
+                                Delay
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var result in simulationResults.ForecastAnalysis)
+                        {
+                            <tr class="@(result.Percentage == "80 %" ? "bg-[#FFBEC3]" : "bg-white/0") border-l border-t border-[#b9b9b9]">
+                                <td class="px-3 py-2.5 text-center cell-text">
+                                    @result.Percentage
+                                </td>
+                                <td class="px-3 py-2.5 text-center cell-text">
+                                    @result.EndDate
+                                </td>
+                                <td class="px-3 py-2.5 text-center cell-text">
+                                    @result.Days
+                                </td>
+                                <td class="px-3 py-2.5 text-right cell-text">
+                                    @result.Cost
+                                </td>
+                                <td class="px-3 py-2.5 text-right cell-text">
+                                    @result.CostOfDelay
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <div class="Table self-stretch grow shrink basis-0 bg-white rounded border border-[#b9b9b9] flex-col justify-start items-start flex">
-        <div class="overflow-auto max-h-[300px] w-full">
-            <table class="table-auto w-full self-stretch grow shrink basis-0 bg-white rounded border border-[#b9b9b9]">
-                <thead class="sticky top-0 bg-[#7e44eb]">
-                    <tr class="border-l border-t border-[#b9b9b9]">
-                        <th class="px-3 py-2.5 text-center cell-header-text">%</th>
-                        <th class="px-3 py-2.5 text-center cell-header-text">
-                            End date
-                        </th>
-                        <th class="px-3 py-2.5 text-center cell-header-text">Days</th>
-                        <th class="px-3 py-2.5 text-center cell-header-text">Cost</th>
-                        <th class="px-3 py-2.5 text-center cell-header-text">
-                            Cost of
-                            Delay
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var result in simulationResults.ForecastAnalysis)
-                    {
-                        <tr class="bg-white/0 border-l border-t border-[#b9b9b9]">
-                            <td class="px-3 py-2.5 text-center cell-text">
-                                @result.Percentage
-                            </td>
-                            <td class="px-3 py-2.5 text-center cell-text">
-                                @result.EndDate
-                            </td>
-                            <td class="px-3 py-2.5 text-center cell-text">
-                                @result.Days
-                            </td>
-                            <td class="px-3 py-2.5 text-right cell-text">
-                                @result.Cost
-                            </td>
-                            <td class="px-3 py-2.5 text-right cell-text">
-                                @result.CostOfDelay
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
 </div>
-
 
 
 

@@ -31,7 +31,7 @@ public class ListForeCastAnalysis
         SimulationId = simulationId; // Store the simulationId for later  
 
         // Use the injected IMonteCarloSimulation instance to get a new simulation instance
-        MonteCarloSimulation.InitiateAndRunSimulation(mappedProjectData, 5000, simulationId);
+        MonteCarloSimulation.InitiateAndRunSimulation(mappedProjectData, 1000, simulationId);
 
         // Store the simulation instance with the simulationId for later retrieval
         SimulationManager.AddSimulationToManager(simulationId, MonteCarloSimulation);
@@ -58,7 +58,11 @@ public class ListForeCastAnalysis
           0.75,
           0.70,
           0.65,
-          0.60
+          0.60,
+          0.55,
+          0.50,
+          0.45,
+          0.40
         };
 
         var listOfDayPercentileMarks = listOfPercentileMarks.Select(percentile => simulationResults.SimTotalDaysResult.Percentile(percentile)).ToList();
@@ -67,12 +71,12 @@ public class ListForeCastAnalysis
         var listOfCostOfDelays = listOfPercentileMarks.Select(percentile => (double)Simulation.CostPrDay * (listOfEndDays[listOfPercentileMarks.IndexOf(percentile)] - simulation.TargetDate).Days).ToList();
 
         var forecastAnalysis = new List<ForecastAnalysisModel>();
-        for (int i = 0; i < 9; i++)
+        for (int i = 0; i < listOfPercentileMarks.Count(); i++)
         {
             var forecastAnalysisModel = new ForecastAnalysisModel
             {
                 Percentage = listOfPercentileMarks[i].ToString("P0"),
-                EndDate = listOfEndDays[i].ToString("MMM yyyy"),
+                EndDate = listOfEndDays[i].ToString("dd MMM yyyy"),
                 Days = (int)listOfDayPercentileMarks[i],
                 Cost = listOfCosts[i].ToString("C0"),
                 CostOfDelay = listOfCostOfDelays[i].ToString("C0")
@@ -94,13 +98,13 @@ public class ForecastAnalysisModel
     {
         return new List<ForecastAnalysisModel>
         {
-            new ForecastAnalysisModel { Percentage = "99%", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0" },
-            new ForecastAnalysisModel { Percentage = "95%", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0" },
-            new ForecastAnalysisModel { Percentage = "90%", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0" },
-            new ForecastAnalysisModel { Percentage = "85%", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0" },
-            new ForecastAnalysisModel { Percentage = "80%", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0" },
-            new ForecastAnalysisModel { Percentage = "75%", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0" },
-            new ForecastAnalysisModel { Percentage = "70%", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0" },
+            new ForecastAnalysisModel { Percentage = "99 %", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0" },
+            new ForecastAnalysisModel { Percentage = "95 %", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0" },
+            new ForecastAnalysisModel { Percentage = "90 %", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0" },
+            new ForecastAnalysisModel { Percentage = "85 %", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0" },
+            new ForecastAnalysisModel { Percentage = "80 %", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0" },
+            new ForecastAnalysisModel { Percentage = "75 %", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0" },
+            new ForecastAnalysisModel { Percentage = "70 %", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0" },
         };
     }
 }
