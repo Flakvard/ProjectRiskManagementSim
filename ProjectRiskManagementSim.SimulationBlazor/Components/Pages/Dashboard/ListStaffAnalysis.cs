@@ -52,7 +52,7 @@ public class ListStaffAnalysis
         StaffAnalysisList.Clear();
         for (int i = 1; i <= 5; i++)
         {
-            if (WipAnalysis == null && !WipAnalysis!.ContainsKey(i)) continue;
+            if (WipAnalysis == null || !WipAnalysis!.ContainsKey(i)) continue;
             var staffName = WipAnalysis![i].Item1;
             var days = WipAnalysis[i].Item2;
             var staffPriority = i;
