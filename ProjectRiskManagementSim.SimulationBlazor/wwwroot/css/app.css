@@ -27,4 +27,24 @@
   .column-input-border {
     @apply flex flex-col gap-2 border border-[#b9b9b9] bg-gray-50 rounded-md p-2;
   }
+
+  .forecast-indicator{
+    display: none;
+  }
+  .htmx-request .forecast-indicator {
+      display: block;
+  }
+
+  .htmx-request.forecast-indicator {
+      display: block;
+  }
+
+  /* Hide previously loaded content during HTMX request */
+  .htmx-request .forecastAnalysis {
+      display: none;
+  }
+
+  .htmx-request.forecastAnalysis {
+      display: none;
+  }
 }

@@ -2,7 +2,15 @@
 module.exports = {
   content: ["./**/*.{razor,html,cshtml}"],
   theme: {
-    extend: {},
+    extend: {
+      keyframes: {
+            shimmer: {
+              '100%': {
+                transform: 'translateX(100%)',
+              },
+            },
+          },
+    },
   },
   plugins: [],
 }
