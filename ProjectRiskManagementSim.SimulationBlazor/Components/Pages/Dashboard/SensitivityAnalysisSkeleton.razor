@@ -12,7 +12,7 @@
             class="SensitivityAnalysisSection self-stretch px-[30px] py-px justify-center items-center gap-2.5 inline-flex">
             <div
               class="SensitivityAnalysisHeader text-white text-xl font-semibold font-['Outfit'] capitalize tracking-wider">
-              @SelectedSim.ToString()</div>
+              Sensitivity Analysis</div>
           </div>
           <div class="flex p-1">
             <RunSimButtonSkeleton />
@@ -39,7 +39,18 @@
                 </div>
               </div>
             </div>
+            <div
+              class="Cell grow shrink basis-0 self-stretch bg-[#7e44eb] border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
+              <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
+                <div
+                  class="Text grow shrink basis-0 text-center text-white text-sm font-semibold font-['Outfit'] leading-[18.20px]">
+                  Days
+                </div>
+              </div>
+            </div>
           </div>
+          @foreach( var result in listSensitivityAnalysis.SensitivityAnalysisList)
+          {
           <div class="Row self-stretch justify-center items-start inline-flex">
             <div
               class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
@@ -53,14 +64,6 @@
                 <DotLoader />
               </div>
             </div>
-          </div>
-          <div class="Row self-stretch justify-center items-start inline-flex">
-            <div
-              class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-              <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
-                <DotLoader />
-              </div>
-            </div>
             <div
               class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
               <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
@@ -68,53 +71,16 @@
               </div>
             </div>
           </div>
-          <div class="Row self-stretch justify-center items-start inline-flex">
-            <div
-              class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-              <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
-                <DotLoader />
-              </div>
-            </div>
-            <div
-              class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-              <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
-                <DotLoader />
-              </div>
-            </div>
-          </div>
-          <div class="Row self-stretch justify-center items-start inline-flex">
-            <div
-              class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-              <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
-                <DotLoader />
-              </div>
-            </div>
-            <div
-              class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-              <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
-                <DotLoader />
-              </div>
-            </div>
-          </div>
-          <div class="Row self-stretch justify-center items-start inline-flex">
-            <div
-              class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-              <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
-                <DotLoader />
-              </div>
-            </div>
-            <div
-              class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-              <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
-                <DotLoader />
-              </div>
-            </div>
-          </div>
+          }
         </div>
       </div>
     </div>
   </div>
 </div>
-@code{
-public string SelectedSim { get; set; } = "Sensitivity Analysis";
+@code {
+public ListSensitivityAnalysis listSensitivityAnalysis { get; set; }
+protected override async Task OnInitializedAsync()
+{
+listSensitivityAnalysis = new ListSensitivityAnalysis();
+}
 }

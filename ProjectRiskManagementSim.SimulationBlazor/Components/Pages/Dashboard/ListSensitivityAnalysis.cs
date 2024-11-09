@@ -52,6 +52,7 @@ public class ListSensitivityAnalysis
         SensitivityAnalysisList.Clear();
         for (int i = 1; i <= 5; i++)
         {
+            if (ColumnAnalysis == null && !ColumnAnalysis!.ContainsKey(i)) continue;
             var sensitivityName = ColumnAnalysis![i].Item1;
             var days = ColumnAnalysis[i].Item2;
             var sensitivityPriority = i;
