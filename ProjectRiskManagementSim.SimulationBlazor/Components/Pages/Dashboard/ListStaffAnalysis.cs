@@ -10,11 +10,11 @@ public class ListStaffAnalysis
 
     private void LoadStaffAnalysis()
     {
-        StaffAnalysisList.Add(new StaffAnalysis { Priority = 1, StaffName = "Testing on Production" });
-        StaffAnalysisList.Add(new StaffAnalysis { Priority = 2, StaffName = "Testing on Production" });
-        StaffAnalysisList.Add(new StaffAnalysis { Priority = 3, StaffName = "Testing on Development" });
-        StaffAnalysisList.Add(new StaffAnalysis { Priority = 4, StaffName = "In Progress" });
-        StaffAnalysisList.Add(new StaffAnalysis { Priority = 5, StaffName = "Testing on Production" });
+        StaffAnalysisList.Add(new StaffAnalysis { Priority = 1, StaffName = "None" });
+        StaffAnalysisList.Add(new StaffAnalysis { Priority = 2, StaffName = "None" });
+        StaffAnalysisList.Add(new StaffAnalysis { Priority = 3, StaffName = "None" });
+        StaffAnalysisList.Add(new StaffAnalysis { Priority = 4, StaffName = "None" });
+        StaffAnalysisList.Add(new StaffAnalysis { Priority = 5, StaffName = "None" });
     }
 }
 public class StaffAnalysis
