@@ -42,10 +42,10 @@ var projectSimModel = new ProjectSimulationModel
         new ColumnModel(wip: backLogModel.Deliverables.Count) { Name = "Backlog", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 54 },
         new ColumnModel(wip: wip, wipMax: wip) { Name = "Open", IsBuffer=true,  EstimatedLowBound = 1, EstimatedHighBound = 54 },
         new ColumnModel(wip: 5, wipMax: 5) { Name = "In Progress", EstimatedLowBound = 1, EstimatedHighBound = 47 },
-        new ColumnModel(wip: wip, wipMax: wip) { Name = "Rdy4Test", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 50 },
-        new ColumnModel(wip: 0, wipMax: 2) { Name = "Test Stage", EstimatedLowBound = 1, EstimatedHighBound = 11 },
-        new ColumnModel(wip: wip, wipMax: wip) { Name = "Await Dply Prod", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 22 },
-        new ColumnModel(wip: 0, wipMax: 2) { Name = "Rdy4TestProd", EstimatedLowBound = 1, EstimatedHighBound = 54 },
+        new ColumnModel(wip: wip, wipMax: wip) { Name = "Ready to test on Development", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 50 },
+        new ColumnModel(wip: 0, wipMax: 2) { Name = "Testing on Development", EstimatedLowBound = 1, EstimatedHighBound = 11 },
+        new ColumnModel(wip: wip, wipMax: wip) { Name = "Waiting Deployment on Production", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 22 },
+        new ColumnModel(wip: 0, wipMax: 2) { Name = "Ready to test on Production", EstimatedLowBound = 1, EstimatedHighBound = 54 },
         new ColumnModel(wip: backLogModel.Deliverables.Count) { Name = "Done", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 54 }
     },
     // Columns = new List<ColumnModel>
@@ -74,12 +74,15 @@ const int projectSimulationsCount = 100;
 var stopwatch = Stopwatch.StartNew();
 // SensitiveAnalysis
 var MCS = new MonteCarloSimulation();
+Console.WriteLine("Column Estimate Analysis");
 await MCS.ColumnEstimateAnalysis(projectSimModel, projectSimulationsCount);
 Console.WriteLine();
 Console.WriteLine();
+Console.WriteLine("WIP Analysis");
 await MCS.WIPAnalysis(projectSimModel, projectSimulationsCount);
 Console.WriteLine();
 Console.WriteLine();
+Console.WriteLine("Block WIP Analysis");
 await MCS.BlockWIPAnalysis(projectSimModel, projectSimulationsCount);
 Console.WriteLine();
 Console.WriteLine();

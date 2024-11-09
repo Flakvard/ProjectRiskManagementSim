@@ -13,6 +13,7 @@ public interface IMonteCarloSimulation
     public bool IsCompleted { get; set; }
     public Guid SimulationId { get; set; }
     public Dictionary<double, (string, double)>? WipAnalysis { get; set; }
+    public Dictionary<double, (string, double)>? ColumnAnalysis { get; set; }
 
     public Task ColumnEstimateAnalysis(ProjectSimulationModel projectSimModel, int projectSimulationsCount);
     public Task WIPAnalysis(ProjectSimulationModel projectSimModel, int projectSimulationsCount);

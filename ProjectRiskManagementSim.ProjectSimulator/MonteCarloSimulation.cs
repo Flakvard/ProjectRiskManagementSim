@@ -28,6 +28,8 @@ public class MonteCarloSimulation : IMonteCarloSimulation
     public Dictionary<ColumnModel, List<DeliverableModel>?>? ColumnDeliverables { get; set; }
     public List<DeliverableModel>? DeliverablesCopy { get; set; }
     public Dictionary<double, (string, double)>? WipAnalysis { get; set; } = new Dictionary<double, (string, double)>();
+    public Dictionary<double, (string, double)>? ColumnAnalysis { get; set; } = new Dictionary<double, (string, double)>();
+
 
     private int _simulationCount;
 
@@ -630,6 +632,36 @@ public class MonteCarloSimulation : IMonteCarloSimulation
         IsCompleted = false;
         const double estimateMultiplier = 0.5;
         var projectWithModifiedEstimates = new List<ProjectSimulationModel> { projectSimModel };
+        ProjectColumnMultiplier(projectSimModel, estimateMultiplier, projectWithModifiedEstimates);
+
+        int projectsCount = projectWithModifiedEstimates.Count;
+        var orderedByTotalDays = await RunSimulationAsync(projectWithModifiedEstimates, projectSimulationsCount);
+
+        var baselineProject = orderedByTotalDays.FirstOrDefault(mcs => mcs.ProjectSimulationModel.Name == projectSimModel.Name);
+        var baselineTotalDays = baselineProject!.SimTotalDaysResult!.Percentile(0.9);
+        var priority = 1;
+        foreach (var MCS in orderedByTotalDays)
+        {
+            var name = MCS.ProjectSimulationModel.Name;
+            var totalDays = MCS.SimTotalDaysResult != null && MCS.SimTotalDaysResult.Any()
+                ? MCS.SimTotalDaysResult.Percentile(0.9)
+                : 0.0;
+            if (totalDays < baselineTotalDays)
+            {
+                Console.WriteLine($"Simulation {name} is {totalDays}\t\t\t\tdays from {baselineProject.ProjectSimulationModel.Name} {baselineTotalDays}\t\t\tDifference {baselineTotalDays - totalDays}");
+                if (priority > 5 && !ColumnAnalysis!.ContainsKey(priority) && baselineProject != null)
+                {
+                    var days = double.Round(totalDays, 0);
+                    ColumnAnalysis.Add(priority, (name, days));
+                }
+                priority++;
+            }
+        }
+        IsCompleted = true;
+    }
+
+    private static void ProjectColumnMultiplier(ProjectSimulationModel projectSimModel, double estimateMultiplier, List<ProjectSimulationModel> projectWithModifiedEstimates)
+    {
         // Loop through each column and modify EstimatedLowBound and EstimatedHighBound
         for (int i = 0; i < projectSimModel.Columns.Count; i++)
         {
@@ -642,26 +674,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
             columnToModify.EstimatedHighBound *= estimateMultiplier;
             projectWithModifiedEstimates.Add(newProjectSimModel);
         }
-
-        int projectsCount = projectWithModifiedEstimates.Count;
-        var orderedByTotalDays = await RunSimulationAsync(projectWithModifiedEstimates, projectSimulationsCount);
-
-        var baselineProject = orderedByTotalDays.FirstOrDefault(mcs => mcs.ProjectSimulationModel.Name == projectSimModel.Name);
-        var baselineTotalDays = baselineProject!.SimTotalDaysResult!.Percentile(0.9);
-        foreach (var MCS in orderedByTotalDays)
-        {
-            var name = MCS.ProjectSimulationModel.Name;
-            var totalDays = MCS.SimTotalDaysResult != null && MCS.SimTotalDaysResult.Any()
-                ? MCS.SimTotalDaysResult.Percentile(0.9)
-                : 0.0;
-            if (totalDays < baselineTotalDays)
-            {
-                Console.WriteLine($"Simulation {name} is {totalDays}\t\t\t\tdays from {baselineProject.ProjectSimulationModel.Name} {baselineTotalDays}\t\t\tDifference {baselineTotalDays - totalDays}");
-            }
-        }
-        IsCompleted = true;
     }
-
 
     public async Task WIPAnalysis(ProjectSimulationModel projectSimModel, int projectSimulationsCount)
     {
