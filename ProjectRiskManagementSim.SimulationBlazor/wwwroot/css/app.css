@@ -47,4 +47,24 @@
   .htmx-request.forecastAnalysis {
       display: none;
   }
+
+  .sensitivity-indicator{
+    display: none;
+  }
+  .htmx-request .sensitivity-indicator {
+      display: block;
+  }
+
+  .htmx-request.sensitivity-indicator {
+      display: block;
+  }
+
+  /* Hide previously loaded content during HTMX request */
+  .htmx-request .sensitivityAnalysis {
+      display: none;
+  }
+
+  .htmx-request.sensitivityAnalysis {
+      display: none;
+  }
 }
