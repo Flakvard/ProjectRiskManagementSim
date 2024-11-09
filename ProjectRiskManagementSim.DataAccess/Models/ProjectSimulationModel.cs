@@ -43,6 +43,9 @@ public class ProjectSimulationModel
 
     // Navigation property for one-to-many relationship
     public ICollection<ForecastModel> Forecasts { get; set; }
+    //
+    // Navigation property for one-to-many relationship
+    public ICollection<SensitivityModel> Sensitivities { get; set; }
 
     // Deliverables info
     public double DeliverablesCount { get; set; }
