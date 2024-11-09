@@ -1,3 +1,8 @@
+@using ProjectRiskManagementSim.DataAccess
+@using ProjectRiskManagementSim.DataAccess.Models
+@inject IServiceScopeFactory ServiceScopeFactory
+@using ProjectRiskManagementSim.SimulationBlazor.Components.Pages.Dashboard
+@using ProjectRiskManagementSim.ProjectSimulation.Interfaces
 @page "/dashboard/{projectSimulationId:int}/sensitivity-analysis"
 <div id="sensitivityAnalysis" class="grow shrink basis-0 self-stretch">
   <SensitivityAnalysisSkeleton />
@@ -41,6 +46,15 @@
               </div>
             </div>
           </div>
+          <div
+            class="Cell grow shrink basis-0 self-stretch bg-[#7e44eb] border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
+            <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
+              <div
+                class="Text grow shrink basis-0 text-center text-white text-sm font-semibold font-['Outfit'] leading-[18.20px]">
+                Days
+              </div>
+            </div>
+          </div>
         </div>
         @foreach (var result in listSensitivityAnalysis.SensitivityAnalysisList)
         {
@@ -61,6 +75,14 @@
                 @result.SensitivityName</div>
             </div>
           </div>
+          <div
+            class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
+            <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
+              <div
+                class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
+                @result.Days</div>
+            </div>
+          </div>
         </div>
         }
       </div>
@@ -68,16 +90,24 @@
   </div>
 </div>
 @code {
+private IMonteCarloSimulation _MCS;
+private OxygenSimulationContext _context;
 public string SelectedSim { get; set; } = "Sensitivity Analysis";
 [Parameter] public int ProjectSimulationId { get; set; }
+[Parameter] public ProjectSimulationModel Simulation { get; set; }
 public ListSensitivityAnalysis listSensitivityAnalysis { get; set; }
 protected override async Task OnInitializedAsync()
 {
-listSensitivityAnalysis = new ListSensitivityAnalysis();
+using var scope = ServiceScopeFactory.CreateScope();
+_MCS = scope.ServiceProvider.GetRequiredService<IMonteCarloSimulation>();
 
-}
-private async Task HandleSensitivityAnalysis(HtmxEventArgs args)
-{
-await Task.Delay(5000);
-}
-}
+  listSensitivityAnalysis = new ListSensitivityAnalysis(Simulation, _MCS);
+
+  }
+  private async Task HandleSensitivityAnalysis(HtmxEventArgs args)
+  {
+  using var scope = ServiceScopeFactory.CreateScope();
+  _context = scope.ServiceProvider.GetRequiredService<OxygenSimulationContext>();
+    await listSensitivityAnalysis.RunSimulationAnalysis(_context, ProjectSimulationId);
+    }
+    }

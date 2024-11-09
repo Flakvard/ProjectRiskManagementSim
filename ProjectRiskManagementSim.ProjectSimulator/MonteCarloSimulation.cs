@@ -649,7 +649,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
             if (totalDays < baselineTotalDays)
             {
                 Console.WriteLine($"Simulation {name} is {totalDays}\t\t\t\tdays from {baselineProject.ProjectSimulationModel.Name} {baselineTotalDays}\t\t\tDifference {baselineTotalDays - totalDays}");
-                if (priority > 5 && !ColumnAnalysis!.ContainsKey(priority) && baselineProject != null)
+                if (priority <= 5 && !ColumnAnalysis!.ContainsKey(priority) && baselineProject != null)
                 {
                     var days = double.Round(totalDays, 0);
                     ColumnAnalysis.Add(priority, (name, days));

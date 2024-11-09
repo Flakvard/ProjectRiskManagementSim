@@ -32,8 +32,7 @@ public class ListStaffAnalysis
         Simulation = simulation;
         MonteCarloSimulation = monteCarloSimulation;
     }
-    //
-    // Run the simulation forcast analysis
+    // Run the simulation staff analysis
     public async Task RunSimulationAnalysis(OxygenSimulationContext context, int dbSimulationId)
     {
         Simulation = await context.GetSimulationByIdAsync(dbSimulationId);
@@ -45,9 +44,6 @@ public class ListStaffAnalysis
         MonteCarloSimulation!.InitiateSimulation(mappedProjectData, simulationId);
         await MonteCarloSimulation.WIPAnalysis(mappedProjectData, 1000);
         WipAnalysis = MonteCarloSimulation.WipAnalysis;
-
-        // Store the simulation instance with the simulationId for later retrieval
-        SimulationManager.AddSimulationToManager(simulationId, MonteCarloSimulation);
 
         UpdateStaffAnalysis();
     }
