@@ -10,14 +10,28 @@ public class ListForeCastAnalysis
 {
     public List<ForecastAnalysisModel> ForecastAnalysis { get; set; }
     public ProjectSimulationModel? Simulation { get; set; }
-    public IMonteCarloSimulation MonteCarloSimulation { get; set; }
+    public IMonteCarloSimulation? MonteCarloSimulation { get; set; }
     public Guid SimulationId { get; set; }
-    public SimResultsModel SimulationResults { get; set; }
+    public SimResultsModel? SimulationResults { get; set; }
     public ListForeCastAnalysis(ProjectSimulationModel? simulation, IMonteCarloSimulation monteCarloSimulation)
     {
-        ForecastAnalysis = ForecastAnalysisModel.InitialSimulationResults();
         Simulation = simulation;
         MonteCarloSimulation = monteCarloSimulation;
+        if (Simulation != null && Simulation.Forecasts.Count > 0)
+        {
+            ForecastAnalysis = Simulation.Forecasts.Select(f => new ForecastAnalysisModel
+            {
+                Percentage = f.Percentage,
+                EndDate = f.EndDate,
+                Days = f.Days,
+                Cost = f.Cost,
+                CostOfDelay = f.CostOfDelay
+            }).ToList();
+        }
+        else
+        {
+            ForecastAnalysis = ForecastAnalysisModel.InitialSimulationResults();
+        }
     }
     public ListForeCastAnalysis()
     {
@@ -39,10 +53,42 @@ public class ListForeCastAnalysis
         UpdateForecastAnalysis();
 
         // Update the database with the simulation results
-        Simulation!.SimulationCosts = SimulationResults.CostsResult;
-        Simulation!.SimulationDays = SimulationResults.DaysResult;
-        Simulation!.SimEndDate = SimulationResults.EndDate;
-        await context.UpdateSimulationAsync(Simulation);
+        if (SimulationResults != null)
+        {
+            Simulation!.SimulationCosts = SimulationResults.CostsResult;
+            Simulation!.SimulationDays = SimulationResults.DaysResult;
+            Simulation!.SimEndDate = SimulationResults.EndDate;
+            await context.UpdateSimulationAsync(Simulation);
+        }
+        // Add or Update the Forecast in database
+        var simForecast = Simulation!.Forecasts.ToList();
+        if (simForecast.Count == 0)
+        {
+            var forecasts = ForecastAnalysis.Select(f => new ForecastModel
+            {
+                Percentage = f.Percentage,
+                EndDate = f.EndDate,
+                Days = f.Days,
+                Cost = f.Cost,
+                CostOfDelay = f.CostOfDelay,
+                ProjectSimulationModelId = Simulation!.Id
+            }).ToList();
+            context.ForecastModel.AddRange(forecasts);
+            context.SaveChanges();
+        }
+        else
+        {
+            for (int i = 0; i < ForecastAnalysis.Count; i++)
+            {
+                simForecast[i].Percentage = ForecastAnalysis[i].Percentage;
+                simForecast[i].EndDate = ForecastAnalysis[i].EndDate;
+                simForecast[i].Days = ForecastAnalysis[i].Days;
+                simForecast[i].Cost = ForecastAnalysis[i].Cost;
+                simForecast[i].CostOfDelay = ForecastAnalysis[i].CostOfDelay;
+            }
+            context.ForecastModel.UpdateRange(simForecast);
+            context.SaveChanges();
+        }
 
     }
     public void UpdateForecastAnalysis()
@@ -99,6 +145,7 @@ public class ListForeCastAnalysis
                 };
             }
             forecastAnalysis.Add(forecastAnalysisModel);
+
         }
         ForecastAnalysis = forecastAnalysis;
     }
