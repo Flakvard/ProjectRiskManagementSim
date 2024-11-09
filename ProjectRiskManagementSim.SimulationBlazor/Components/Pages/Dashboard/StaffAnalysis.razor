@@ -129,10 +129,7 @@
   </div>
 </div>
 
-}
-
 @code {
-public bool IsLoading { get; set; } = true;
 public string SelectedSim { get; set; } = "Staff Analysis";
 [Parameter] public int ProjectSimulationId { get; set; }
 private async Task HandleStaffAnalysis(HtmxEventArgs args)
