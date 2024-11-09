@@ -1,3 +1,8 @@
+@using ProjectRiskManagementSim.DataAccess
+@using ProjectRiskManagementSim.DataAccess.Models
+@inject IServiceScopeFactory ServiceScopeFactory
+@using ProjectRiskManagementSim.SimulationBlazor.Components.Pages.Dashboard
+@using ProjectRiskManagementSim.ProjectSimulation.Interfaces
 @page "/dashboard/{projectSimulationId:int}/staff-analysis"
 <!-- Staff Analysis in Lower Right Content -->
 <div id="staffAnalysis" class="grow shrink basis-0 self-stretch">
@@ -65,17 +70,24 @@
 </div>
 
 @code {
-public string SelectedSim { get; set; } = "Staff Analysis";
+private IMonteCarloSimulation _MCS;
+private OxygenSimulationContext _context;
 [Parameter] public int ProjectSimulationId { get; set; }
+[Parameter] public ProjectSimulationModel Simulation { get; set; }
 public ListStaffAnalysis listStaffAnalysis { get; set; }
 protected override async Task OnInitializedAsync()
 {
-listStaffAnalysis = new ListStaffAnalysis();
+using var scope = ServiceScopeFactory.CreateScope();
+_MCS = scope.ServiceProvider.GetRequiredService<IMonteCarloSimulation>();
 
-}
+  listStaffAnalysis = new ListStaffAnalysis(Simulation, _MCS);
 
-private async Task HandleStaffAnalysis(HtmxEventArgs args)
-{
-await Task.Delay(3000);
-}
-}
+  }
+
+  private async Task HandleStaffAnalysis(HtmxEventArgs args)
+  {
+  using var scope = ServiceScopeFactory.CreateScope();
+  _context = scope.ServiceProvider.GetRequiredService<OxygenSimulationContext>();
+    await listStaffAnalysis.RunSimulationAnalysis(_context, ProjectSimulationId);
+    }
+    }

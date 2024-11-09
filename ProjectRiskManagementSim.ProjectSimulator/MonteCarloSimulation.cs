@@ -27,6 +27,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
     public Guid SimulationId { get; set; }
     public Dictionary<ColumnModel, List<DeliverableModel>?>? ColumnDeliverables { get; set; }
     public List<DeliverableModel>? DeliverablesCopy { get; set; }
+    public Dictionary<double, (string, double)>? WipAnalysis { get; set; } = new Dictionary<double, (string, double)>();
 
     private int _simulationCount;
 
@@ -707,6 +708,13 @@ public class MonteCarloSimulation : IMonteCarloSimulation
             // print the simulation with the lowest total Days
             Console.WriteLine($"Simulation with the lowest total days: {simulationWithLowestTotalDaysIndex.ProjectSimulationModel.Name} is {double.Round(simulationWithLowestTotalDays, 0)} days from {baselineProject.ProjectSimulationModel.Name} {double.Round(baselineTotalDays, 0)}");
             projectSimModel = simulationWithLowestTotalDaysIndex.ProjectSimulationModel;
+
+            if (!WipAnalysis!.ContainsKey(k) && simulationWithLowestTotalDaysIndex != null)
+            {
+                var name = simulationWithLowestTotalDaysIndex.ProjectSimulationModel.Name;
+                var days = double.Round(baselineTotalDays, 0);
+                WipAnalysis.Add(k, (name, days));
+            }
             wipMultiplier += 1;
 
         }
