@@ -1,0 +1,154 @@
+<!-- Staff Analysis in Lower Right Content -->
+<div id="staff-indicator"
+  class="staff-indicator htmx-indicator relative self-stretch grow shrink basis-0 flex-col justify-start items-start">
+  <div
+    class="rounded-2xl relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent">
+    <div
+      class="StaffAnalysis grow shrink basis-0 self-stretch bg-[#ffb4ba]/25 rounded-2xl justify-start items-center gap-2.5 flex">
+      <div
+        class="StaffResults grow shrink basis-0 self-stretch p-4 flex-col justify-start items-start gap-2.5 inline-flex">
+        <div class="flex">
+          <div
+            class="StaffAnalysisSection self-stretch px-[30px] py-px justify-center items-center gap-2.5 inline-flex">
+            <div class="StaffAnalysisHeader text-white text-xl font-semibold font-['Outfit'] capitalize tracking-wider">
+              Staff analysis</div>
+          </div>
+          <div class="flex p-1">
+            <RunSimButtonSkeleton />
+          </div>
+        </div>
+        <div
+          class="Table self-stretch grow shrink basis-0 bg-white rounded border border-[#b9b9b9] flex-col justify-start items-start flex">
+          <div class="Row self-stretch justify-start items-start inline-flex">
+            <div
+              class="Cell grow shrink basis-0 self-stretch bg-[#7e44eb] border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
+              <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
+                <div
+                  class="Text grow shrink basis-0 text-center text-white text-sm font-semibold font-['Outfit'] leading-[18.20px]">
+                  #</div>
+              </div>
+            </div>
+            <div
+              class="Cell grow shrink basis-0 self-stretch bg-[#7e44eb] border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
+              <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
+                <div
+                  class="Text grow shrink basis-0 text-center text-white text-sm font-semibold font-['Outfit'] leading-[18.20px]">
+                  Priority</div>
+              </div>
+            </div>
+          </div>
+          <div class="Row self-stretch justify-start items-start inline-flex">
+            <div
+              class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
+              <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
+                <div class='px-3 py-2.5 flex space-x-1 justify-center items-center bg-white dark:invert'>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce'></div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
+              <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
+                <div class='px-3 py-2.5 flex space-x-1 justify-center items-center bg-white dark:invert'>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce'></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="Row self-stretch justify-start items-start inline-flex">
+            <div
+              class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
+              <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
+                <div class='px-3 py-2.5 flex space-x-1 justify-center items-center bg-white dark:invert'>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce'></div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
+              <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
+                <div class='px-3 py-2.5 flex space-x-1 justify-center items-center bg-white dark:invert'>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce'></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="Row self-stretch justify-start items-start inline-flex">
+            <div
+              class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
+              <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
+                <div class='px-3 py-2.5 flex space-x-1 justify-center items-center bg-white dark:invert'>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce'></div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
+              <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
+                <div class='px-3 py-2.5 flex space-x-1 justify-center items-center bg-white dark:invert'>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce'></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="Row self-stretch justify-start items-start inline-flex">
+            <div
+              class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
+              <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
+                <div class='px-3 py-2.5 flex space-x-1 justify-center items-center bg-white dark:invert'>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce'></div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
+              <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
+                <div class='px-3 py-2.5 flex space-x-1 justify-center items-center bg-white dark:invert'>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce'></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="Row self-stretch justify-start items-start inline-flex">
+            <div
+              class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
+              <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
+                <div class='px-3 py-2.5 flex space-x-1 justify-center items-center bg-white dark:invert'>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce'></div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
+              <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
+                <div class='px-3 py-2.5 flex space-x-1 justify-center items-center bg-white dark:invert'>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+                  <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce'></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,123 +1,142 @@
+@page "/dashboard/{projectSimulationId:int}/staff-analysis"
 <!-- Staff Analysis in Lower Right Content -->
-<div
-  class="StaffAnalysis grow shrink basis-0 self-stretch bg-[#ffb4ba]/25 rounded-2xl justify-start items-center gap-2.5 flex">
-  <div class="StaffResults grow shrink basis-0 self-stretch p-4 flex-col justify-start items-start gap-2.5 inline-flex">
-    <div class="StaffAnalysisSection self-stretch px-[30px] py-px justify-center items-center gap-2.5 inline-flex">
-      <div class="StaffAnalysisHeader text-white text-xl font-semibold font-['Outfit'] capitalize tracking-wider">
-        Staff analysis</div>
-    </div>
-    <div class="Header self-stretch justify-start items-start gap-2.5 inline-flex">
-      <div class="HeaderSection grow shrink basis-0 self-stretch justify-center items-center gap-[5px] flex">
-        <SimDropdown />
-      </div>
-      <RunSimButton />
-    </div>
+<div id="staffAnalysis" class="grow shrink basis-0 self-stretch">
+  <StaffAnalysisSkeleton />
+
+  <div
+    class="staffAnalysis grow shrink basis-0 self-stretch bg-[#ffb4ba]/25 rounded-2xl justify-start items-center gap-2.5 flex">
     <div
-      class="Table self-stretch grow shrink basis-0 bg-white rounded border border-[#b9b9b9] flex-col justify-start items-start flex">
-      <div class="Row self-stretch justify-start items-start inline-flex">
-        <div
-          class="Cell grow shrink basis-0 self-stretch bg-[#7e44eb] border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
-          <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-            <div
-              class="Text grow shrink basis-0 text-center text-white text-sm font-semibold font-['Outfit'] leading-[18.20px]">
-              #</div>
-          </div>
+      class="StaffResults grow shrink basis-0 self-stretch p-4 flex-col justify-start items-start gap-2.5 inline-flex">
+      <div class="flex">
+        <div class="StaffAnalysisSection self-stretch px-[30px] py-px justify-center items-center gap-2.5 inline-flex">
+          <div class="StaffAnalysisHeader text-white text-xl font-semibold font-['Outfit'] capitalize tracking-wider">
+            Staff analysis</div>
         </div>
-        <div
-          class="Cell grow shrink basis-0 self-stretch bg-[#7e44eb] border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
-          <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-            <div
-              class="Text grow shrink basis-0 text-center text-white text-sm font-semibold font-['Outfit'] leading-[18.20px]">
-              Priority</div>
-          </div>
+        <div class="flex p-1" hx-trigger="click" hx-indicator=".staff-indicator,.staffAnalysis"
+          hx-put="/dashboard/@ProjectSimulationId/staff-analysis" hx-target="#staffAnalysis" hx-swap="OuterHTML"
+          @onput="HandleStaffAnalysis">
+          <RunSimButton />
         </div>
       </div>
-      <div class="Row self-stretch justify-start items-start inline-flex">
-        <div
-          class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
-          <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-            <div
-              class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-              1.</div>
+      <div
+        class="Table self-stretch grow shrink basis-0 bg-white rounded border border-[#b9b9b9] flex-col justify-start items-start flex">
+        <div class="Row self-stretch justify-start items-start inline-flex">
+          <div
+            class="Cell grow shrink basis-0 self-stretch bg-[#7e44eb] border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
+            <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
+              <div
+                class="Text grow shrink basis-0 text-center text-white text-sm font-semibold font-['Outfit'] leading-[18.20px]">
+                #</div>
+            </div>
+          </div>
+          <div
+            class="Cell grow shrink basis-0 self-stretch bg-[#7e44eb] border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
+            <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
+              <div
+                class="Text grow shrink basis-0 text-center text-white text-sm font-semibold font-['Outfit'] leading-[18.20px]">
+                Priority</div>
+            </div>
           </div>
         </div>
-        <div
-          class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
-          <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-            <div
-              class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-              Testing on Production</div>
+        <div class="Row self-stretch justify-start items-start inline-flex">
+          <div
+            class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
+            <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
+              <div
+                class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
+                1.</div>
+            </div>
+          </div>
+          <div
+            class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
+            <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
+              <div
+                class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
+                Testing on Production</div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="Row self-stretch justify-start items-start inline-flex">
-        <div
-          class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
-          <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-            <div
-              class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-              2.</div>
+        <div class="Row self-stretch justify-start items-start inline-flex">
+          <div
+            class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
+            <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
+              <div
+                class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
+                2.</div>
+            </div>
+          </div>
+          <div
+            class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
+            <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
+              <div
+                class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
+                Testing on Production</div>
+            </div>
           </div>
         </div>
-        <div
-          class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
-          <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-            <div
-              class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-              Testing on Production</div>
+        <div class="Row self-stretch justify-start items-start inline-flex">
+          <div
+            class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
+            <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
+              <div
+                class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
+                3.</div>
+            </div>
+          </div>
+          <div
+            class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
+            <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
+              <div
+                class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
+                Testing on Development</div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="Row self-stretch justify-start items-start inline-flex">
-        <div
-          class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
-          <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-            <div
-              class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-              3.</div>
+        <div class="Row self-stretch justify-start items-start inline-flex">
+          <div
+            class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
+            <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
+              <div
+                class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
+                4.</div>
+            </div>
+          </div>
+          <div
+            class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
+            <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
+              <div
+                class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
+                In Progress</div>
+            </div>
           </div>
         </div>
-        <div
-          class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
-          <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-            <div
-              class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-              Testing on Development</div>
+        <div class="Row self-stretch justify-start items-start inline-flex">
+          <div
+            class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
+            <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
+              <div class="Text grow shrink basis-0"></div>
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="Row self-stretch justify-start items-start inline-flex">
-        <div
-          class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
-          <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-            <div
-              class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-              4.</div>
-          </div>
-        </div>
-        <div
-          class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
-          <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-            <div
-              class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-              In Progress</div>
-          </div>
-        </div>
-      </div>
-      <div class="Row self-stretch justify-start items-start inline-flex">
-        <div
-          class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
-          <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-            <div class="Text grow shrink basis-0"></div>
-          </div>
-        </div>
-        <div
-          class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
-          <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-            <div class="Text grow shrink basis-0"></div>
+          <div
+            class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
+            <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
+              <div class="Text grow shrink basis-0"></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+}
+
+@code {
+public bool IsLoading { get; set; } = true;
+public string SelectedSim { get; set; } = "Staff Analysis";
+[Parameter] public int ProjectSimulationId { get; set; }
+private async Task HandleStaffAnalysis(HtmxEventArgs args)
+{
+await Task.Delay(3000);
+}
+}
