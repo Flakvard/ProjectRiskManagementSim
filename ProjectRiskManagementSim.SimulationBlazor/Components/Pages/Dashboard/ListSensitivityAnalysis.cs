@@ -19,11 +19,11 @@ public class ListSensitivityAnalysis
 
     private void LoadSensitivityAnalysis()
     {
-        SensitivityAnalysisList.Add(new SensitivityAnalysis { Priority = 1, SensitivityName = "None", Days = 0 });
-        SensitivityAnalysisList.Add(new SensitivityAnalysis { Priority = 2, SensitivityName = "None", Days = 0 });
-        SensitivityAnalysisList.Add(new SensitivityAnalysis { Priority = 3, SensitivityName = "None", Days = 0 });
-        SensitivityAnalysisList.Add(new SensitivityAnalysis { Priority = 4, SensitivityName = "None", Days = 0 });
-        SensitivityAnalysisList.Add(new SensitivityAnalysis { Priority = 5, SensitivityName = "None", Days = 0 });
+        SensitivityAnalysisList.Add(new SensitivityAnalysis { Priority = 1, SensitivityName = "None", Days = 0, EndDate = "None" });
+        SensitivityAnalysisList.Add(new SensitivityAnalysis { Priority = 2, SensitivityName = "None", Days = 0, EndDate = "None" });
+        SensitivityAnalysisList.Add(new SensitivityAnalysis { Priority = 3, SensitivityName = "None", Days = 0, EndDate = "None" });
+        SensitivityAnalysisList.Add(new SensitivityAnalysis { Priority = 4, SensitivityName = "None", Days = 0, EndDate = "None" });
+        SensitivityAnalysisList.Add(new SensitivityAnalysis { Priority = 5, SensitivityName = "None", Days = 0, EndDate = "None" });
     }
     public ListSensitivityAnalysis(ProjectSimulationModel? simulation, IMonteCarloSimulation monteCarloSimulation)
     {
@@ -55,8 +55,10 @@ public class ListSensitivityAnalysis
             if (ColumnAnalysis == null || !ColumnAnalysis!.ContainsKey(i)) continue;
             var sensitivityName = ColumnAnalysis![i].Item1;
             var days = ColumnAnalysis[i].Item2;
+            DateTime listOfEndDays = listOfEndDays = Simulation!.StartDate.AddDays(days);
+            var endDate = listOfEndDays.ToString("dd MMM yyyy");
             var sensitivityPriority = i;
-            SensitivityAnalysisList.Add(new SensitivityAnalysis { Priority = sensitivityPriority, SensitivityName = sensitivityName, Days = days });
+            SensitivityAnalysisList.Add(new SensitivityAnalysis { Priority = sensitivityPriority, SensitivityName = sensitivityName, Days = days, EndDate = endDate });
         }
     }
 }
@@ -65,4 +67,5 @@ public class SensitivityAnalysis
     public int Priority { get; set; }
     public string SensitivityName { get; set; }
     public double Days { get; set; }
+    public string EndDate { get; set; }
 }
