@@ -12,6 +12,7 @@ public class ListForeCastAnalysis
     public ProjectSimulationModel? Simulation { get; set; }
     public IMonteCarloSimulation MonteCarloSimulation { get; set; }
     public Guid SimulationId { get; set; }
+    public SimResultsModel SimulationResults { get; set; }
     public ListForeCastAnalysis(ProjectSimulationModel? simulation, IMonteCarloSimulation monteCarloSimulation)
     {
         ForecastAnalysis = ForecastAnalysisModel.InitialSimulationResults();
@@ -36,6 +37,12 @@ public class ListForeCastAnalysis
         // Store the simulation instance with the simulationId for later retrieval
         SimulationManager.AddSimulationToManager(simulationId, MonteCarloSimulation);
         UpdateForecastAnalysis();
+
+        // Update the database with the simulation results
+        Simulation!.SimulationCosts = SimulationResults.CostsResult;
+        Simulation!.SimulationDays = SimulationResults.DaysResult;
+        Simulation!.SimEndDate = SimulationResults.EndDate;
+        await context.UpdateSimulationAsync(Simulation);
 
     }
     public void UpdateForecastAnalysis()
@@ -73,6 +80,7 @@ public class ListForeCastAnalysis
         var forecastAnalysis = new List<ForecastAnalysisModel>();
         for (int i = 0; i < listOfPercentileMarks.Count(); i++)
         {
+            var percentile = listOfPercentileMarks[i];
             var forecastAnalysisModel = new ForecastAnalysisModel
             {
                 Percentage = listOfPercentileMarks[i].ToString("P0"),
@@ -81,6 +89,15 @@ public class ListForeCastAnalysis
                 Cost = listOfCosts[i].ToString("C0"),
                 CostOfDelay = listOfCostOfDelays[i].ToString("C0")
             };
+            if (percentile == 0.80)
+            {
+                SimulationResults = new SimResultsModel
+                {
+                    CostsResult = listOfCosts[i],
+                    DaysResult = listOfDayPercentileMarks[i],
+                    EndDate = listOfEndDays[i]
+                };
+            }
             forecastAnalysis.Add(forecastAnalysisModel);
         }
         ForecastAnalysis = forecastAnalysis;
@@ -108,5 +125,10 @@ public class ForecastAnalysisModel
         };
     }
 }
-
+public class SimResultsModel
+{
+    public double CostsResult { get; set; }
+    public double DaysResult { get; set; }
+    public DateTime EndDate { get; set; }
+}
 

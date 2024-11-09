@@ -126,6 +126,11 @@ public class OxygenSimulationContext : DbContext
             .Include(p => p.ProjectSimulationModels)
             .FirstOrDefaultAsync(p => p.Id == simulationProjectId);
     }
+    public async Task UpdateSimulationAsync(ProjectSimulationModel simulation)
+    {
+        ProjectSimulationModel.Update(simulation);
+        await SaveChangesAsync();
+    }
 }
 
 
