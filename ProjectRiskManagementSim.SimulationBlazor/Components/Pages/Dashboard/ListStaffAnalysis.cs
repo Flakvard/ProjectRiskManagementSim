@@ -19,11 +19,11 @@ public class ListStaffAnalysis
 
     private void LoadStaffAnalysis()
     {
-        StaffAnalysisList.Add(new StaffAnalysis { Priority = 1, StaffName = "None" });
-        StaffAnalysisList.Add(new StaffAnalysis { Priority = 2, StaffName = "None" });
-        StaffAnalysisList.Add(new StaffAnalysis { Priority = 3, StaffName = "None" });
-        StaffAnalysisList.Add(new StaffAnalysis { Priority = 4, StaffName = "None" });
-        StaffAnalysisList.Add(new StaffAnalysis { Priority = 5, StaffName = "None" });
+        StaffAnalysisList.Add(new StaffAnalysis { Priority = 1, StaffName = "None", Days = 0 });
+        StaffAnalysisList.Add(new StaffAnalysis { Priority = 2, StaffName = "None", Days = 0 });
+        StaffAnalysisList.Add(new StaffAnalysis { Priority = 3, StaffName = "None", Days = 0 });
+        StaffAnalysisList.Add(new StaffAnalysis { Priority = 4, StaffName = "None", Days = 0 });
+        StaffAnalysisList.Add(new StaffAnalysis { Priority = 5, StaffName = "None", Days = 0 });
     }
     public ListStaffAnalysis(ProjectSimulationModel? simulation, IMonteCarloSimulation monteCarloSimulation)
     {
@@ -59,7 +59,7 @@ public class ListStaffAnalysis
             var staffName = WipAnalysis![i].Item1;
             var days = WipAnalysis[i].Item2;
             var staffPriority = i;
-            StaffAnalysisList.Add(new StaffAnalysis { Priority = staffPriority, StaffName = staffName });
+            StaffAnalysisList.Add(new StaffAnalysis { Priority = staffPriority, StaffName = staffName, Days = days });
         }
     }
 }
@@ -67,4 +67,5 @@ public class StaffAnalysis
 {
     public int Priority { get; set; }
     public string StaffName { get; set; }
+    public double Days { get; set; }
 }

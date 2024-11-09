@@ -36,7 +36,17 @@
                   Priority</div>
               </div>
             </div>
+            <div
+              class="Cell grow shrink basis-0 self-stretch bg-[#7e44eb] border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
+              <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
+                <div
+                  class="Text grow shrink basis-0 text-center text-white text-sm font-semibold font-['Outfit'] leading-[18.20px]">
+                  Days</div>
+              </div>
+            </div>
           </div>
+          @foreach( var result in listStaffAnalysis.StaffAnalysisList)
+          {
           <div class="Row self-stretch justify-start items-start inline-flex">
             <div
               class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
@@ -50,14 +60,6 @@
                 <DotLoader />
               </div>
             </div>
-          </div>
-          <div class="Row self-stretch justify-start items-start inline-flex">
-            <div
-              class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-              <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
-                <DotLoader />
-              </div>
-            </div>
             <div
               class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
               <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
@@ -65,50 +67,16 @@
               </div>
             </div>
           </div>
-          <div class="Row self-stretch justify-start items-start inline-flex">
-            <div
-              class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-              <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
-                <DotLoader />
-              </div>
-            </div>
-            <div
-              class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-              <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
-                <DotLoader />
-              </div>
-            </div>
-          </div>
-          <div class="Row self-stretch justify-start items-start inline-flex">
-            <div
-              class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-              <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
-                <DotLoader />
-              </div>
-            </div>
-            <div
-              class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-              <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
-                <DotLoader />
-              </div>
-            </div>
-          </div>
-          <div class="Row self-stretch justify-start items-start inline-flex">
-            <div
-              class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-              <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
-                <DotLoader />
-              </div>
-            </div>
-            <div
-              class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-              <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
-                <DotLoader />
-              </div>
-            </div>
-          </div>
+          }
         </div>
       </div>
     </div>
   </div>
 </div>
+@code {
+public ListStaffAnalysis listStaffAnalysis { get; set; }
+protected override async Task OnInitializedAsync()
+{
+listStaffAnalysis = new ListStaffAnalysis();
+}
+}
