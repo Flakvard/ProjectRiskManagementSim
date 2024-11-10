@@ -103,12 +103,12 @@
                                     <div class="flex flex-row gap-2 justify-center items-center">
                                         <label class="label-input" for="wip0">WIP:</label>
                                         <input class="input-border" type="number" id="wip0" name="wip0"
-                                               value="@double.Round(NewProjectHandler.IssuesCount)">
+                                               value="@double.Round(NewProjectHandler.EpicCount)">
                                     </div>
                                     <div class="flex flex-row gap-2 justify-center items-center">
                                         <label class="label-input" for="wipMax0">WIP Max:</label>
                                         <input class="input-border" type="number" id="wipMax0" name="wipMax0"
-                                               value="@double.Round(NewProjectHandler.IssuesCount)">
+                                               value="@double.Round(NewProjectHandler.EpicCount)">
                                     </div>
                                     <div class="flex flex-row gap-2 justify-center items-center">
                                         <label class="label-input" for="lowBound0">Estimated Low Bound:</label>
@@ -358,7 +358,7 @@
                                         <input class="input-border" type="checkbox" id="isBuffer8" name="isBuffer8">
                                     </div>
                                 </div>
-                     
+
                                 <!-- Column 9 -->
                                 <div class="column-input-border">
                                     <div class="flex flex-row gap-2 justify-center items-center">
@@ -367,11 +367,13 @@
                                     </div>
                                     <div class="flex flex-row gap-2 justify-center items-center">
                                         <label class="label-input" for="wip9">WIP:</label>
-                                        <input class="input-border" type="number" id="wip9" name="wip9" value="@double.Round(NewProjectHandler.IssuesCount)">
+                                        <input class="input-border" type="number" id="wip9" name="wip9"
+                                               value="@double.Round(NewProjectHandler.EpicCount)">
                                     </div>
                                     <div class="flex flex-row gap-2 justify-center items-center">
                                         <label class="label-input" for="wipMax9">WIP Max:</label>
-                                        <input class="input-border" type="number" id="wipMax9" name="wipMax9" value="@double.Round(NewProjectHandler.IssuesCount)">
+                                        <input class="input-border" type="number" id="wipMax9" name="wipMax9"
+                                               value="@double.Round(NewProjectHandler.EpicCount)">
                                     </div>
                                     <div class="flex flex-row gap-2 justify-center items-center">
                                         <label class="label-input" for="lowBound9">Estimated Low Bound:</label>
@@ -401,21 +403,36 @@
                         <div class="flex flex-col border border-[#b9b9b9] p-4 gap-2 flex-grow">
                             <div>
                                 <label>Deliverable Number:</label>
-                                <input class="input-border" type="number" step="1" name="FeatureNumber" required
+                                <input class="input-border" type="number" step="1" name="DeliverablesNumber" required
                                        value="@NewProjectHandler.EpicCount" />
                             </div>
                             <div>
                                 <label>Issues Number:</label>
-                                <input class="input-border" type="number" step="1" name="DeliverablesNumber" required
+                                <input class="input-border" type="number" step="1" name="IssueNumber" required
                                        value="@NewProjectHandler.IssuesCount" />
                             </div>
-                            <div>
+                            <div class="hidden">
                                 <label>Percentage Low Bound:</label>
                                 <input class="input-border" type="number" step="1" name="PercentageLowBound" required value="0" />
                             </div>
-                            <div>
+                            <div class="hidden">
                                 <label>Percentage High Bound:</label>
                                 <input class="input-border" type="number" step="1" name="PercentageHighBound" required value="100" />
+                            </div>
+                            <div>
+                                <label>Issues Done Count:</label>
+                                <input class="input-border" type="number" step="1" name="IssuesDoneCount" required
+                                       value="@NewProjectHandler.IssuesDoneCount" />
+                            </div>
+                            <div>
+                                <label>Bug Count:</label>
+                                <input class="input-border" type="number" step="1" name="BugCount" required
+                                       value="@NewProjectHandler.BugCount" />
+                            </div>
+                            <div>
+                                <label>Bug %:</label>
+                                <input class="input-border" type="number" step="1" name="BugPercentage" required
+                                       value="@double.Round(@NewProjectHandler.BugPercentage)" />
                             </div>
                         </div>
                     </div>

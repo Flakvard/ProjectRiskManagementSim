@@ -111,10 +111,13 @@ public static class PageRoutes
             string? stringFrontendDevs = form["FrontendDevs"];
             string? stringTesters = form["Testers"];
             string? stringHours = form["Hours"];
+            string? stringIssueNumber = form["IssueNumber"];
             string? stringDeliverablesNumber = form["DeliverablesNumber"];
-            string? stringFeatureNumber = form["FeatureNumber"];
             string? stringPercentageLowBound = form["PercentageLowBound"];
             string? stringPercentageHighBound = form["PercentageHighBound"];
+            string? stringIssueDoneCount = form["IssuesDoneCount"];
+            string? stringBugCount = form["BugCount"];
+            string? stringBugPercentage = form["BugPercentage"];
             if (jiraProjectName == null
                 || jiraId == null
                 || jiraProjectId == null
@@ -128,10 +131,14 @@ public static class PageRoutes
                 || stringFrontendDevs == null
                 || stringTesters == null
                 || stringHours == null
+                || stringIssueNumber == null
                 || stringDeliverablesNumber == null
-                || stringFeatureNumber == null
                 || stringPercentageLowBound == null
-                || stringPercentageHighBound == null)
+                || stringPercentageHighBound == null
+                || stringIssueDoneCount == null
+                || stringBugCount == null
+                || stringBugPercentage == null
+                )
             {
                 return Results.BadRequest("Invalid input.");
             }
@@ -145,10 +152,14 @@ public static class PageRoutes
             var backendDevs = double.Parse(stringBackendDevs);
             var frontendDevs = double.Parse(stringFrontendDevs);
             var testers = double.Parse(stringTesters);
+            var issueNumber = double.Parse(stringIssueNumber);
             var deliverableNumber = double.Parse(stringDeliverablesNumber);
-            var featureNumber = double.Parse(stringFeatureNumber);
             var percentageLowBound = double.Parse(stringPercentageLowBound) / 100;
             var percentageHighBound = double.Parse(stringPercentageHighBound) / 100;
+            var issueDoneCount = double.Parse(stringIssueDoneCount);
+            var bugCount = double.Parse(stringBugCount);
+            var bugPercentage = double.Parse(stringBugPercentage);
+
             if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(jiraProjectId) || string.IsNullOrWhiteSpace(jiraProjectName))
             {
                 return Results.BadRequest("Invalid input.");
@@ -243,7 +254,10 @@ public static class PageRoutes
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now,
                     DeliverablesCount = deliverableNumber,
-                    FeaturesCount = featureNumber,
+                    IssueCount = issueNumber,
+                    IssueDoneCount = issueDoneCount,
+                    BugCount = bugCount,
+                    BugPercentage = bugPercentage,
 
                     PercentageLowBound = percentageLowBound,
                     PercentageHighBound = percentageHighBound,
@@ -294,7 +308,10 @@ public static class PageRoutes
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now,
                     DeliverablesCount = deliverableNumber,
-                    FeaturesCount = featureNumber,
+                    IssueCount = issueNumber,
+                    IssueDoneCount = issueDoneCount,
+                    BugCount = bugCount,
+                    BugPercentage = bugPercentage,
 
                     PercentageLowBound = percentageLowBound,
                     PercentageHighBound = percentageHighBound,
@@ -322,21 +339,6 @@ public static class PageRoutes
                 _context.SaveChanges();
             }
 
-
-            if (existingProject != null)
-            {
-                var proj = ModelMapper.MapDBProjectSimulationModelToViewProjectSimulationModel(existingProject.ProjectSimulationModels.Last());
-                // Initialize the simulation
-                var simulationId = Guid.NewGuid(); // Create a unique ID for this simulation session
-                var mappedProjectData = ModelMapper.MapToSimProjProjectSimulationModel(proj);
-
-                // Use the injected IMonteCarloSimulation instance to get a new simulation instance
-                var simulation = MCS.GetSimulationInstance();
-                simulation.InitiateSimulation(mappedProjectData, simulationId);
-
-                // Store the simulation instance with the simulationId for later retrieval
-                SimulationManager.AddSimulationToManager(simulationId, simulation);
-            }
             // Prepare simulation result HTML to return
             var htmlContent = $@"Saved!";
             return Results.Content(htmlContent, "text/html");

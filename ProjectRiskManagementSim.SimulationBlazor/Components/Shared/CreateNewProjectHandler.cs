@@ -13,8 +13,10 @@ public class CreateNewProjectHandler
     public string? JiraProjectId { get; set; }
     public List<IssueLeadTime>? IssueLeadTimes { get; set; }
     public int IssuesCount { get; set; }
+    public int IssuesDoneCount { get; set; }
     public int EpicCount { get; set; }
     public int BugCount { get; set; }
+    public double BugPercentage { get; set; }
 
     // Properties for percentiles
     public List<double> OpenPercentiles { get; set; } = new List<double> { 0, 0 };
@@ -86,9 +88,11 @@ public class CreateNewProjectHandler
         var issuesCount = 0;
         var epicCount = 0;
         var bugCount = 0;
+        var issuesDoneCount = 0;
         if (IssueLeadTimes == null)
         {
             IssuesCount = issuesCount;
+            IssuesDoneCount = issuesDoneCount;
             EpicCount = epicCount;
             BugCount = bugCount;
             return;
@@ -98,6 +102,10 @@ public class CreateNewProjectHandler
             if (issueLeadTime.IssueType == "Task" || issueLeadTime.IssueType == "Sub-task" || issueLeadTime.IssueType == "Subtask" || issueLeadTime.IssueType == "Tech Task")
             {
                 issuesCount += 1;
+                if (issueLeadTime.CurrentStatus == "Done" || issueLeadTime.CurrentStatus == "Closed" || issueLeadTime.CurrentStatus == "Resolved")
+                {
+                    issuesDoneCount += 1;
+                }
             }
             else if (issueLeadTime.IssueType == "Bug" || issueLeadTime.IssueType == "Sub-bug")
             {
@@ -134,6 +142,12 @@ public class CreateNewProjectHandler
         IssuesCount = issuesCount;
         EpicCount = epicCount;
         BugCount = bugCount;
+        IssuesDoneCount = issuesDoneCount;
+        if (issuesDoneCount > 0)
+        {
+            BugPercentage = (double)bugCount / issuesDoneCount * 100;
+
+        }
         var totalHours = Issues.Sum(x => x.TimeSpentSeconds) / 3600;
         TotalHours = totalHours != null ? (double)totalHours : 0.0;
         var totalCost = Issues.Sum(x => x.TimeSpentSeconds) / 3600 * 370;
