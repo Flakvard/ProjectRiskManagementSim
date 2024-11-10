@@ -63,7 +63,7 @@
             <td class="px-3 py-2.5 text-center cell-text">@simulation.UpdatedAt</td>
             <td class="px-3 py-2.5 text-center cell-text">
               <button class="bg-[#ff7c87] rounded-lg p-1">
-                <a href="/dashboard/@simulation.Id"
+                <a href="/dashboard/@simulation.Id" hx-trigger="apexCharts from:body"
                   class="px-3 py-2.5 text-white text-center cell-text hover:text-purple-100">Open</a></button>
             </td>
           </tr>

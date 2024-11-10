@@ -1,7 +1,8 @@
 ﻿<!-- Navbar -->
 <nav class="w-full self-stretch px-[180px] justify-between items-center flex">
   <div class="w-40 h-12 justify-left items-center flex">
-    <a href="/" class="w-[75px] text-white text-xl font-semibold font-['Inter'] hover:text-red-400">Oxygen</a>
+    <a hx-get="/" hx-target="#hero-content" hx-swap="outerHTML" hx-on::after-request="initializeModal()"
+      class="w-[75px] text-white text-xl font-semibold font-['Inter'] hover:text-red-400">Oxygen</a>
   </div>
   <div class="flex space-x-9">
     <a href="/htmx-test"
@@ -10,9 +11,7 @@
       class="w-[108.90px] text-white text-xl font-normal font-['Inter'] hover:text-red-400">HTMX-test</button>
     <a href="/dashboard"
       class="Dashboard w-[103.90px] text-white text-xl font-normal font-['Inter'] hover:text-red-400">Dashboard</a>
-        <a href="/simulations"
+    <a href="/simulations"
       class="w-[108.90px] text-white text-xl font-normal font-['Inter'] hover:text-red-400">Simulations</a>
-    <a href="/counter"
-      class="User w-[44.96px] text-white text-xl font-normal font-['Inter'] hover:text-red-400">User</a>
   </div>
 </nav>
