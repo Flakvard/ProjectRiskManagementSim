@@ -25,6 +25,7 @@ public class ListForeCastAnalysis
                 EndDate = f.EndDate,
                 Days = f.Days,
                 Cost = f.Cost,
+                DaysDelay = f.DaysDelay,
                 CostOfDelay = f.CostOfDelay
             }).ToList();
         }
@@ -58,6 +59,7 @@ public class ListForeCastAnalysis
             Simulation!.SimulationCosts = SimulationResults.CostsResult;
             Simulation!.SimulationDays = SimulationResults.DaysResult;
             Simulation!.SimEndDate = SimulationResults.EndDate;
+            Simulation!.SimulationDaysOfDelay = SimulationResults.DaysDelay;
             await context.UpdateSimulationAsync(Simulation);
         }
         // Add or Update the Forecast in database
@@ -70,6 +72,7 @@ public class ListForeCastAnalysis
                 EndDate = f.EndDate,
                 Days = f.Days,
                 Cost = f.Cost,
+                DaysDelay = f.DaysDelay,
                 CostOfDelay = f.CostOfDelay,
                 ProjectSimulationModelId = Simulation!.Id
             }).ToList();
@@ -84,6 +87,7 @@ public class ListForeCastAnalysis
                 simForecast[i].EndDate = ForecastAnalysis[i].EndDate;
                 simForecast[i].Days = ForecastAnalysis[i].Days;
                 simForecast[i].Cost = ForecastAnalysis[i].Cost;
+                simForecast[i].DaysDelay = ForecastAnalysis[i].DaysDelay;
                 simForecast[i].CostOfDelay = ForecastAnalysis[i].CostOfDelay;
             }
             context.ForecastModel.UpdateRange(simForecast);
@@ -133,6 +137,7 @@ public class ListForeCastAnalysis
                 EndDate = listOfEndDays[i].ToString("dd MMM yyyy"),
                 Days = (int)listOfDayPercentileMarks[i],
                 Cost = listOfCosts[i].ToString("C0"),
+                DaysDelay = listOfEndDays[i].Subtract(simulation.TargetDate).Days,
                 CostOfDelay = listOfCostOfDelays[i].ToString("C0")
             };
             if (percentile == 0.80)
@@ -141,7 +146,8 @@ public class ListForeCastAnalysis
                 {
                     CostsResult = listOfCosts[i],
                     DaysResult = listOfDayPercentileMarks[i],
-                    EndDate = listOfEndDays[i]
+                    EndDate = listOfEndDays[i],
+                    DaysDelay = listOfEndDays[i].Subtract(simulation.TargetDate).Days,
                 };
             }
             forecastAnalysis.Add(forecastAnalysisModel);
@@ -153,22 +159,23 @@ public class ListForeCastAnalysis
 
 public class ForecastAnalysisModel
 {
-    public string Percentage { get; set; }
-    public string EndDate { get; set; }
+    public string Percentage { get; set; } = "";
+    public string EndDate { get; set; } = "Month";
     public int Days { get; set; }
-    public string Cost { get; set; }
-    public string CostOfDelay { get; set; }
+    public string Cost { get; set; } = "0";
+    public double DaysDelay { get; set; }
+    public string CostOfDelay { get; set; } = "0";
     public static List<ForecastAnalysisModel> InitialSimulationResults()
     {
         return new List<ForecastAnalysisModel>
         {
-            new ForecastAnalysisModel { Percentage = "99 %", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0" },
-            new ForecastAnalysisModel { Percentage = "95 %", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0" },
-            new ForecastAnalysisModel { Percentage = "90 %", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0" },
-            new ForecastAnalysisModel { Percentage = "85 %", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0" },
-            new ForecastAnalysisModel { Percentage = "80 %", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0" },
-            new ForecastAnalysisModel { Percentage = "75 %", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0" },
-            new ForecastAnalysisModel { Percentage = "70 %", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0" },
+            new ForecastAnalysisModel { Percentage = "99 %", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0", DaysDelay = 0},
+            new ForecastAnalysisModel { Percentage = "95 %", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0",  DaysDelay = 0},
+            new ForecastAnalysisModel { Percentage = "90 %", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0",  DaysDelay = 0},
+            new ForecastAnalysisModel { Percentage = "85 %", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0",  DaysDelay = 0},
+            new ForecastAnalysisModel { Percentage = "80 %", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0",  DaysDelay = 0},
+            new ForecastAnalysisModel { Percentage = "75 %", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0",  DaysDelay = 0},
+            new ForecastAnalysisModel { Percentage = "70 %", EndDate = "Month", Days = 0, Cost = "0", CostOfDelay = "0",  DaysDelay = 0},
         };
     }
 }
@@ -177,5 +184,6 @@ public class SimResultsModel
     public double CostsResult { get; set; }
     public double DaysResult { get; set; }
     public DateTime EndDate { get; set; }
+    public double DaysDelay { get; set; }
 }
 

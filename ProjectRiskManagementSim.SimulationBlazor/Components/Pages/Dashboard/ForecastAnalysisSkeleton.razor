@@ -21,6 +21,7 @@
                     <div class="px-3 py-2.5 text-center cell-header-text">End date</div>
                     <div class="px-3 py-2.5 text-center cell-header-text">Days</div>
                     <div class="px-3 py-2.5 text-center cell-header-text">Cost</div>
+                    <div class="px-3 py-2.5 text-center cell-header-text">Days of delay</div>
                     <div class="px-3 py-2.5 text-center cell-header-text">Cost of Delay</div>
                 </div>
 
@@ -28,6 +29,11 @@
                 @foreach (var result in simulationResults.ForecastAnalysis)
                 {
                     <div class="grid grid-cols-5 border-t border-[#b9b9b9]">
+                        <div class='px-3 py-2.5 flex space-x-1 justify-center items-center bg-white dark:invert'>
+                            <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+                            <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+                            <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce'></div>
+                        </div>
                         <div class='px-3 py-2.5 flex space-x-1 justify-center items-center bg-white dark:invert'>
                             <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.3s]'></div>
                             <div class='h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.15s]'></div>
