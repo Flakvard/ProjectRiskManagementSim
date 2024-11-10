@@ -7,36 +7,43 @@
       <div class="CostDelaySection px-2.5 py-[5px] justify-start items-start gap-2.5 inline-flex">
         <div
           class="CostDelayValue w-[113px] text-right text-white text-base font-bold font-['Outfit'] capitalize leading-none">
-          @if(@Project != null )
+          @if (@Project != null)
           {
-          @Project.Name;
+          @Project.Name
+          ;
           }
         </div>
-        <Editbutton />
+        <button>
+          <Editbutton />
+        </button>
       </div>
     </div>
   </div>
   <div class="StartDateSection self-stretch px-2.5 py-[5px] justify-end items-start gap-2.5 inline-flex">
     <div class="Frame10 grow shrink basis-0 justify-start items-center gap-2.5 flex">
-      <div class="StartDateName text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">Start:
+      <div class="StartDateName text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
+        Start:
       </div>
     </div>
     <div class="StartDateValue text-right text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
-      @if(@Simulation != null && @Simulation.StartDate != null )
+      @if (@Simulation != null && @Simulation.StartDate != null)
       {
-      @Simulation.StartDate.ToShortDateString();
+      @Simulation.StartDate.ToShortDateString()
+      ;
       }
     </div>
   </div>
   <div class="TargetDateSection self-stretch px-2.5 py-[5px] justify-end items-start gap-2.5 inline-flex">
     <div class="Frame11 grow shrink basis-0 justify-start items-center gap-2.5 flex">
-      <div class="TargetDateName text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">Target:
+      <div class="TargetDateName text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
+        Target:
       </div>
     </div>
     <div class="TargetDateValue text-right text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
-      @if(@Simulation != null && @Simulation.TargetDate != null )
+      @if (@Simulation != null && @Simulation.TargetDate != null)
       {
-      @Simulation.TargetDate.ToShortDateString();
+      @Simulation.TargetDate.ToShortDateString()
+      ;
       }
     </div>
   </div>
@@ -45,45 +52,81 @@
       <div class="EndDateName text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">End:</div>
     </div>
     <div class="EndDateValue text-right text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
-      @if(@Simulation != null )
+      @if (@Simulation != null && @Simulation.SimEndDate != null)
       {
-      }
-      19-11-2024
-    </div>
-  </div>
-  <div class="BudgetSection self-stretch px-2.5 py-[5px] justify-end items-start gap-2.5 inline-flex">
-    <div class="Frame13 grow shrink basis-0 justify-start items-center gap-2.5 flex">
-      <div class="BudgetName w-20 text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">Budget:
-      </div>
-    </div>
-    <div class="BudgetValue text-right text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
-      @if(@Simulation != null )
-      {
-      }
-      0
-    </div>
-  </div>
-  <div class="CostSection self-stretch px-2.5 py-[5px] justify-end items-start gap-2.5 inline-flex">
-    <div class="Frame14 grow shrink basis-0 justify-start items-center gap-2.5 flex">
-      <div class="CostName text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">Cost:</div>
-    </div>
-    <div class="CostValue text-right text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
-      @if(@Simulation != null && @Simulation.ActualCosts != null )
-      {
-                @Simulation.ActualCosts.Value.ToString("N0", new CultureInfo("da-DK"))
+      var date = (DateTime)@Simulation.SimEndDate;
+      @date.ToShortDateString()
+      ;
       }
     </div>
   </div>
   <div class="CostDelaySection self-stretch px-2.5 py-[5px] justify-end items-start gap-2.5 inline-flex">
     <div class="Frame15 grow shrink basis-0 justify-start items-center gap-2.5 flex">
-      <div class="CostDelayName text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">delay/day:
+      <div class="CostDelayName text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
+        delay/days:
       </div>
     </div>
     <div class="CostDelayValue text-right text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
-      @if(@Simulation != null )
+      @if (@Simulation != null)
       {
+      if (@Simulation.SimulationDaysOfDelay != null)
+      @Simulation.SimulationDaysOfDelay.Value.ToString("N0", new CultureInfo("da-DK"))
+      ;
       }
-      0
+    </div>
+  </div>
+  <div class="BudgetSection self-stretch px-2.5 py-[5px] justify-end items-start gap-2.5 inline-flex">
+    <div class="Frame13 grow shrink basis-0 justify-start items-center gap-2.5 flex">
+      <div class="BudgetName w-20 text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
+        Budget:
+      </div>
+    </div>
+    <div class="BudgetValue text-right text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
+      @if (@Simulation != null && @Simulation.BudgetCosts != null)
+      {
+      @Simulation.BudgetCosts.Value.ToString("N0", new CultureInfo("da-DK"))
+      }
+    </div>
+  </div>
+  <div class="SimCostSection self-stretch px-2.5 py-[5px] justify-end items-start gap-2.5 inline-flex">
+    <div class="Frame13 grow shrink basis-0 justify-start items-center gap-2.5 flex">
+      <div class="SimCostName text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
+        ForecastCost:
+      </div>
+    </div>
+    <div class="SimCostValue text-right text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
+      @if (@Simulation != null && @Simulation.SimulationCosts != null)
+      {
+      @Simulation.SimulationCosts.Value.ToString("N0", new CultureInfo("da-DK"))
+      }
+    </div>
+  </div>
+  <div class="CostSection self-stretch px-2.5 py-[5px] justify-end items-start gap-2.5 inline-flex">
+    <div class="Frame14 grow shrink basis-0 justify-start items-center gap-2.5 flex">
+      <div class="CostName text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">Actual Cost:</div>
+    </div>
+    <div class="CostValue text-right text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
+      @if (@Simulation != null && @Simulation.ActualCosts != null)
+      {
+      @Simulation.ActualCosts.Value.ToString("N0", new CultureInfo("da-DK"))
+      }
+    </div>
+  </div>
+  <div class="DevelopersSection self-stretch px-2.5 py-[5px] justify-end items-start gap-2.5 inline-flex">
+    <div class="Frame15 grow shrink basis-0 justify-start items-center gap-2.5 flex">
+      <div class="DevelopersName text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
+        Developers:
+      </div>
+    </div>
+    <div class="DevelopersValue text-right text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
+      @if (@Simulation != null)
+      {
+      var back = @Simulation.BackendDevs;
+      var front = @Simulation.FrontendDevs;
+      var testers = @Simulation.Testers;
+      var total = back + front + testers;
+      @total
+      }
     </div>
   </div>
 </div>
