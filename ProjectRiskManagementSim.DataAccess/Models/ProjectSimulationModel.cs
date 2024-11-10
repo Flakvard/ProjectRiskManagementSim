@@ -52,7 +52,10 @@ public class ProjectSimulationModel
 
     // Deliverables info
     public double DeliverablesCount { get; set; }
-    public double FeaturesCount { get; set; }
+    public double IssueCount { get; set; }
     public double PercentageLowBound { get; set; }
     public double PercentageHighBound { get; set; }
+    public double IssueDoneCount { get; set; }
+    public double BugCount { get; set; }
+    public double BugPercentage { get; set; }
 }
