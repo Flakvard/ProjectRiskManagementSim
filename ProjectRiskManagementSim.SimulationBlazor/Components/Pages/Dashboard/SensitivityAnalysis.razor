@@ -16,7 +16,7 @@
           class="SensitivityAnalysisSection self-stretch px-[30px] py-px justify-center items-center gap-2.5 inline-flex">
           <div
             class="SensitivityAnalysisHeader text-white text-xl font-semibold font-['Outfit'] capitalize tracking-wider">
-            @SelectedSim.ToString()
+            Sensitivity Analysis
           </div>
         </div>
         <div class="flex p-1" hx-trigger="click" hx-indicator=".sensitivity-indicator,.sensitivityAnalysis"
@@ -73,7 +73,8 @@
             <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
               <div
                 class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-                @result.Priority</div>
+                @result.Priority
+              </div>
             </div>
           </div>
           <div
@@ -81,7 +82,8 @@
             <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
               <div
                 class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-                @result.SensitivityName</div>
+                @result.SensitivityName
+              </div>
             </div>
           </div>
           <div
@@ -89,7 +91,8 @@
             <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
               <div
                 class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-                @result.Days</div>
+                @result.Days
+              </div>
             </div>
           </div>
           <div
@@ -97,7 +100,8 @@
             <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
               <div
                 class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-                @result.EndDate</div>
+                @result.EndDate
+              </div>
             </div>
           </div>
         </div>
@@ -109,7 +113,6 @@
 @code {
 private IMonteCarloSimulation _MCS;
 private OxygenSimulationContext _context;
-public string SelectedSim { get; set; } = "Sensitivity Analysis";
 [Parameter] public int ProjectSimulationId { get; set; }
 [Parameter] public ProjectSimulationModel Simulation { get; set; }
 public ListSensitivityAnalysis listSensitivityAnalysis { get; set; }

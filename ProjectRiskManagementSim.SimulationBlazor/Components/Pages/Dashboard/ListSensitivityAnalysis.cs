@@ -11,11 +11,6 @@ public class ListSensitivityAnalysis
     public IMonteCarloSimulation? MonteCarloSimulation { get; set; }
     public Guid SimulationId { get; set; }
     public Dictionary<double, (string, double)>? ColumnAnalysis { get; set; } = new Dictionary<double, (string, double)>();
-    public ListSensitivityAnalysis()
-    {
-        SensitivityAnalysisList = new List<SensitivityAnalysis>();
-        LoadSensitivityAnalysis();
-    }
 
     private void LoadSensitivityAnalysis()
     {
@@ -27,11 +22,31 @@ public class ListSensitivityAnalysis
     }
     public ListSensitivityAnalysis(ProjectSimulationModel? simulation, IMonteCarloSimulation monteCarloSimulation)
     {
-        SensitivityAnalysisList = new List<SensitivityAnalysis>();
-        LoadSensitivityAnalysis();
         Simulation = simulation;
+        if (Simulation != null && Simulation!.Sensitivities.Count > 0)
+        {
+            SensitivityAnalysisList = Simulation.Sensitivities.Select(s => new SensitivityAnalysis
+            {
+                Priority = s.Priority,
+                SensitivityName = s.SensitivityName,
+                Days = s.Days,
+                EndDate = s.EndDate
+            }).ToList();
+        }
+        else
+        {
+            SensitivityAnalysisList = new List<SensitivityAnalysis>();
+            LoadSensitivityAnalysis();
+        }
         MonteCarloSimulation = monteCarloSimulation;
     }
+
+    public ListSensitivityAnalysis()
+    {
+        SensitivityAnalysisList = new List<SensitivityAnalysis>();
+        LoadSensitivityAnalysis();
+    }
+
     // Run the simulation staff analysis
     public async Task RunSimulationAnalysis(OxygenSimulationContext context, int dbSimulationId)
     {
@@ -46,6 +61,31 @@ public class ListSensitivityAnalysis
         ColumnAnalysis = MonteCarloSimulation.ColumnAnalysis;
 
         UpdateSensitivityAnalysis();
+
+        // Add or Update the Sensitivities in database
+        if (Simulation != null)
+        {
+            Simulation.Sensitivities = SensitivityAnalysisList.Select(s => new SensitivityModel
+            {
+                Priority = s.Priority,
+                SensitivityName = s.SensitivityName,
+                Days = s.Days,
+                EndDate = s.EndDate,
+            }).ToList();
+            await context.UpdateSimulationAsync(Simulation);
+        }
+        else
+        {
+            var sensitivities = SensitivityAnalysisList.Select(s => new SensitivityModel
+            {
+                Priority = s.Priority,
+                SensitivityName = s.SensitivityName,
+                Days = s.Days,
+                EndDate = s.EndDate,
+                ProjectSimulationModelId = Simulation!.Id
+            }).ToList();
+            context.SensitivityModel.AddRange(sensitivities);
+        }
     }
     public void UpdateSensitivityAnalysis()
     {
