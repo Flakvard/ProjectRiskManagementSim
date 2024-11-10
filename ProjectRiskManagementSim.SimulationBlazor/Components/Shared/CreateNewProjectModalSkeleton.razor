@@ -1,0 +1,244 @@
+<div id="modal-indicator"
+     class="modal-indicator htmx-indicator bg-white rounded-lg shadow-lg w-1/3 h-5/6 relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent">
+  <!-- Modal Header -->
+  <div class="px-4 py-2 bg-[#7e44eb] rounded-t-lg flex justify-between items-center border-b">
+    <h2 class="text-white text-lg font-semibold">New Simulation</h2>
+    <button id="closeModal" class="text-white hover:text-black">&times;</button>
+  </div>
+
+  <!-- Modal Body -->
+  <div class="flex flex-col p-4 flex-grow overflow-hidden">
+    <div class="overflow-hidden">
+      <div class="flex flex-row gap-4 h-full">
+
+        <!-- Simulation Details -->
+        <div class="flex flex-col gap-2 h-full flex-grow">
+          <h2>Project details</h2>
+          <div class="flex flex-col h-full gap-2">
+            <div class="hidden">
+              <label>JiraProjectId: </label>
+              <div class="input-border">
+                <DotLoader />
+              </div>
+            </div>
+            <div>
+              <label>JiraId: </label>
+              <div class="input-border">
+                <DotLoader />
+              </div>
+            </div>
+            <div>
+              <label>Jira Project Name:</label>
+              <div class="input-border">
+                <DotLoader />
+              </div>
+            </div>
+            <div>
+              <label>Name:</label>
+              <div class="input-border">
+                <DotLoader />
+              </div>
+            </div>
+            <div>
+              <label>Start Date:</label>
+              <div class="input-border">
+                <DotLoader />
+              </div>
+            </div>
+            <div>
+              <label>Target Date:</label>
+              <div class="input-border">
+                <DotLoader />
+              </div>
+            </div>
+            <div>
+              <label>Budget:</label>
+              <div class="input-border">
+                <DotLoader />
+              </div>
+            </div>
+            <div>
+              <label>BackendDevs:</label>
+              <div class="input-border">
+                <DotLoader />
+              </div>
+            </div>
+            <div>
+              <label>FrontendDevs:</label>
+              <div class="input-border">
+                <DotLoader />
+              </div>
+            </div>
+            <div>
+              <label>Testers:</label>
+              <div class="input-border">
+                <DotLoader />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contianer for Column Details and Deliverables Details -->
+        <div class="flex flex-col flex-grow gap-2">
+
+          <!-- Column Details -->
+          <div class="flex flex-col h-full flex-grow overflow-hidden">
+            <h2>Columns</h2>
+            <div class="flex flex-col border border-[#b9b9b9] p-4 gap-2 h-full overflow-y-auto">
+              <div id="kanbanForm" class="flex flex-col gap-2">
+                <!-- Column 0 -->
+                <div class="column-input-border">
+                  <div class="flex flex-row gap-2 justify-center items-center">
+                    <label class="label-input" for="name0">Name:</label>
+                    <div class="input-border">
+                      <DotLoader />
+                    </div>
+                  </div>
+
+                  <div class="flex flex-row gap-2 justify-center items-center">
+                    <label class="label-input" for="wip0">WIP:</label>
+                    <div class="input-border">
+                      <DotLoader />
+                    </div>
+                  </div>
+                  <div class="flex flex-row gap-2 justify-center items-center">
+                    <label class="label-input" for="wipMax0">WIP Max:</label>
+                    <div class="input-border">
+                      <DotLoader />
+                    </div>
+                  </div>
+                  <div class="flex flex-row gap-2 justify-center items-center">
+                    <label class="label-input" for="lowBound0">Estimated Low Bound:</label>
+                    <div class="input-border">
+                      <DotLoader />
+                    </div>
+                  </div>
+                  <div class="flex flex-row gap-2 justify-center items-center">
+                    <label class="label-input" for="highBound0">Estimated High Bound:</label>
+                    <div class="input-border">
+                      <DotLoader />
+                    </div>
+                  </div>
+                  <div class="flex flex-row gap-2 justify-center items-center">
+                    <label class="label-input" for="isBuffer0">Is Buffer:</label>
+                    <div class="input-border">
+                      <DotLoader />
+                    </div>
+                  </div>
+                </div>
+                <!-- Column 1 -->
+                <div class="column-input-border">
+                  <div class="flex flex-row gap-2 justify-center items-center">
+                    <label class="label-input" for="name1">Name:</label>
+                    <div class="input-border">
+                      <DotLoader />
+                    </div>
+                  </div>
+
+                  <div class="flex flex-row gap-2 justify-center items-center">
+                    <label class="label-input" for="wip1">WIP:</label>
+                    <div class="input-border">
+                      <DotLoader />
+                    </div>
+                  </div>
+                  <div class="flex flex-row gap-2 justify-center items-center">
+                    <label class="label-input" for="wipMax1">WIP Max:</label>
+                    <div class="input-border">
+                      <DotLoader />
+                    </div>
+                  </div>
+                  <div class="flex flex-row gap-2 justify-center items-center">
+                    <label class="label-input" for="lowBound1">Estimated Low Bound:</label>
+                    <div class="input-border">
+                      <DotLoader />
+                    </div>
+                  </div>
+                  <div class="flex flex-row gap-2 justify-center items-center">
+                    <label class="label-input" for="highBound1">Estimated High Bound:</label>
+                    <div class="input-border">
+                      <DotLoader />
+                    </div>
+                  </div>
+                  <div class="flex flex-row gap-2 justify-center items-center">
+                    <label class="label-input" for="isBuffer1">Is Buffer:</label>
+                    <div class="input-border">
+                      <DotLoader />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Deliverables Details -->
+          <div class="flex flex-col h-full flex-grow overflow-hidden">
+            <h2>Deliverables</h2>
+            <div class="flex flex-col border border-[#b9b9b9] p-4 gap-2 flex-grow">
+              <div>
+                <label>Deliverable Number:</label>
+                <div class="input-border">
+                  <DotLoader />
+                </div>
+              </div>
+              <div>
+                <label>Issues Number:</label>
+                <div class="input-border">
+                  <DotLoader />
+                </div>
+              </div>
+              <div>
+                <label>Issues Done Count:</label>
+                <div class="input-border">
+                  <DotLoader />
+                </div>
+              </div>
+              <div>
+                <label>Bug Count:</label>
+                <div class="input-border">
+                  <DotLoader />
+                </div>
+              </div>
+              <div>
+                <label>Bug %:</label>
+                <div class="input-border">
+                  <DotLoader />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal Footer -->
+  <div class="px-4 py-2 border-t h-fit flex justify-between">
+    <div class="flex justify-start">
+      <button id="closeModalFooter" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 mr-2">
+        <div class='px-1.5 py-1 flex space-x-1 justify-center items-center bg-gray-500 dark:invert'>
+          <div class='h-2 w-2 bg-white rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+          <div class='h-2 w-2 bg-white rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+          <div class='h-2 w-2 bg-white rounded-full animate-bounce'></div>
+        </div>
+      </button>
+      <button>
+        <div class='px-1.5 py-1 flex space-x-1 justify-center items-center dark:invert'>
+          <div class='h-2 w-2 bg-black rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+          <div class='h-2 w-2 bg-black rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+          <div class='h-2 w-2 bg-black rounded-full animate-bounce'></div>
+        </div>
+      </button>
+    </div>
+    <div class="flex justify-end">
+      <button type="submit" class="bg-[#7e44eb] text-white px-4 py-2 rounded hover:bg-blue-600">
+        <div class='px-1.5 py-1 flex space-x-1 justify-center items-center bg-[#7e44eb] dark:invert'>
+          <div class='h-2 w-2 bg-white rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+          <div class='h-2 w-2 bg-white rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+          <div class='h-2 w-2 bg-white rounded-full animate-bounce'></div>
+        </div>
+      </button>
+    </div>
+  </div>
+
+</div>

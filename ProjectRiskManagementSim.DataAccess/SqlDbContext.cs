@@ -112,7 +112,7 @@ public class OxygenSimulationContext : DbContext
     {
         return await ProjectModel.ToListAsync();
     }
-    public ProjectModel? GetProjectByIdAsync(string jiraId)
+    public ProjectModel? GetProjectById(string jiraId)
     {
         // Check if the project already exists in the database
         var project = ProjectModel

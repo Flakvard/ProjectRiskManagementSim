@@ -67,6 +67,7 @@
   .htmx-request.sensitivityAnalysis {
       display: none;
   }
+
   .staff-indicator{
     display: none;
   }
@@ -86,4 +87,24 @@
   .htmx-request.staffAnalysis {
       display: none;
   }
+
+  .modal-indicator{
+    display: none;
+  }
+  .htmx-request .modal-indicator {
+      display: block;
+  }
+
+  .htmx-request.modal-indicator {
+      display: block;
+  }
+  /* Hide previously loaded content during HTMX request */
+  .htmx-request .modal {
+      display: none;
+  }
+
+  .htmx-request.modal {
+      display: none;
+  }
+
 }

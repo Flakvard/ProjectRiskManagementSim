@@ -225,7 +225,7 @@ public static class PageRoutes
             double targetDays = targetTimeSpan.Days;
 
             // Check if the project already exists in the database
-            var existingProject = _context.GetProjectByIdAsync(jiraId);
+            var existingProject = _context.GetProjectById(jiraId);
             if (existingProject == null)
             {
                 ProjectModel projectModel = new ProjectModel
@@ -336,7 +336,7 @@ public static class PageRoutes
                 existingProject.ProjectSimulationModels.Add(projectSimulationModel);
 
                 // Save all changes at once
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
 
             // Prepare simulation result HTML to return

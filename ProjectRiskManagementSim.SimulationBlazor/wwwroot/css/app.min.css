@@ -678,6 +678,28 @@ video {
   display: none;
 }
 
+.modal-indicator{
+  display: none;
+}
+
+.htmx-request .modal-indicator {
+  display: block;
+}
+
+.htmx-request.modal-indicator {
+  display: block;
+}
+
+/* Hide previously loaded content during HTMX request */
+
+.htmx-request .modal {
+  display: none;
+}
+
+.htmx-request.modal {
+  display: none;
+}
+
 .pointer-events-none {
   pointer-events: none;
 }
@@ -882,6 +904,10 @@ video {
   height: 100%;
 }
 
+.h-8 {
+  height: 2rem;
+}
+
 .max-h-\[300px\] {
   max-height: 300px;
 }
@@ -1029,6 +1055,10 @@ video {
 
 .w-full {
   width: 100%;
+}
+
+.w-8 {
+  width: 2rem;
 }
 
 .min-w-full {

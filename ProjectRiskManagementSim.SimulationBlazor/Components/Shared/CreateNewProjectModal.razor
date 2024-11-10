@@ -2,7 +2,6 @@
 @using ProjectRiskManagementSim.DataAccess
 @inject OxygenAnalyticsContext Context;
 
-
 <form class="bg-white rounded-lg shadow-lg w-1/3 h-5/6 flex flex-col" id="start-simulation-form"
       hx-post="/create-simulation" hx-target="#simulation-result" hx-swap="innerHTML">
 
@@ -454,16 +453,19 @@
             </button>
         </div>
         <div class="flex justify-end">
-            <button type="submit" class="bg-[#7e44eb] text-white px-4 py-2 rounded hover:bg-blue-600">
+            <button type="submit" hx-indicator="#spinner" class="bg-[#7e44eb] flex gap-2 text-white px-4 py-2 rounded hover:bg-blue-600">
                 <div id="simulation-result">Save changes</div>
+                <div id="spinner" class="htmx-indicator inline-block h-6 w-6 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-neutral-50 motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                     role="status">
+                    <span class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Loading...</span>
+                </div>
             </button>
+
         </div>
     </div>
 </form>
 
-
 @code {
-
     [Parameter] public int ProjectId { get; set; }
     public CreateNewProjectHandler NewProjectHandler { get; set; } = new CreateNewProjectHandler();
     protected override async Task OnInitializedAsync()
