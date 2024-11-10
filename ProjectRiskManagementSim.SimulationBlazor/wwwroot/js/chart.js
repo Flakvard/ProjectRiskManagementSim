@@ -1,6 +1,6 @@
 document.body.addEventListener("apexCharts", function(evt){
-var chart = new ApexCharts(document.querySelector("#chart"), options);
-chart.render();
+    var chart = new ApexCharts(document.querySelector("#chart"), options);
+    chart.render();
     console.log("ApexCharts event fired");
 })
 // Purpose: To create a chart that displays the SimDate and TargetDate

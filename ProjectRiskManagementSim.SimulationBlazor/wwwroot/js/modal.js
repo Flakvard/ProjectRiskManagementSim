@@ -47,16 +47,9 @@ document.addEventListener('htmx:afterSettle', (event) => {
     initializeModal();
   }
 });
-// Attach the event listener for HTMX afterSwap event
-document.addEventListener('htmx:afterRequest', (event) => {
-  if (event.detail.target.id === 'modal') {
-    initializeModal();
-  }
-});
 
 document.body.addEventListener("initializeModal", function(evt){
     initializeModal();
-    console.log("initializeModal event fired");
 })
 
 
