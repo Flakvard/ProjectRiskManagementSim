@@ -224,6 +224,8 @@ public static class PageRoutes
             var targetTimeSpan = targetDate - startDate;
             double targetDays = targetTimeSpan.Days;
 
+            int simIdFromDb = 0; // Access the ID for later use
+
             // Check if the project already exists in the database
             var existingProject = _context.GetProjectById(jiraId);
             if (existingProject == null)
@@ -286,6 +288,7 @@ public static class PageRoutes
 
                 // Save all changes at once
                 _context.SaveChanges();
+                simIdFromDb = projectSimulationModel.Id;
             }
             else if (existingProject != null)
             {
@@ -337,10 +340,18 @@ public static class PageRoutes
 
                 // Save all changes at once
                 await _context.SaveChangesAsync();
+                simIdFromDb = projectSimulationModel.Id;
             }
-
             // Prepare simulation result HTML to return
-            var htmlContent = $@"Saved!";
+            var htmlContent = $@"
+                  <div id='simulation-dashboar-result'  class='flex justify-end'>
+                    <button class='bg-[#7e44eb] flex gap-2 text-white px-4 py-2 rounded hover:bg-red-400'>
+                      <a href='/dashboard/{simIdFromDb.ToString()}'>
+                        <div >Open Dashboard</div>
+                      </a>
+                    </button>
+                  </div>
+                  ";
             return Results.Content(htmlContent, "text/html");
         });
 
