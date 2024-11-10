@@ -105,7 +105,7 @@ public class ListSensitivityAnalysis
 public class SensitivityAnalysis
 {
     public int Priority { get; set; }
-    public string SensitivityName { get; set; }
+    public string SensitivityName { get; set; } = null!;
     public double Days { get; set; }
-    public string EndDate { get; set; }
+    public string EndDate { get; set; } = null!;
 }

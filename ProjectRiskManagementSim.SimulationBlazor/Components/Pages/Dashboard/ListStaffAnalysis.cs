@@ -19,16 +19,29 @@ public class ListStaffAnalysis
 
     private void LoadStaffAnalysis()
     {
-        StaffAnalysisList.Add(new StaffAnalysis { Priority = 1, StaffName = "None", Days = 0 });
-        StaffAnalysisList.Add(new StaffAnalysis { Priority = 2, StaffName = "None", Days = 0 });
-        StaffAnalysisList.Add(new StaffAnalysis { Priority = 3, StaffName = "None", Days = 0 });
-        StaffAnalysisList.Add(new StaffAnalysis { Priority = 4, StaffName = "None", Days = 0 });
-        StaffAnalysisList.Add(new StaffAnalysis { Priority = 5, StaffName = "None", Days = 0 });
+        StaffAnalysisList.Add(new StaffAnalysis { Priority = 1, StaffName = "None", Days = 0, EndDate = "None" });
+        StaffAnalysisList.Add(new StaffAnalysis { Priority = 2, StaffName = "None", Days = 0, EndDate = "None" });
+        StaffAnalysisList.Add(new StaffAnalysis { Priority = 3, StaffName = "None", Days = 0, EndDate = "None" });
+        StaffAnalysisList.Add(new StaffAnalysis { Priority = 4, StaffName = "None", Days = 0, EndDate = "None" });
+        StaffAnalysisList.Add(new StaffAnalysis { Priority = 5, StaffName = "None", Days = 0, EndDate = "None" });
     }
     public ListStaffAnalysis(ProjectSimulationModel? simulation, IMonteCarloSimulation monteCarloSimulation)
     {
-        StaffAnalysisList = new List<StaffAnalysis>();
-        LoadStaffAnalysis();
+        if (simulation != null && simulation!.StaffAnalyses.Count > 0)
+        {
+            StaffAnalysisList = simulation.StaffAnalyses.Select(s => new StaffAnalysis
+            {
+                Priority = s.Priority,
+                StaffName = s.StaffName,
+                Days = s.Days,
+                EndDate = s.EndDate
+            }).ToList();
+        }
+        else
+        {
+            StaffAnalysisList = new List<StaffAnalysis>();
+            LoadStaffAnalysis();
+        }
         Simulation = simulation;
         MonteCarloSimulation = monteCarloSimulation;
     }
@@ -46,6 +59,32 @@ public class ListStaffAnalysis
         WipAnalysis = MonteCarloSimulation.WipAnalysis;
 
         UpdateStaffAnalysis();
+        // Add or Update the StaffAnalyses in database
+        if (Simulation != null)
+        {
+            Simulation.StaffAnalyses = StaffAnalysisList.Select(s => new StaffAnalysisModel
+            {
+                Priority = s.Priority,
+                StaffName = s.StaffName,
+                Days = s.Days,
+                EndDate = s.EndDate,
+
+            }).ToList();
+            await context.UpdateSimulationAsync(Simulation);
+        }
+        else
+        {
+            var staffAnalyses = StaffAnalysisList.Select(s => new StaffAnalysisModel
+            {
+                Priority = s.Priority,
+                StaffName = s.StaffName,
+                Days = s.Days,
+                EndDate = s.EndDate,
+                ProjectSimulationModelId = Simulation!.Id
+            }).ToList();
+            context.StaffAnalysisModel.AddRange(staffAnalyses);
+        }
+
     }
     public void UpdateStaffAnalysis()
     {
@@ -56,13 +95,16 @@ public class ListStaffAnalysis
             var staffName = WipAnalysis![i].Item1;
             var days = WipAnalysis[i].Item2;
             var staffPriority = i;
-            StaffAnalysisList.Add(new StaffAnalysis { Priority = staffPriority, StaffName = staffName, Days = days });
+            DateTime listOfEndDays = listOfEndDays = Simulation!.StartDate.AddDays(days);
+            var endDate = listOfEndDays.ToString("dd MMM yyyy");
+            StaffAnalysisList.Add(new StaffAnalysis { Priority = staffPriority, StaffName = staffName, Days = days, EndDate = endDate });
         }
     }
 }
 public class StaffAnalysis
 {
     public int Priority { get; set; }
-    public string StaffName { get; set; }
+    public string StaffName { get; set; } = null!;
     public double Days { get; set; }
+    public string EndDate { get; set; } = null!;
 }
