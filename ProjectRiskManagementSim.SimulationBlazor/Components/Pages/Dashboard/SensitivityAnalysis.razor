@@ -25,87 +25,31 @@
           <RunSimButton />
         </div>
       </div>
-      <div
-        class="Table self-stretch grow shrink basis-0 bg-white rounded border border-[#b9b9b9] flex-col justify-start items-start flex">
-        <div class="Row self-stretch justify-center items-start inline-flex">
-          <div
-            class="Cell grow shrink basis-0 self-stretch bg-[#7e44eb] border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-            <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
-              <div
-                class="Text grow shrink basis-0 text-center text-white text-sm font-semibold font-['Outfit'] leading-[18.20px]">
-                #
-              </div>
-            </div>
-          </div>
-          <div
-            class="Cell grow shrink basis-0 self-stretch bg-[#7e44eb] border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-            <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
-              <div
-                class="Text grow shrink basis-0 text-center text-white text-sm font-semibold font-['Outfit'] leading-[18.20px]">
-                Priority
-              </div>
-            </div>
-          </div>
-          <div
-            class="Cell grow shrink basis-0 self-stretch bg-[#7e44eb] border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-            <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
-              <div
-                class="Text grow shrink basis-0 text-center text-white text-sm font-semibold font-['Outfit'] leading-[18.20px]">
-                Days
-              </div>
-            </div>
-          </div>
-          <div
-            class="Cell grow shrink basis-0 self-stretch bg-[#7e44eb] border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex">
-            <div class="Content self-stretch px-3 py-2.5 justify-center items-start inline-flex">
-              <div
-                class="Text grow shrink basis-0 text-center text-white text-sm font-semibold font-['Outfit'] leading-[18.20px]">
-                End Date
-              </div>
-            </div>
-          </div>
-        </div>
-        @foreach (var result in listSensitivityAnalysis.SensitivityAnalysisList)
-        {
-        <div class="Row self-stretch justify-start items-start inline-flex">
-          <div
-            class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
-            <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-              <div
-                class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-                @result.Priority
-              </div>
-            </div>
-          </div>
-          <div
-            class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
-            <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-              <div
-                class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-                @result.SensitivityName
-              </div>
-            </div>
-          </div>
-          <div
-            class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
-            <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-              <div
-                class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-                @result.Days
-              </div>
-            </div>
-          </div>
-          <div
-            class="Cell grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-start items-start inline-flex">
-            <div class="Content self-stretch px-3 py-2.5 justify-start items-start inline-flex">
-              <div
-                class="Text grow shrink basis-0 text-center text-black text-xs font-normal font-['Inter'] leading-none">
-                @result.EndDate
-              </div>
-            </div>
-          </div>
-        </div>
-        }
+      <div class="overflow-auto h-52 border border-[#b9b9b9] rounded">
+        <table class="min-w-full bg-white">
+          <!-- Table Header -->
+          <thead class="sticky top-0 bg-[#7e44eb] text-white font-['Outfit'] font-semibold text-sm tracking-wider">
+            <tr>
+              <th class="py-2 px-3 border-b border-[#b9b9b9] text-center">#</th>
+              <th class="py-2 px-3 border-b border-[#b9b9b9] text-center">Priority</th>
+              <th class="py-2 px-3 border-b border-[#b9b9b9] text-center">Days</th>
+              <th class="py-2 px-3 border-b border-[#b9b9b9] text-center">End Date</th>
+            </tr>
+          </thead>
+
+          <!-- Table Body with Scrollable Rows -->
+          <tbody class="text-xs font-['Inter'] text-black">
+            @foreach (var result in listSensitivityAnalysis.SensitivityAnalysisList)
+            {
+            <tr class="odd:bg-white even:bg-gray-100">
+              <td class="py-2 px-3 border-b border-[#b9b9b9] text-center">@result.Priority</td>
+              <td class="py-2 px-3 border-b border-[#b9b9b9] text-center">@result.SensitivityName</td>
+              <td class="py-2 px-3 border-b border-[#b9b9b9] text-center">@result.Days</td>
+              <td class="py-2 px-3 border-b border-[#b9b9b9] text-center">@result.EndDate</td>
+            </tr>
+            }
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
