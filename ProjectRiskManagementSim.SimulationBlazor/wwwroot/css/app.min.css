@@ -882,10 +882,6 @@ video {
   height: 100%;
 }
 
-.h-52 {
-  height: 13rem;
-}
-
 .max-h-\[300px\] {
   max-height: 300px;
 }
@@ -1220,12 +1216,6 @@ video {
 
 .overflow-y-auto {
   overflow-y: auto;
-}
-
-.truncate {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .\!whitespace-nowrap {
