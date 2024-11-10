@@ -9,6 +9,7 @@ public class ForecastModel
     public string EndDate { get; set; } = null!;
     public int Days { get; set; }
     public string Cost { get; set; } = null!;
+    public double DaysDelay { get; set; }
     public string CostOfDelay { get; set; } = null!;
 
     // Foreign key

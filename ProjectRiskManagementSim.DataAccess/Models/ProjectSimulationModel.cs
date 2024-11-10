@@ -32,6 +32,7 @@ public class ProjectSimulationModel
     public double? ActualDays { get; set; }
     public double TargetDays { get; set; }
     public double? SimulationDays { get; set; }
+    public double? SimulationDaysOfDelay { get; set; }
 
     public double? ActualHours { get; set; }
 
