@@ -13,7 +13,8 @@
       <div class="flex">
         <div class="StaffAnalysisSection self-stretch px-[30px] py-px justify-center items-center gap-2.5 inline-flex">
           <div class="StaffAnalysisHeader text-white text-xl font-semibold font-['Outfit'] capitalize tracking-wider">
-            Staff analysis</div>
+            Staff analysis
+          </div>
         </div>
         <div class="flex p-1" hx-trigger="click" hx-indicator=".staff-indicator,.staffAnalysis"
           hx-put="/dashboard/@ProjectSimulationId/staff-analysis" hx-target="#staffAnalysis" hx-swap="OuterHTML"
@@ -21,31 +22,37 @@
           <RunSimButton />
         </div>
       </div>
-      <div class="overflow-auto w-full h-full border border-[#b9b9b9] rounded">
-        <table class="min-w-full bg-white">
-          <!-- Table Header -->
-          <thead class="sticky top-0 bg-[#7e44eb] text-white font-['Outfit'] font-semibold text-sm tracking-wider">
-            <tr>
-              <th class="py-2 px-3 border-b border-[#b9b9b9] text-center">#</th>
-              <th class="py-2 px-3 border-b border-[#b9b9b9] text-center">Priority</th>
-              <th class="py-2 px-3 border-b border-[#b9b9b9] text-center">Days</th>
-              <th class="py-2 px-3 border-b border-[#b9b9b9] text-center">End Date</th>
-            </tr>
-          </thead>
+      <div class="min-w-full border border-[#b9b9b9] rounded">
+        <div class="overflow-auto">
 
-          <!-- Table Body with Scrollable Rows -->
-          <tbody class="text-xs font-['Inter'] text-black">
-            @foreach (var result in listStaffAnalysis.StaffAnalysisList)
-            {
-            <tr class="odd:bg-white even:bg-gray-100">
-              <td class="py-2 px-3 border-b border-[#b9b9b9] text-center">@result.Priority</td>
-              <td class="py-2 px-3 border-b border-[#b9b9b9] text-center">@result.StaffName</td>
-              <td class="py-2 px-3 border-b border-[#b9b9b9] text-center">@result.Days</td>
-              <td class="py-2 px-3 border-b border-[#b9b9b9] text-center">@result.EndDate</td>
-            </tr>
-            }
-          </tbody>
-        </table>
+
+          <table class="min-w-full min-h-full bg-white">
+            <!-- Table Header -->
+            <thead class="sticky top-0 bg-[#7e44eb] text-white font-['Outfit'] font-semibold text-sm tracking-wider">
+              <tr>
+                <th class="py-2 px-3 border-b border-[#b9b9b9] text-center">#</th>
+                <th class="py-2 px-3 border-b border-[#b9b9b9] text-center">Priority</th>
+                <th class="py-2 px-3 border-b border-[#b9b9b9] text-center">Days</th>
+                <th class="py-2 px-3 border-b border-[#b9b9b9] text-center">End Date</th>
+              </tr>
+            </thead>
+
+            <!-- Table Body with Scrollable Rows -->
+            <tbody class="overflow-auto max-h-[200px] text-xs font-['Inter'] text-black">
+              @foreach (var result in listStaffAnalysis.StaffAnalysisList)
+              {
+              <tr class="odd:bg-white even:bg-gray-100">
+                <td class="py-2 px-3 border-b border-[#b9b9b9] text-center">@result.Priority</td>
+                <td class="py-2 px-3 border-b border-[#b9b9b9] text-center">@result.StaffName</td>
+                <td class="py-2 px-3 border-b border-[#b9b9b9] text-center">@result.Days</td>
+                <td class="py-2 px-3 border-b border-[#b9b9b9] text-center">@result.EndDate</td>
+              </tr>
+              }
+            </tbody>
+
+
+          </table>
+        </div>
       </div>
     </div>
   </div>
