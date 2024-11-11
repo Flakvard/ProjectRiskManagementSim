@@ -121,16 +121,27 @@
     <div class="DevelopersValue text-right text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
       @if (@Simulation != null)
       {
-      var back = @Simulation.BackendDevs;
-      var front = @Simulation.FrontendDevs;
-      var testers = @Simulation.Testers;
-      var total = back + front + testers;
-      @total
+        @TotalDevelopers.ToString();
       }
     </div>
   </div>
 </div>
 @code {
-[Parameter] public ProjectSimulationModel Simulation { get; set; }
-[Parameter] public ProjectModel Project { get; set; }
+    [Parameter] public ProjectSimulationModel Simulation { get; set; }
+    [Parameter] public ProjectModel Project { get; set; }
+    public double TotalDevelopers { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (@Simulation != null)
+        {
+            var back = @Simulation.BackendDevs;
+            var front = @Simulation.FrontendDevs;
+            var testers = @Simulation.Testers;
+            var total = back + front + testers;
+            TotalDevelopers = total;
+        }
+        
+    }
+
 }

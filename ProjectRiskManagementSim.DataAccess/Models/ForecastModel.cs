@@ -6,11 +6,11 @@ public class ForecastModel
     [Key]
     public int Id { get; set; }
     public string Percentage { get; set; } = null!;
-    public string EndDate { get; set; } = null!;
+    public DateTime EndDate { get; set; }
     public int Days { get; set; }
-    public string Cost { get; set; } = null!;
+    public double Cost { get; set; }
     public double DaysDelay { get; set; }
-    public string CostOfDelay { get; set; } = null!;
+    public double CostOfDelay { get; set; }
 
     // Foreign key
     public int ProjectSimulationModelId { get; set; }
