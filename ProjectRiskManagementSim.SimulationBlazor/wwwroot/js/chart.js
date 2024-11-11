@@ -33,7 +33,10 @@ function optionFactory(newData) {
             id: "chart",
             type: 'line',
             height: '100%',
-            width: '100%'
+            width: '100%',
+            animations: {
+              enabled: false,
+            }
         },
         series: [
             {
