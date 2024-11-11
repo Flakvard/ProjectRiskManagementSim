@@ -7,8 +7,6 @@ public class CreateNewProjectHandler
     public string? Name { get; set; }
     public string? ProjectCategory { get; set; }
     public string? Manager { get; set; }
-    public DateTime? StartDate { get; set; }
-    public DateTime? EndDate { get; set; }
     public string? JiraId { get; set; }
     public string? JiraProjectId { get; set; }
     public List<IssueLeadTime>? IssueLeadTimes { get; set; }
@@ -48,40 +46,107 @@ public class CreateNewProjectHandler
     public List<double> AwaitingRefinementPercentiles { get; set; } = new List<double> { 0, 0 };
     public List<double> OnHoldPercentiles { get; set; } = new List<double> { 0, 0 };
     public List<double> CreatedPercentiles { get; set; } = new List<double> { 0, 0 };
+
+    public DateTime StartDate { get; set; } = new DateTime();
+    public DateTime? SimEndDate { get; set; }
+    public DateTime? TargetDate { get; set; } = new DateTime();
     public List<IssueModel> Issues { get; set; } = new List<IssueModel>();
     public double TotalHours { get; set; }
     public double TotalCost { get; set; }
     public double TotalRevenue { get; set; }
     public DateTime FirstIssueDate { get; set; }
     public DateTime LastIssueDate { get; set; }
+    public double? ActualRevenue { get; private set; }
+    public double? BudgetCosts { get; private set; }
+    public double? ActualCosts { get; private set; }
+    public double? SimulationCosts { get; private set; }
+    public double? CostPrDay { get; private set; }
+    public double FrontendDevs { get; private set; }
+    public double BackendDevs { get; private set; }
+    public double Testers { get; private set; }
+    public double? ActualDays { get; private set; }
+    public double TargetDays { get; private set; }
+    public double? SimulationDays { get; private set; }
+    public double? SimulationDaysOfDelay { get; private set; }
+    public double? ActualHours { get; private set; }
+    public DateTime CreatedAt { get; private set; }
+    public DateTime UpdatedAt { get; private set; }
+    public double DeliverablesCount { get; private set; }
+    public double PercentageLowBound { get; private set; }
+    public double PercentageHighBound { get; private set; }
 
-
-    public async Task InitializeProjectsAsync(OxygenAnalyticsContext context)
+    public async Task InitializeProjectsAsync(OxygenAnalyticsContext context, OxygenSimulationContext context1)
     {
-        await FetchProjectInfo(context);
+        await FetchProjectInfo(context, context1);
     }
-    private async Task FetchProjectInfo(OxygenAnalyticsContext context)
+    private async Task FetchProjectInfo(OxygenAnalyticsContext contextAnalytics, OxygenSimulationContext contextSimulation)
     {
         // var projects = await context.Projects.ToListAsync();
-        var project = await context.GetProjectByIdAsync(ProjectId);
+        var project = await contextAnalytics.GetProjectByIdAsync(ProjectId);
         if (project == null)
         {
             // Handle the case where the project is not found
             throw new InvalidOperationException($"Project with ID {ProjectId} not found.");
         }
-        Name = project.Name;
-        ProjectCategory = project.ProjectCategory;
-        JiraId = project.JiraId;
-        JiraProjectId = project.JiraProjectId;
-        IssueLeadTimes = await context.GetIssueLeadTimesByProjectAsync(project.Name);
-        if (IssueLeadTimes == null || IssueLeadTimes.Count == 0)
+        var simProject = contextSimulation.GetProjectById(project.JiraId);
+        if (simProject == null)
         {
-            IssueLeadTimes = new List<IssueLeadTime>(); // Ensure it’s an empty list instead of null
+            Name = project.Name;
+            ProjectCategory = project.ProjectCategory;
+            JiraId = project.JiraId;
+            JiraProjectId = project.JiraProjectId;
+            IssueLeadTimes = await contextAnalytics.GetIssueLeadTimesByProjectAsync(project.Name);
+            if (IssueLeadTimes == null || IssueLeadTimes.Count == 0)
+            {
+                IssueLeadTimes = new List<IssueLeadTime>(); // Ensure it’s an empty list instead of null
+            }
+
+            await CalculateCount(contextAnalytics);
+
+            CalculatePercentiles();
         }
+        else
+        {
+            // map the last inserted simualtion to the CreateNewProjectHandler
+            var listOfSimProject = await contextSimulation.GetProjectSimulationsAsync(simProject.Id);
+            ProjectSimulationModel lastSimProject = listOfSimProject.Last();
+            // Map to CreateNewProjectHandler
+            ProjectId = project.Id;
+            Name = project.Name;
+            ProjectCategory = project.ProjectCategory;
+            StartDate = lastSimProject.StartDate;
+            TargetDate = lastSimProject.TargetDate;
+            JiraId = project.JiraId;
+            JiraProjectId = project.JiraProjectId;
+            ActualRevenue = lastSimProject.ActualRevenue;
+            BudgetCosts = lastSimProject.BudgetCosts;
+            ActualCosts = lastSimProject.ActualCosts;
+            SimulationCosts = lastSimProject.SimulationCosts;
+            CostPrDay = lastSimProject.CostPrDay;
+            FrontendDevs = lastSimProject.FrontendDevs;
+            BackendDevs = lastSimProject.BackendDevs;
+            Testers = lastSimProject.Testers;
+            ActualDays = lastSimProject.ActualDays;
+            TargetDays = lastSimProject.TargetDays;
+            SimulationDays = lastSimProject.SimulationDays;
+            SimulationDaysOfDelay = lastSimProject.SimulationDaysOfDelay;
+            ActualHours = lastSimProject.ActualHours;
+            CreatedAt = lastSimProject.CreatedAt;
+            UpdatedAt = lastSimProject.UpdatedAt;
+            DeliverablesCount = lastSimProject.DeliverablesCount;
+            IssuesCount = (int)lastSimProject.IssueCount;
+            PercentageLowBound = lastSimProject.PercentageLowBound;
+            PercentageHighBound = lastSimProject.PercentageHighBound;
 
-        await CalculateCount(context);
+            EpicCount = (int)lastSimProject.DeliverablesCount;
+            IssuesDoneCount = (int)lastSimProject.IssueDoneCount;
+            BugCount = (int)lastSimProject.BugCount;
+            BugPercentage = lastSimProject.BugPercentage;
 
-        CalculatePercentiles();
+            // Map the last inserted simulation to the CreateNewProjectHandler
+
+
+        }
     }
     private async Task CalculateCount(OxygenAnalyticsContext context)
     {

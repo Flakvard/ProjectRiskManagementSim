@@ -1,9 +1,10 @@
 @page "/create-new-project-modal/{projectId:int}"
 @using ProjectRiskManagementSim.DataAccess
-@inject OxygenAnalyticsContext Context;
+@inject OxygenAnalyticsContext AnalyticsContext;
+@inject OxygenSimulationContext SimContext;
 
 <form class="bg-white rounded-lg shadow-lg w-1/3 h-5/6 flex flex-col" id="start-simulation-form"
-      hx-post="/create-simulation" hx-target="#simulation-result" hx-swap="innerHTML">
+      hx-post="/create-simulation" hx-target="#simulation-result" hx-swap="outerHTML">
 
     <!-- Modal Header -->
     <div class="px-4 py-2 bg-[#7e44eb] rounded-t-lg flex justify-between items-center border-b">
@@ -48,23 +49,23 @@
                         </div>
                         <div>
                             <label>Target Date:</label>
-                            <input class="input-border" type="date" name="TargetDate" required />
+                            <input class="input-border" type="date" name="TargetDate" required value="@NewProjectHandler.LastIssueDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)" />
                         </div>
                         <div>
                             <label>Budget:</label>
-                            <input class="input-border" type="number" name="Budget" value="0" required />
+                            <input class="input-border" type="number" name="Budget" value="@NewProjectHandler.BudgetCosts" required />
                         </div>
                         <div>
                             <label>BackendDevs:</label>
-                            <input class="input-border" type="number" name="BackendDevs" value="0" required />
+                            <input class="input-border" type="number" name="BackendDevs" value="@NewProjectHandler.BackendDevs" required />
                         </div>
                         <div>
                             <label>FrontendDevs:</label>
-                            <input class="input-border" type="number" name="FrontendDevs" value="0" required />
+                            <input class="input-border" type="number" name="FrontendDevs" value="@NewProjectHandler.FrontendDevs" required />
                         </div>
                         <div>
                             <label>Testers:</label>
-                            <input class="input-border" type="number" name="Testers" value="0" required />
+                            <input class="input-border" type="number" name="Testers" value="@NewProjectHandler.Testers" required />
                         </div>
                         <div class="hidden">
                             <label>Revenue Amount:</label>
@@ -447,13 +448,13 @@
             <button id="closeModalFooter" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 mr-2">
                 Close
             </button>
-            <button type="submit" class="bg-[#7e44eb] text-white px-4 py-2 rounded hover:bg-blue-600" hx-put="/select-project"
-                    hx-vals='{ "Open": true }' hx-target="#modal" hx-swap="innerHTML" hx-replace-url="true">
+            <button type="submit" class="bg-[#7e44eb] text-white px-4 py-2 rounded hover:bg-red-400" hx-put="/select-project"
+                    hx-vals='{ "Open": true }' hx-target="#modal" hx-swap="innerHTML">
                 Back
             </button>
         </div>
         <div class="flex justify-end">
-            <button type="submit" hx-indicator="#spinner" class="bg-[#7e44eb] flex gap-2 text-white px-4 py-2 rounded hover:bg-blue-600">
+            <button type="submit" hx-indicator="#spinner" class="bg-[#7e44eb] flex gap-2 text-white px-4 py-2 rounded hover:bg-red-400">
                 <div id="simulation-result">Save changes</div>
                 <div id="spinner" class="htmx-indicator inline-block h-6 w-6 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-neutral-50 motion-reduce:animate-[spin_1.5s_linear_infinite]"
                      role="status">
@@ -471,6 +472,6 @@
     protected override async Task OnInitializedAsync()
     {
         NewProjectHandler.ProjectId = ProjectId;
-        await NewProjectHandler.InitializeProjectsAsync(Context);
+        await NewProjectHandler.InitializeProjectsAsync(AnalyticsContext, SimContext);
     }
 }
