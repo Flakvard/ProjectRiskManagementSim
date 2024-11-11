@@ -118,9 +118,9 @@ public class CreateNewProjectHandler
             TargetDate = lastSimProject.TargetDate;
             JiraId = project.JiraId;
             JiraProjectId = project.JiraProjectId;
-            ActualRevenue = lastSimProject.ActualRevenue;
+            TotalRevenue = (double)lastSimProject.ActualRevenue;
             BudgetCosts = lastSimProject.BudgetCosts;
-            ActualCosts = lastSimProject.ActualCosts;
+            TotalCost = (double)lastSimProject.ActualCosts;
             SimulationCosts = lastSimProject.SimulationCosts;
             CostPrDay = lastSimProject.CostPrDay;
             FrontendDevs = lastSimProject.FrontendDevs;
@@ -145,6 +145,18 @@ public class CreateNewProjectHandler
 
             // Map the last inserted simulation to the CreateNewProjectHandler
 
+            var projectLowBound = lastSimProject.Columns.Select(x => x.EstimatedLowBound).ToList();
+            var projectHighBound = lastSimProject.Columns.Select(x => x.EstimatedHighBound).ToList();
+            BacklogPercentiles = new List<double> { projectLowBound[0], projectHighBound[0] };
+            OpenPercentiles = new List<double> { projectLowBound[1], projectHighBound[1] };
+            InProgressPercentiles = new List<double> { projectLowBound[2], projectHighBound[2] };
+            AwaitingCustomerPercentiles = new List<double> { projectLowBound[3], projectHighBound[3] };
+            FinishedPercentiles = new List<double> { projectLowBound[4], projectHighBound[4] };
+            ReadyForTestOnStagePercentiles = new List<double> { projectLowBound[5], projectHighBound[5] };
+            TestingOnStagePercentiles = new List<double> { projectLowBound[6], projectHighBound[6] };
+            WaitingForDeploymentToProductionPercentiles = new List<double> { projectLowBound[7], projectHighBound[7] };
+            ReadyToTestOnProductionPercentiles = new List<double> { projectLowBound[8], projectHighBound[8] };
+            DonePercentiles = new List<double> { projectLowBound[9], projectHighBound[9] };
 
         }
     }
@@ -193,6 +205,7 @@ public class CreateNewProjectHandler
             if (FirstIssueDate == DateTime.MinValue || issueCreatedDate < FirstIssueDate)
             {
                 FirstIssueDate = issueCreatedDate;
+                StartDate = issueCreatedDate;
             }
             var issueUpdatedDate = new DateTime();
             if (issueLeadTime.LastUpdated != null)

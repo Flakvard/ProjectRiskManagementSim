@@ -41,16 +41,26 @@
                         </div>
                         <div>
                             <label>Start Date:</label>
-                            <input class="input-border" type="date" name="StartDate" required value="@NewProjectHandler.FirstIssueDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)" />
+                            <input class="input-border" type="date" name="StartDate" required value="@NewProjectHandler.StartDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)" />
                         </div>
                         <div class="hidden">
                             <label>Last Updated Date:</label>
                             <input class="input-border" type="date" name="LastDate" required value="@NewProjectHandler.LastIssueDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)" />
                         </div>
-                        <div>
-                            <label>Target Date:</label>
-                            <input class="input-border" type="date" name="TargetDate" required value="@NewProjectHandler.LastIssueDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)" />
-                        </div>
+                        @if (@NewProjectHandler.TargetDate != null)
+                        {
+                            <div>
+                                <label>Target Date:</label>
+                                <input class="input-border" type="date" name="TargetDate" required value="@NewProjectHandler.TargetDate?.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)" />
+                            </div>
+                        }
+                        else
+                        {
+                            <div>
+                                <label>Target Date:</label>
+                                <input class="input-border" type="date" name="TargetDate" required/>
+                            </div>
+                        }
                         <div>
                             <label>Budget:</label>
                             <input class="input-border" type="number" name="Budget" value="@NewProjectHandler.BudgetCosts" required />
@@ -67,17 +77,17 @@
                             <label>Testers:</label>
                             <input class="input-border" type="number" name="Testers" value="@NewProjectHandler.Testers" required />
                         </div>
-                        <div class="hidden">
+                        <div class="">
                             <label>Revenue Amount:</label>
                             <input class="input-border" type="number" name="RevenueAmount"
                                    value="@double.Round(NewProjectHandler.TotalRevenue)" required />
                         </div>
-                        <div class="hidden">
+                        <div class="">
                             <label>Cost:</label>
                             <input class="input-border" type="number" name="Cost" value="@double.Round(NewProjectHandler.TotalCost)"
                                    required />
                         </div>
-                        <div class="hidden">
+                        <div class="">
                             <label>Hours:</label>
                             <input class="input-border" type="number" name="hours" value="@double.Round(NewProjectHandler.TotalHours)"
                                    required />

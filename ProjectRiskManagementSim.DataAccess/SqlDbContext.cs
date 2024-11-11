@@ -124,6 +124,7 @@ public class OxygenSimulationContext : DbContext
     {
         return await ProjectSimulationModel
             .Include(p => p.Project)
+            .Include(p => p.Columns)
             .Where(ps => ps.ProjectId == projectId)
             .ToListAsync();
     }
