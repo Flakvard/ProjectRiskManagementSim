@@ -54,8 +54,7 @@
     <div class="EndDateValue text-right text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
       @if (@Simulation != null && @Simulation.SimEndDate != null)
       {
-      var date = (DateTime)@Simulation.SimEndDate;
-      @date.ToShortDateString()
+        @Simulation.SimEndDate?.ToShortDateString()
       ;
       }
     </div>
