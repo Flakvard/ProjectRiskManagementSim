@@ -14,6 +14,7 @@ public class ListForeCastAnalysis
     public IMonteCarloSimulation? MonteCarloSimulation { get; set; }
     public Guid SimulationId { get; set; }
     public SimResultsModel? SimulationResults { get; set; }
+    public List<ForecastModel?> Forecasts { get; set; }
     public ListForeCastAnalysis(ProjectSimulationModel? simulation, IMonteCarloSimulation monteCarloSimulation)
     {
         Simulation = simulation;
@@ -67,14 +68,14 @@ public class ListForeCastAnalysis
         var simForecast = Simulation!.Forecasts.ToList();
         if (simForecast.Count == 0)
         {
-            var forecasts = ForecastAnalysis.Select(f => new ForecastModel
+            var forecasts = Forecasts.Select(f => new ForecastModel
             {
-                Percentage = f.Percentage,
-                EndDate = string.IsNullOrWhiteSpace(f.EndDate) ? new DateTime() : DateTime.ParseExact(f.EndDate, "dd MMM yyyy", CultureInfo.InvariantCulture),
+                Percentage = f!.Percentage,
+                EndDate = f.EndDate,
                 Days = f.Days,
-                Cost = double.Parse(f.Cost, NumberStyles.Number, CultureInfo.InvariantCulture),
+                Cost = f.Cost,
                 DaysDelay = f.DaysDelay,
-                CostOfDelay = double.Parse(f.CostOfDelay, NumberStyles.Number, CultureInfo.InvariantCulture),
+                CostOfDelay = f.CostOfDelay,
                 ProjectSimulationModelId = Simulation!.Id
             }).ToList();
             context.ForecastModel.AddRange(forecasts);
@@ -82,14 +83,17 @@ public class ListForeCastAnalysis
         }
         else
         {
-            for (int i = 0; i < ForecastAnalysis.Count; i++)
+            for (int i = 0; i < Forecasts.Count; i++)
             {
-                simForecast[i].Percentage = ForecastAnalysis[i].Percentage;
-                simForecast[i].EndDate = DateTime.ParseExact(ForecastAnalysis[i].EndDate, "dd MMM yyyy", CultureInfo.InvariantCulture);
-                simForecast[i].Days = ForecastAnalysis[i].Days;
-                simForecast[i].Cost = double.Parse(ForecastAnalysis[i].Cost, NumberStyles.Number, CultureInfo.InvariantCulture);
-                simForecast[i].DaysDelay = ForecastAnalysis[i].DaysDelay;
-                simForecast[i].CostOfDelay = double.Parse(ForecastAnalysis[i].CostOfDelay, NumberStyles.Number, CultureInfo.InvariantCulture);
+                if (Forecasts[i] == null)
+                    continue;
+
+                simForecast[i].Percentage = Forecasts[i]!.Percentage;
+                simForecast[i].EndDate = Forecasts[i]!.EndDate;
+                simForecast[i].Days = Forecasts[i]!.Days;
+                simForecast[i].Cost = Forecasts[i]!.Cost;
+                simForecast[i].DaysDelay = Forecasts[i]!.DaysDelay;
+                simForecast[i].CostOfDelay = Forecasts[i]!.CostOfDelay;
             }
             context.ForecastModel.UpdateRange(simForecast);
             context.SaveChanges();
@@ -129,6 +133,7 @@ public class ListForeCastAnalysis
         var listOfCostOfDelays = listOfPercentileMarks.Select(percentile => (double)Simulation.CostPrDay * (listOfEndDays[listOfPercentileMarks.IndexOf(percentile)] - simulation.TargetDate).Days).ToList();
 
         var forecastAnalysis = new List<ForecastAnalysisModel>();
+        var forecastAnalysisModelDb = new List<ForecastModel>();
         for (int i = 0; i < listOfPercentileMarks.Count(); i++)
         {
             var percentile = listOfPercentileMarks[i];
@@ -141,6 +146,16 @@ public class ListForeCastAnalysis
                 DaysDelay = listOfEndDays[i].Subtract(simulation.TargetDate).Days,
                 CostOfDelay = listOfCostOfDelays[i].ToString("N0")
             };
+            var forcastModelDb = new ForecastModel
+            {
+                Percentage = listOfPercentileMarks[i].ToString("P0"),
+                EndDate = listOfEndDays[i],
+                Days = (int)listOfDayPercentileMarks[i],
+                Cost = listOfCosts[i],
+                DaysDelay = listOfEndDays[i].Subtract(simulation.TargetDate).Days,
+                CostOfDelay = listOfCostOfDelays[i],
+                ProjectSimulationModelId = Simulation!.Id
+            };
             if (percentile == 0.90)
             {
                 SimulationResults = new SimResultsModel
@@ -152,9 +167,12 @@ public class ListForeCastAnalysis
                 };
             }
             forecastAnalysis.Add(forecastAnalysisModel);
+            forecastAnalysisModelDb.Add(forcastModelDb);
 
         }
         ForecastAnalysis = forecastAnalysis;
+        Forecasts = forecastAnalysisModelDb;
+
     }
 }
 

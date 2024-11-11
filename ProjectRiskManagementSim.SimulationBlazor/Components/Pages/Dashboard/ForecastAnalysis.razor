@@ -7,7 +7,7 @@
 @page "/dashboard/{projectSimulationId:int}/forecast-analysis"
 @inject HtmxContext Context
 <!-- ForecastAnalysis in Upper Right Content -->
-<HtmxFragment Match=@(req => req.Method == HttpMethods.Put)>
+<HtmxFragment Match=@(req=> req.Method == HttpMethods.Put)>
     <div id="forecastAnalysis" class="self-stretch grow shrink basis-0">
         <ForecastAnalysisSkeleton />
         <div class="forecastAnalysis self-stretch grow shrink basis-0 p-4 bg-[#ffb4ba]/25 rounded-2xl flex-col justify-start items-start gap-2.5 flex">
@@ -46,7 +46,7 @@
                         <tbody>
                             @foreach (var result in simulationResults.ForecastAnalysis)
                             {
-                                <tr class="@(result.Percentage == "90%" ? "bg-[#FFBEC3]" : "odd:bg-white even:bg-gray-100" ) border-l border-t border-[#b9b9b9]">
+                                <tr class="@(result.Percentage == "90 %" ? "bg-[#FFBEC3]" : "odd:bg-white even:bg-gray-100" ) border-l border-t border-[#b9b9b9]">
                                     <td class="px-3 py-2.5 text-center cell-text">
                                         @result.Percentage
                                     </td>
