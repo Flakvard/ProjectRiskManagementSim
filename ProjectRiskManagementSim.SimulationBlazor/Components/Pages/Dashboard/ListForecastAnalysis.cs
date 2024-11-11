@@ -141,7 +141,7 @@ public class ListForeCastAnalysis
                 DaysDelay = listOfEndDays[i].Subtract(simulation.TargetDate).Days,
                 CostOfDelay = listOfCostOfDelays[i].ToString("N0")
             };
-            if (percentile == 0.80)
+            if (percentile == 0.90)
             {
                 SimulationResults = new SimResultsModel
                 {
