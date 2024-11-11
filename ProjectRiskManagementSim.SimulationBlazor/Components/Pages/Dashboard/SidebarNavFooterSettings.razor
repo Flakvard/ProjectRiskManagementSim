@@ -1,0 +1,37 @@
+﻿@inherits ConditionalComponentBase
+
+<div class="SidebarFooterSettings w-full h-full justify-center items-center gap-2 inline-flex">
+
+
+
+    <a id="run-sim-link" href="/dashboard/@ProjectSimulationId" hx-trigger="apexCharts from:body, initializeSim from:body"
+       hx-push-url="true" class="hidden dashboardButton p-2 justify-center items-center flex rounded-md">
+        <ToggleRight />
+    </a>
+
+
+    <div id="run-sim-button">
+        <button hx-get="/run-simulation/@ProjectSimulationId" hx-target="#dashboardMain" hx-swap="outerHTML"
+                hx-push-url="true" class="runSimulationButton p-2 justify-center items-center flex rounded-md" hx-trigger="click, initializeSim from:body">
+            <ToggleLeft />
+        </button>
+    </div>
+
+    <div class="Archive w-6 h-6 px-px py-[3px] justify-center items-center flex">
+    </div>
+    <div class="Settings w-6 h-6 p-px justify-center items-center flex">
+        <button>
+            <SettingsIcon />
+        </button>
+    </div>
+    <div class="ExternalLink w-6 h-6 p-[3px] justify-center items-center flex">
+    </div>
+</div>
+@code {
+
+    [Parameter] public int ProjectSimulationId { get; set; }
+    private void HandleStepRun(HtmxEventArgs args)
+    {
+        //StepRunningSimulation = true;
+    }
+}

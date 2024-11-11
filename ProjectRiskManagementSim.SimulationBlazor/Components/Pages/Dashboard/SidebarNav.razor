@@ -8,50 +8,43 @@
 <!-- Dashboard sidebar -->
 <!-- Sidebar (fixed width, only grows vertically) -->
 <HtmxFragment Match=@(req=> req.Target == "sidebar-navigation")>
-    <nav id="sidebar-navigation" hx-get="/sidebar/@ProjectSimulationId" hx-trigger=@Trigger.OnEvent("newForcast").From("body")
-    hx-swap=@SwapStyles.OuterHTML class="w-64 p-2.5 bg-violet-600/40 flex flex-col flex-grow-0">
-    <!-- Sidebar Upper Section -->
-    @if(@sidebarInfoHandler != null && @sidebarInfoHandler._simulation != null && @sidebarInfoHandler._project != null)
-    {
-    <SidebarNavProjectInfo Simulation=@sidebarInfoHandler._simulation Project=@sidebarInfoHandler._project />
-    }
-    <!-- Divider -->
-    <div class="Rectangle2 self-stretch h-0.5 bg-[#ff7c87]"></div>
-    <!-- Sidebar Lower Section -->
-    @if(@sidebarInfoHandler != null && @sidebarInfoHandler._simulations != null)
-    {
-    <SidebarNavOtherSimulations Simulations=@sidebarInfoHandler._simulations />
-    }
-    <!-- Divider -->
-    <div class="Rectangle3 self-stretch h-0.5 bg-[#ff7c87]"></div>
-    <!-- Sidebar Footer Section -->
-    <div class="SidebarFooterSettings w-full h-full justify-center items-center gap-2 inline-flex">
-      <div class="runSimulationButton p-2 justify-center items-center flex bg-white rounded-md">
-        <button hx-get="/run-simulation/@ProjectSimulationId" hx-target="#dashboardMain"
-          hx-swap="outerHTML">Run</button>
-      </div>
-      <div class="Archive w-6 h-6 px-px py-[3px] justify-center items-center flex">
-      </div>
-      <div class="Settings w-6 h-6 p-px justify-center items-center flex">
-        <button>
-          <SettingsIcon />
-        </button>
-      </div>
-      <div class="ExternalLink w-6 h-6 p-[3px] justify-center items-center flex">
-      </div>
-    </div>
-  </nav>
+    <nav id="sidebar-navigation" hx-get="/sidebar/@ProjectSimulationId"
+         hx-trigger=@Trigger.OnEvent("newForcast").From("body") hx-swap=@SwapStyles.OuterHTML
+         class="w-64 p-2.5 bg-violet-600/40 flex flex-col flex-grow-0">
+        <!-- Sidebar Upper Section -->
+        @if (@sidebarInfoHandler != null && @sidebarInfoHandler._simulation != null && @sidebarInfoHandler._project != null)
+        {
+            <SidebarNavProjectInfo Simulation=@sidebarInfoHandler._simulation Project=@sidebarInfoHandler._project />
+        }
+        <!-- Divider -->
+        <div class="Rectangle2 self-stretch h-0.5 bg-[#ff7c87]"></div>
+        <!-- Sidebar Lower Section -->
+        @if (@sidebarInfoHandler != null && @sidebarInfoHandler._simulations != null)
+        {
+            <SidebarNavOtherSimulations Simulations=@sidebarInfoHandler._simulations />
+        }
+        <!-- Divider -->
+        <div class="Rectangle3 self-stretch h-0.5 bg-[#ff7c87]"></div>
+        <!-- Sidebar Footer Section -->
+        <SidebarNavFooterSettings ProjectSimulationId="@ProjectSimulationId" />
+        
+    </nav>
 </HtmxFragment>
 
 @code {
-private OxygenSimulationContext _context;
-[Parameter] public int ProjectSimulationId { get; set; }
-public SidebarInfoHandler sidebarInfoHandler { get; set; }
-protected override async Task OnInitializedAsync()
-{
-using var scope = ServiceScopeFactory.CreateScope();
-_context = scope.ServiceProvider.GetRequiredService<OxygenSimulationContext>();
-  sidebarInfoHandler = new SidebarInfoHandler(ProjectSimulationId);
-  await sidebarInfoHandler.InitializeProjectsAsync(_context);
-  }
-  }
+    [SupplyParameterFromForm] public bool StepRunningSimulation { get; set; } = false;
+    private OxygenSimulationContext _context;
+    [Parameter] public int ProjectSimulationId { get; set; }
+    public SidebarInfoHandler sidebarInfoHandler { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        using var scope = ServiceScopeFactory.CreateScope();
+        _context = scope.ServiceProvider.GetRequiredService<OxygenSimulationContext>();
+        sidebarInfoHandler = new SidebarInfoHandler(ProjectSimulationId);
+        await sidebarInfoHandler.InitializeProjectsAsync(_context);
+    }
+    private void HandleStepRun(HtmxEventArgs args)
+    {
+        //StepRunningSimulation = true;
+    }
+}

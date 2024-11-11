@@ -1,10 +1,44 @@
-<!-- Script to handle modal open/close functionality -->
+// Function to switch between the simulation button and the dashboard link
+function initializeSim() {
+    const runSimButton = document.getElementById('run-sim-button');
+    const runSimLink = document.getElementById('run-sim-link');
+
+  if(runSimButton)
+  {
+    runSimButton.addEventListener('click', () => {
+        runSimLink.classList.remove('hidden')
+        runSimButton.classList.add('hidden')
+    })
+  }
+  if(runSimLink)
+  {
+    runSimLink.addEventListener('click', () => {
+        runSimButton.classList.remove('hidden')
+        runSimLink.classList.add('hidden')
+    })
+  }
+}
+initializeSim();
+
+// Attach the function to Htmx events
+document.addEventListener('htmx:beforeRequest', function (event) {
+    if (event.detail.elt.id === 'run-sim-button' || event.detail.elt.id === 'run-sim-link') {
+        initializeSim();
+    }
+});
+document.addEventListener('initializeSim', function (event) {
+    if (event.detail.elt.id === 'run-sim-button' || event.detail.elt.id === 'run-sim-link') {
+        initializeSim();
+    }
+});
+
+
 function initializeModal() {
   const openModal = document.getElementById('openModal');
   const modal = document.getElementById('modal');
   const closeModal = document.getElementById('closeModal');
   const closeModalFooter = document.getElementById('closeModalFooter');
-
+    
   if (openModal) {
     openModal.addEventListener('click', () => {
       modal.classList.remove('hidden');
