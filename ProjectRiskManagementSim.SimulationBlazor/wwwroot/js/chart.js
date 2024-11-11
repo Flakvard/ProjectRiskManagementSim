@@ -1,78 +1,106 @@
-document.body.addEventListener("apexCharts", function(evt){
-    var chart = new ApexCharts(document.querySelector("#chart"), options);
-    chart.render();
-    console.log("ApexCharts event fired");
-})
-// Purpose: To create a chart that displays the SimDate and TargetDate
-var options = {
-  chart: {
-    type: 'line',
-    height: 400,
-    width: 670
-  },
-  series: [{
-    name: 'SimDate',
-    data: [
-      {x: new Date('2024-09-25').getTime(), y: new Date('2024-09-25').getTime()},
-      {x: new Date('2024-10-20').getTime(), y: new Date('2024-10-20').getTime()},
-      {x: new Date('2024-11-09').getTime(), y: new Date('2024-11-09').getTime()},
-      {x: new Date('2024-11-19').getTime(), y: new Date('2024-11-19').getTime()},
-      {x: new Date('2024-12-09').getTime(), y: new Date('2024-12-09').getTime()},
-      {x: new Date('2024-12-19').getTime(), y: new Date('2024-12-19').getTime()},
-      {x: new Date('2025-01-08').getTime(), y: new Date('2025-01-08').getTime()}
-    ]
-  }, {
-    name: 'TargetDate',
-    data: [
-      {x: new Date('2024-09-25').getTime(), y: new Date('2024-10-01').getTime()},
-      {x: new Date('2024-10-20').getTime(), y: new Date('2024-10-01').getTime()},
-      {x: new Date('2024-11-09').getTime(), y: new Date('2024-11-09').getTime()},
-      {x: new Date('2024-11-19').getTime(), y: new Date('2024-11-09').getTime()},
-      {x: new Date('2024-12-09').getTime(), y: new Date('2024-11-09').getTime()},
-      {x: new Date('2024-12-19').getTime(), y: new Date('2024-11-09').getTime()},
-      {x: new Date('2025-01-08').getTime(), y: new Date('2025-01-01').getTime()}
-    ]
-  }],
-  xaxis: {
-    type: 'datetime',
-    labels: {
-      style: {
-              colors: '#7e44eb',
-              fontSize: '12px',
-              fontFamily: 'Helvetica, Arial, sans-serif',
-              fontWeight: 400,
-              cssClass: 'apexcharts-yaxis-label',
-          }
-    }
-  },
-  yaxis: {
-    type: 'datetime',
-    labels: {
-      style: {
-              colors: '#7e44eb',
-              fontSize: '12px',
-              fontFamily: 'Helvetica, Arial, sans-serif',
-              fontWeight: 400,
-              cssClass: 'apexcharts-yaxis-label',
-          },
-      formatter: function (value) {
-        var date = new Date(value);
-        return date.toLocaleDateString();
-      }
-    }
-  },
-  colors:['#ff7c87', '#7e44eb', '#9C27B0'],
-  legend: {
-    position: 'top',
-    horizontalAlign: 'center',
-    fontSize: '12px',
-    fontFamily: 'Helvetica, Arial, sans-serif',
-    fontWeight: 400,
-    labels: {
-      colors: '#7e44eb',
-    }
-  },
-};
+// Function to initialize or update the chart
+function initializeChart(newData) {
+    // Check if chart already exists
+    let chart = ApexCharts.getChartByID("chart");
 
-var chart = new ApexCharts(document.querySelector("#chart"), options);
-chart.render();
+    // If chart exists, update the series; otherwise, create a new chart
+    if (chart) {
+        chart.updateSeries([
+            {
+                name: 'SimDate',
+                data: newData.simDateData
+            },
+            {
+                name: 'TargetDate',
+                data: newData.targetDateData
+            }
+        ]);
+    } else {
+        // Chart options for a new chart
+        const options = optionFactory(newData);
+
+        chart = new ApexCharts(document.querySelector("#chart"), options);
+        chart.render();
+    }
+
+    console.log("Chart initialized or updated.");
+}
+
+// Chart options factory
+function optionFactory(newData) {
+    return {
+        chart: {
+            id: "chart",
+            type: 'line',
+            height: '100%',
+            width: '100%'
+        },
+        series: [
+            {
+                name: 'SimDate',
+                data: newData.simDateData
+            },
+            {
+                name: 'TargetDate',
+                data: newData.targetDateData
+            }
+        ],
+        xaxis: {
+            type: 'datetime',
+            labels: {
+                style: {
+                    colors: '#7e44eb',
+                    fontSize: '12px',
+                    fontFamily: 'Helvetica, Arial, sans-serif',
+                    fontWeight: 400,
+                    cssClass: 'apexcharts-yaxis-label',
+                }
+            }
+        },
+        yaxis: {
+            type: 'datetime',
+            labels: {
+                style: {
+                    colors: '#7e44eb',
+                    fontSize: '12px',
+                    fontFamily: 'Helvetica, Arial, sans-serif',
+                    fontWeight: 400,
+                    cssClass: 'apexcharts-yaxis-label',
+                },
+                formatter: function (value) {
+                    const date = new Date(value);
+                    return date.toLocaleDateString();
+                }
+            }
+        },
+        colors: ['#ff7c87', '#7e44eb', '#9C27B0'],
+        legend: {
+            position: 'top',
+            horizontalAlign: 'center',
+            fontSize: '12px',
+            fontFamily: 'Helvetica, Arial, sans-serif',
+            fontWeight: 400,
+            labels: {
+                colors: '#7e44eb',
+            }
+        },
+    };
+}
+
+// HTMX event listeners to initialize the chart after content swap
+document.addEventListener("htmx:afterSwap", (event) => {
+    if (event.detail.target.id === "chartContainer") { // Adjust if necessary
+        initializeChart(window.newChartData); // Use globally available data or refetch it
+    }
+});
+
+document.body.addEventListener("apexCharts", function(evt){
+    if (event.detail.target.id === "chartContainer") { // Adjust if necessary
+        initializeChart(window.newChartData); // Use globally available data or refetch it
+    }
+})
+
+// Initial chart rendering if data is already available
+if (window.newChartData) {
+    initializeChart(window.newChartData);
+}

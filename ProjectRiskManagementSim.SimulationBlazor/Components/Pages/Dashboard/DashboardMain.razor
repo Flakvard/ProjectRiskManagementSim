@@ -5,31 +5,58 @@
 <!-- Dashboard -->
 <div id="dashboardMain" class="flex flex-row">
   <!-- Main Content -->
-  <div class="flex-1">
+  <div class="flex">
     <!-- Upper dashboard Content -->
-    <div class="Upperdashboard self-stretch grow shrink basis-0 justify-start items-end gap-[17px] inline-flex">
+    <div class="Upperdashboard self-stretch grow shrink basis-0 justify-start items-start gap-[17px] inline-flex">
       <!-- Upper Left Content -->
-      <div class="LeftsideSection w-[437px] self-stretch p-[15px] justify-start items-center gap-2.5 flex">
-        <div
-          class="LeftsideFrame grow shrink basis-0 self-stretch p-4 bg-[#ffb4ba]/25 rounded-2xl flex-col justify-start items-start gap-2.5 inline-flex">
-          <div class="overflow-hidden">
-            @if (@dashboardInfoHandler._simulation != null &&
-            !string.IsNullOrEmpty(@dashboardInfoHandler._simulation.Name))
-            {
-            <KanbanSimulationHeader SimulationName="@dashboardInfoHandler._simulation.Name" />
-            }
-            <KanbanDeliverableTable />
-            <div class="hover:overflow-y-scroll">
-              <KanbanColumnTable />
+
+      <div class="LeftsideSection w-full self-stretch p-[15px] justify-center items-start gap-[30px] flex flex-col">
+
+        <div class="p-4 bg-[#ffb4ba]/25 rounded-2xl grow self-stretch justify-center items-center gap-2.5 flex">
+          <div class="bg-white rounded-2xl w-full h-[400px]" id="chart"></div>
+          <!-- In your HTMX Response (Backend) -->
+          <script>
+            // Set new chart data globally for access after HTMX event
+            window.newChartData = {
+              simDateData: [
+                {x: new Date('2024-08-25').getTime(), y: new Date('2024-08-25').getTime()},
+                {x: new Date('2024-10-20').getTime(), y: new Date('2024-10-20').getTime()},
+                {x: new Date('2024-11-09').getTime(), y: new Date('2024-11-09').getTime()},
+                {x: new Date('2024-11-19').getTime(), y: new Date('2024-11-19').getTime()},
+                {x: new Date('2024-12-09').getTime(), y: new Date('2024-12-09').getTime()},
+                {x: new Date('2024-12-19').getTime(), y: new Date('2024-12-19').getTime()},
+                {x: new Date('2025-01-08').getTime(), y: new Date('2025-01-08').getTime()}
+              ],
+              targetDateData: [
+                {x: new Date('2024-08-25').getTime(), y: new Date('2024-10-01').getTime()},
+                {x: new Date('2024-10-20').getTime(), y: new Date('2024-10-01').getTime()},
+                {x: new Date('2024-11-09').getTime(), y: new Date('2024-11-09').getTime()},
+                {x: new Date('2024-11-19').getTime(), y: new Date('2024-11-09').getTime()},
+                {x: new Date('2024-12-09').getTime(), y: new Date('2024-11-09').getTime()},
+                {x: new Date('2024-12-19').getTime(), y: new Date('2024-11-09').getTime()},
+                {x: new Date('2025-01-08').getTime(), y: new Date('2025-01-01').getTime()}
+              ]
+            };
+
+            // Initialize chart immediately
+            initializeChart(window.newChartData);
+          </script>
+        </div>
+
+        <div class="w-full h-full items-start">
+          <div class="p-4 bg-[#ffb4ba]/25 rounded-2xl">
+            <div class="overflow-auto h-full w-full">
+              <SimulationsResultTable />
             </div>
           </div>
         </div>
+
       </div>
       <!-- Upper Right Content -->
       <div
         class="RightsideFrame grow shrink basis-0 self-stretch p-[15px] flex-col justify-start items-start inline-flex">
         <div
-          class="UpperRightFrame self-stretch grow shrink basis-0 rounded-[40px] flex-col justify-start items-start gap-[30px] flex">
+          class="UpperRightFrame overflow-auto self-stretch grow shrink basis-0 h-full flex-col justify-start items-start gap-[30px] flex">
           @if (@dashboardInfoHandler._simulation != null)
           {
           <ForecastAnalysis ProjectSimulationId=@ProjectSimulationId Simulation=@dashboardInfoHandler._simulation />
@@ -45,36 +72,9 @@
       </div>
     </div>
     <!-- Lower dashboard Content -->
-    <div class="Lowerdashboard self-stretch h-[147px] px-[15px] justify-start items-start gap-[47px] flex">
-      <div class="DashboardFooterLeft w-[407px] self-stretch flex-col justify-start items-start inline-flex">
-        <div
-          class="DashboardFooter self-stretch grow shrink basis-0 p-4 bg-[#ffb4ba]/25 rounded-2xl justify-end items-start gap-2.5 inline-flex">
-          <img class="Image4 grow shrink basis-0 self-stretch rounded-md" src="https://via.placeholder.com/375x115" />
-        </div>
-      </div>
-      <div
-        class="DashboardFooterRight grow shrink basis-0 self-stretch p-4 bg-[#ffb4ba]/25 rounded-2xl justify-end items-start gap-2.5 flex">
-        <div class="overflow-auto h-full w-full">
-          <SimulationsResultTable />
-        </div>
-      </div>
-    </div>
+
   </div>
-  <div class="w-full h-full flex-col">
-
-    <div class="p-4">
-      <div class="p-4 bg-[#ffb4ba]/25 rounded-2xl justify-center items-center gap-2.5 flex">
-
-        <div class="bg-white rounded-2xl" id="chart"></div>
-      </div>
-    </div>
-    <div class="p-4">
-      <div class="p-4 bg-[#ffb4ba]/25 rounded-2xl justify-center items-center gap-2.5 flex">
-
-        <img class="Image4 grow shrink basis-0 self-stretch rounded-md" src="https://via.placeholder.com/575x350" />
-      </div>
-    </div>
-  </div>
+  <!-- Possible right side Main Content -->
 </div>
 
 @code {
