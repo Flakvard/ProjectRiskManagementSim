@@ -1,6 +1,8 @@
+@using ProjectRiskManagementSim.DataAccess.Models
 @using ProjectRiskManagementSim.SimulationBlazor.Components.Pages.Dashboard
 <!-- SimulationsResultTable -->
-@* Render the table dynamically *@
+
+
 <div class="Table1 grow shrink basis-0 self-stretch flex-col justify-start items-start inline-flex">
   <table class="Table self-stretch grow shrink basis-0 bg-white rounded border border-[#b9b9b9]">
     <!-- Table Header -->
@@ -28,7 +30,7 @@
     </thead>
     <!-- Table Body -->
     <tbody class="TableBody overflow-y-auto max-h-[500px]"> <!-- Set max-height to control body scrolling -->
-      @foreach (var result in simulationResults)
+      @foreach (var result in @simulationResults.SimulationsResultTableModels)
       {
       <tr class="Row">
         <td class="cell-content-border p-3 cell-text">
@@ -56,7 +58,27 @@
 </div>
 
 @code {
-[Parameter]
-public List<SimulationsResultTableModel> simulationResults { get; set; } =
-  SimulationsResultTableModel.InitializeSimulationResults();
+
+[Parameter] public List<ProjectSimulationModel> Simulations { get; set; }
+  public ListSimulationsResultTable simulationResults { get; set; }
+
+  protected override void OnInitialized()
+  {
+  simulationResults = new ListSimulationsResultTable();
+  // foreach (var simulation in Simulations)
+  // {
+  // simulationResults.Add(new SimulationsResultTableModel
+  // {
+  // SimulationName = simulation.Name,
+  // SimulationDate = simulation.SimulationDate,
+  // TargetDate = simulation.TargetDate,
+  // Days = simulation.Days,
+  // Budget = simulation.Budget,
+  // ActualCost = simulation.ActualCost,
+  // CostPerDay = simulation.CostPerDay,
+  // DelayPerDay = simulation.DelayPerDay,
+  // Epics = simulation.Epics
+  // });
+  // }
+  }
   }
