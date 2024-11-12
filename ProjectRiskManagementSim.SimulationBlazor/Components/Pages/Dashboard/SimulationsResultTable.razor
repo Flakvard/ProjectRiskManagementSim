@@ -19,6 +19,8 @@
         <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
           Budget</th>
         <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
+          SimCost</th>
+        <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
           Actual</th>
         <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
           Cost/day</th>
@@ -26,6 +28,8 @@
           Days</th>
         <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
           Epics</th>
+        <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
+          Bug %</th>
       </tr>
     </thead>
     <!-- Table Body -->
@@ -47,6 +51,8 @@
         <td class="cell-content-border p-3 text-center cell-text">
           @result.Budget</td>
         <td class="cell-content-border p-3 text-center cell-text">
+          @result.SimCost</td>
+        <td class="cell-content-border p-3 text-center cell-text">
           @result.ActualCost</td>
         <td class="cell-content-border p-3 text-center cell-text">
           @result.CostPerDay</td>
@@ -54,6 +60,8 @@
           @result.Days</td>
         <td class="cell-content-border p-3 text-center cell-text">
           @result.Epics</td>
+        <td class="cell-content-border p-3 text-center cell-text">
+          @result.BugPercentage</td>
       </tr>
       }
 
@@ -64,12 +72,12 @@
 
 @code {
 
-    [Parameter] public List<ProjectSimulationModel> Simulations { get; set; }
-    public ListSimulationsResultTable simulationResults { get; set; }
+[Parameter] public List<ProjectSimulationModel> Simulations { get; set; }
+  public ListSimulationsResultTable simulationResults { get; set; }
 
-    protected override void OnInitialized()
-    {
-        simulationResults = new ListSimulationsResultTable();
-        simulationResults.Init(Simulations);
-    }
+  protected override void OnInitialized()
+  {
+  simulationResults = new ListSimulationsResultTable();
+  simulationResults.Init(Simulations);
+  }
   }
