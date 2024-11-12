@@ -1,6 +1,6 @@
 using ProjectRiskManagementSim.DataAccess;
 using ProjectRiskManagementSim.DataAccess.Models;
-namespace ProjectRiskManagementSim.SimulationBlazor.Components.Pages.Dashboard;
+namespace ProjectRiskManagementSim.SimulationBlazor.Components.Pages.Dashboard.SidebarNav;
 public class SidebarInfoHandler
 {
     public ProjectModel? _project { get; set; }

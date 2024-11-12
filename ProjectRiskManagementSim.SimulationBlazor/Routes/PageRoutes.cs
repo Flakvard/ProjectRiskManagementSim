@@ -2,6 +2,9 @@ using ProjectRiskManagementSim.SimulationBlazor.Components;
 using ProjectRiskManagementSim.SimulationBlazor.Components.Shared;
 using ProjectRiskManagementSim.SimulationBlazor.Components.Pages.Simulations;
 using ProjectRiskManagementSim.SimulationBlazor.Components.Pages.Dashboard;
+using ProjectRiskManagementSim.SimulationBlazor.Components.Pages.Dashboard.ForecastAnalysis;
+
+using ProjectRiskManagementSim.SimulationBlazor.Components.Pages.Dashboard.SensitivityAnalysis;
 using ProjectRiskManagementSim.SimulationBlazor.Components.Pages.RunSimulation;
 using ProjectRiskManagementSim.SimulationBlazor.Models;
 using ProjectRiskManagementSim.SimulationBlazor.Lib;

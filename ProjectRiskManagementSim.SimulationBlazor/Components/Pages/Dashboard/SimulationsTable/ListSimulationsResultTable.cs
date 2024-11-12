@@ -1,6 +1,6 @@
 using ProjectRiskManagementSim.DataAccess.Models;
 
-namespace ProjectRiskManagementSim.SimulationBlazor.Components.Pages.Dashboard;
+namespace ProjectRiskManagementSim.SimulationBlazor.Components.Pages.Dashboard.SimulationsTable;
 
 public partial class ListSimulationsResultTable
 {
@@ -49,7 +49,7 @@ public partial class ListSimulationsResultTable
                 SimCostPerDay = simCostPerDay?.ToString("N0") ?? "0",
                 DelayPerDay = simulation.SimulationDaysOfDelay?.ToString() ?? "0",
                 Epics = (int)simulation.DeliverablesCount,
-                BugPercentage = (simulation.BugPercentage.ToString("N0")) + "%" ?? "0"
+                BugPercentage = simulation.BugPercentage.ToString("N0") + "%" ?? "0"
             });
         }
         return resultTableModels;

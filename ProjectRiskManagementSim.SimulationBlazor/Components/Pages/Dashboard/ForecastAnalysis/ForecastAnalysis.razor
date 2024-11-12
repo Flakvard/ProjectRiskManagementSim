@@ -6,6 +6,7 @@
 @using ProjectRiskManagementSim.ProjectSimulation.Interfaces
 @page "/dashboard/{projectSimulationId:int}/forecast-analysis"
 @inject HtmxContext Context
+
 <!-- ForecastAnalysis in Upper Right Content -->
 <HtmxFragment Match=@(req=> req.Method == HttpMethods.Put)>
     <div id="forecastAnalysis" class="self-stretch grow shrink basis-0">

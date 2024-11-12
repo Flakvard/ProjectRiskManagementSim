@@ -5,7 +5,7 @@ using ProjectRiskManagementSim.ProjectSimulation.Interfaces;
 using ProjectRiskManagementSim.SimulationBlazor.Lib;
 using ProjectRiskManagementSim.SimulationBlazor.Models;
 
-namespace ProjectRiskManagementSim.SimulationBlazor.Components.Pages.Dashboard;
+namespace ProjectRiskManagementSim.SimulationBlazor.Components.Pages.Dashboard.ForecastAnalysis;
 
 public class ListForeCastAnalysis
 {
