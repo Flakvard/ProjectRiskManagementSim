@@ -1,37 +1,41 @@
 ﻿@inherits ConditionalComponentBase
 
-<div class="SidebarFooterSettings w-full h-full justify-center items-center gap-2 inline-flex">
+<div class="SidebarFooterSettings w-full h-full justify-center items-center inline-flex">
 
 
+  <div class="p-2 flex flex-row gap-4 overflow-auto">
+    <button id="openModal">
+      <AddButton />
+    </button>
 
-    <a id="run-sim-link" href="/dashboard/@ProjectSimulationId" hx-trigger="apexCharts from:body, initializeSim from:body"
-       hx-push-url="true" class="hidden dashboardButton p-2 justify-center items-center flex rounded-md">
-        <ToggleRight />
-    </a>
-
-
-    <div id="run-sim-button">
+    <div class="runSimulationButton justify-start align-top items-start flex rounded-md">
+      <a id="run-sim-link" href="/dashboard/@ProjectSimulationId"
+        hx-trigger="apexCharts from:body, initializeSim from:body" hx-push-url="true" class="hidden">
+        <ToggleLeft />
+      </a>
+      <div id="run-sim-button">
         <button hx-get="/run-simulation/@ProjectSimulationId" hx-target="#dashboardMain" hx-swap="outerHTML"
-                hx-push-url="true" class="runSimulationButton p-2 justify-center items-center flex rounded-md" hx-trigger="click, initializeSim from:body">
-            <ToggleLeft />
+          hx-push-url="true" hx-trigger="click, initializeSim from:body">
+          <ToggleRight />
         </button>
+      </div>
     </div>
 
-    <div class="Archive w-6 h-6 px-px py-[3px] justify-center items-center flex">
-    </div>
-    <div class="Settings w-6 h-6 p-px justify-center items-center flex">
-        <button>
-            <SettingsIcon />
-        </button>
-    </div>
-    <div class="ExternalLink w-6 h-6 p-[3px] justify-center items-center flex">
-    </div>
+
+    <button>
+      <TrashButton />
+    </button>
+
+    <button>
+      <SettingsIcon />
+    </button>
+  </div>
 </div>
 @code {
 
-    [Parameter] public int ProjectSimulationId { get; set; }
-    private void HandleStepRun(HtmxEventArgs args)
-    {
-        //StepRunningSimulation = true;
-    }
+[Parameter] public int ProjectSimulationId { get; set; }
+private void HandleStepRun(HtmxEventArgs args)
+{
+//StepRunningSimulation = true;
+}
 }
