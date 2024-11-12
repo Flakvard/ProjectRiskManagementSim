@@ -418,6 +418,7 @@ public static class PageRoutes
         {
             throw new ArgumentException("Invalid input.");
         }
+
         if (stringSimProjectId == null)
         {
             simProjectId = null;
@@ -426,6 +427,7 @@ public static class PageRoutes
         {
             simProjectId = int.Parse(stringSimProjectId);
         }
+
         hours = double.Parse(stringHours);
         startDate = DateTime.Parse(stringStartDate);
         var lastDate = DateTime.Parse(stringLastDate);
@@ -436,6 +438,7 @@ public static class PageRoutes
         backendDevs = double.Parse(stringBackendDevs);
         frontendDevs = double.Parse(stringFrontendDevs);
         testers = double.Parse(stringTesters);
+        var totalDevelopers = backendDevs + frontendDevs;
         issueNumber = double.Parse(stringIssueNumber);
         deliverableNumber = double.Parse(stringDeliverablesNumber);
         percentageLowBound = double.Parse(stringPercentageLowBound) / 100;
@@ -443,6 +446,7 @@ public static class PageRoutes
         issueDoneCount = double.Parse(stringIssueDoneCount);
         bugCount = double.Parse(stringBugCount);
         bugPercentage = double.Parse(stringBugPercentage);
+
         if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(jiraProjectId) || string.IsNullOrWhiteSpace(jiraProjectName))
         {
             throw new ArgumentException("Invalid input.");
@@ -472,8 +476,6 @@ public static class PageRoutes
         }
         costPrDay = cost / daysSinceStartInt;
 
-        // TODO: Staff logic to non blocking column
-        // if(staff != null) do something
         columns = new List<ViewColumnModel>();
         for (int i = 0; i <= 11; i++)
         {
@@ -490,6 +492,7 @@ public static class PageRoutes
                 {
                     continue;
                 }
+
                 if (colName == "Backlog" || colName == "Done")
                 {
                     if (int.Parse(wip) < deliverableNumber || int.Parse(wipMax) < deliverableNumber)
@@ -518,6 +521,60 @@ public static class PageRoutes
                     }
 
                 }
+                else if (colName == "In Progress")
+                {
+                    if (int.Parse(wip) < totalDevelopers || int.Parse(wipMax) < totalDevelopers)
+                    {
+                        columns.Add(new ViewColumnModel
+                        {
+                            Name = colName,
+                            WIP = (int)totalDevelopers,
+                            WIPMax = (int)totalDevelopers,
+                            EstimatedLowBound = int.Parse(lowBound),
+                            EstimatedHighBound = int.Parse(highBound),
+                            IsBuffer = isBuffer == "on"
+                        });
+                    }
+                    else
+                    {
+                        columns.Add(new ViewColumnModel
+                        {
+                            Name = colName,
+                            WIP = int.Parse(wip),
+                            WIPMax = int.Parse(wipMax),
+                            EstimatedLowBound = int.Parse(lowBound),
+                            EstimatedHighBound = int.Parse(highBound),
+                            IsBuffer = isBuffer == "on"
+                        });
+                    }
+                }
+                else if (colName == "Testing on Development")
+                {
+                    if (int.Parse(wip) < testers || int.Parse(wipMax) < testers)
+                    {
+                        columns.Add(new ViewColumnModel
+                        {
+                            Name = colName,
+                            WIP = (int)testers,
+                            WIPMax = (int)testers,
+                            EstimatedLowBound = int.Parse(lowBound),
+                            EstimatedHighBound = int.Parse(highBound),
+                            IsBuffer = isBuffer == "on"
+                        });
+                    }
+                    else
+                    {
+                        columns.Add(new ViewColumnModel
+                        {
+                            Name = colName,
+                            WIP = int.Parse(wip),
+                            WIPMax = int.Parse(wipMax),
+                            EstimatedLowBound = int.Parse(lowBound),
+                            EstimatedHighBound = int.Parse(highBound),
+                            IsBuffer = isBuffer == "on"
+                        });
+                    }
+                }
                 else
                     columns.Add(new ViewColumnModel
                     {
@@ -530,6 +587,7 @@ public static class PageRoutes
                     });
             }
         }
+
         var targetTimeSpan = targetDate - startDate;
         targetDays = targetTimeSpan.Days;
     }
