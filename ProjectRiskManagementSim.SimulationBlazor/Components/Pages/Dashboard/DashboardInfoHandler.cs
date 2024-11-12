@@ -27,7 +27,7 @@ public class DashboardInfoHandler
             // Get all simulations for the project
             if (project != null)
             {
-                    _simulations = project.ProjectSimulationModels.ToList();
+                    _simulations = project.ProjectSimulationModels.OrderBy(id => id.Id).ToList();
             }
         }
     }

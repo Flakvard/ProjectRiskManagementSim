@@ -9,14 +9,21 @@
          hx-swap=@SwapStyles.OuterHTML class="p-4 bg-[#ffb4ba]/25 rounded-2xl grow self-stretch justify-center items-center gap-2.5 flex">
         <div class="bg-white rounded-2xl w-full h-[400px]" id="chart"></div>
         <!-- In your HTMX Response (Backend) -->
+
+@{
+    var sortedSimulations = dashboardInfoHandler._simulations.OrderBy(id => id.Id).ToList();
+}
         @if (dashboardInfoHandler._simulations != null)
         {
             <script>
+
+
                 // Prepare the data by looping through the C# collection and outputting it as JavaScript
                 window.newChartData = {
                     simDateData: [
-                                    @foreach (var simulation in dashboardInfoHandler._simulations)
+                                    @foreach (var simulation in sortedSimulations)
                                     {
+
                                         @if (simulation.SimEndDate != null)
                                         {
                                             <text>
