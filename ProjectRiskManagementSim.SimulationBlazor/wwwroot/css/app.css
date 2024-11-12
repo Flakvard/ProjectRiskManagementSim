@@ -107,4 +107,19 @@
       display: none;
   }
 
+  .spinner{
+    display: none;
+  }
+  .htmx-indicator.spinner {
+      display: none
+  }
+
+  .htmx-indicator.htmx-request.spinner {
+      display: inline;
+  }
+
+  .htmx-indicator.htmx-request~span {
+      display: none;
+  }
+
 }

@@ -162,13 +162,13 @@ public static class PageRoutes
             };
             // Prepare simulation result HTML to return
             var htmlContent = $@"
-                  <div id='closeModalFooter'  class='flex justify-end'>
-                    <button class='bg-[#7e44eb] flex gap-2 text-white px-4 py-2 rounded hover:bg-red-400'>
-                      <a href='/dashboard/{simIdFromDb.ToString()}' hx-get>
-                        <div >Saved!</div>
-                      </a>
-                    </button>
-                  </div>
+                        <div class=""flex justify-end  id=""simulation-dashboar-result"">
+                            <button class=""bg-[#7e44eb] flex gap-2 text-white px-4 py-2 rounded hover:bg-red-400"">
+                                <a href=""/dashboard/{simIdFromDb.ToString()}"" hx-get>
+                                        <div >Open Dashboard</div>
+                                      </a>
+                            </button>
+                        </div>
                   ";
             return Results.Content(htmlContent, "text/html");
         });
@@ -306,13 +306,13 @@ public static class PageRoutes
             }
             // Prepare simulation result HTML to return
             var htmlContent = $@"
-                  <div id='simulation-dashboar-result'  class='flex justify-end'>
-                    <button class='bg-[#7e44eb] flex gap-2 text-white px-4 py-2 rounded hover:bg-red-400'>
-                      <a href='/dashboard/{simIdFromDb.ToString()}' hx-get>
-                        <div >Open Dashboard</div>
-                      </a>
-                    </button>
-                  </div>
+                        <div class=""flex justify-end  id=""simulation-dashboar-result"">
+                            <button class=""bg-[#7e44eb] flex gap-2 text-white px-4 py-2 rounded hover:bg-red-400"">
+                                <a href=""/dashboard/{simIdFromDb.ToString()}"" hx-get>
+                                        <div >Open Dashboard</div>
+                                      </a>
+                            </button>
+                        </div>
                   ";
             return Results.Content(htmlContent, "text/html");
         });
@@ -492,7 +492,7 @@ public static class PageRoutes
                 }
                 if (colName == "Backlog" || colName == "Done")
                 {
-                    if(int.Parse(wip) < deliverableNumber || int.Parse(wipMax) < deliverableNumber)
+                    if (int.Parse(wip) < deliverableNumber || int.Parse(wipMax) < deliverableNumber)
                     {
                         columns.Add(new ViewColumnModel
                         {
@@ -503,7 +503,8 @@ public static class PageRoutes
                             EstimatedHighBound = int.Parse(highBound),
                             IsBuffer = isBuffer == "on"
                         });
-                    }else
+                    }
+                    else
                     {
                         columns.Add(new ViewColumnModel
                         {
@@ -516,16 +517,17 @@ public static class PageRoutes
                         });
                     }
 
-                }else
-                columns.Add(new ViewColumnModel
-                {
-                    Name = colName,
-                    WIP = int.Parse(wip),
-                    WIPMax = int.Parse(wipMax),
-                    EstimatedLowBound = int.Parse(lowBound),
-                    EstimatedHighBound = int.Parse(highBound),
-                    IsBuffer = isBuffer == "on"
-                });
+                }
+                else
+                    columns.Add(new ViewColumnModel
+                    {
+                        Name = colName,
+                        WIP = int.Parse(wip),
+                        WIPMax = int.Parse(wipMax),
+                        EstimatedLowBound = int.Parse(lowBound),
+                        EstimatedHighBound = int.Parse(highBound),
+                        IsBuffer = isBuffer == "on"
+                    });
             }
         }
         var targetTimeSpan = targetDate - startDate;
