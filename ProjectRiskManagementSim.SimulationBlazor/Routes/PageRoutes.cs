@@ -90,6 +90,19 @@ public static class PageRoutes
             </table>", "text/html");
         });
 
+        app.MapDelete("/delete-simulation/{SimulationId:int}", async (int SimulationId, OxygenSimulationContext _context) =>
+        {
+            var simulation = await _context.GetSimulationByIdAsync(SimulationId);
+            if (simulation == null)
+            {
+                return Results.NotFound();
+            }
+            _context.Remove(simulation);
+            _context.SaveChanges();
+            // Delete the simulation with the given ID
+            return Results.Ok();
+        });
+
         app.MapPost("/update-simulation", async (HttpRequest request, IMonteCarloSimulation MCS, OxygenSimulationContext _context) =>
         {
             var form = await request.ReadFormAsync();
@@ -131,22 +144,18 @@ public static class PageRoutes
 
                 existingSimProject.PercentageLowBound = percentageLowBound;
                 existingSimProject.PercentageHighBound = percentageHighBound;
-                existingSimProject.Columns = new List<ColumnModel>();
-                // Log the number of columns
 
-                foreach (var column in columns)
+                // update existing columns
+                existingSimProject.Columns.Select((column, index) =>
                 {
-                    ColumnModel columnModel = new ColumnModel
-                    {
-                        Name = column.Name,
-                        EstimatedLowBound = column.EstimatedLowBound,
-                        EstimatedHighBound = column.EstimatedHighBound,
-                        WIP = column.WIP,
-                        WIPMax = column.WIPMax,
-                        IsBuffer = column.IsBuffer,
-                    };
-                    existingSimProject.Columns.Add(columnModel);
-                }
+                    column.Name = columns[index].Name;
+                    column.EstimatedLowBound = columns[index].EstimatedLowBound;
+                    column.EstimatedHighBound = columns[index].EstimatedHighBound;
+                    column.WIP = columns[index].WIP;
+                    column.WIPMax = columns[index].WIPMax;
+                    column.IsBuffer = columns[index].IsBuffer;
+                    return column;
+                }).ToList();
 
                 await _context.UpdateSimulationAsync(existingSimProject);
                 // Save all changes at once
@@ -481,19 +490,33 @@ public static class PageRoutes
                 {
                     continue;
                 }
-                if (colName == "Backlog" || colName == "Done" && int.Parse(wip) < deliverableNumber || int.Parse(wipMax) < deliverableNumber)
+                if (colName == "Backlog" || colName == "Done")
                 {
-                    columns.Add(new ViewColumnModel
+                    if(int.Parse(wip) < deliverableNumber || int.Parse(wipMax) < deliverableNumber)
                     {
-                        Name = colName,
-                        WIP = (int)deliverableNumber,
-                        WIPMax = (int)deliverableNumber,
-                        EstimatedLowBound = int.Parse(lowBound),
-                        EstimatedHighBound = int.Parse(highBound),
-                        IsBuffer = isBuffer == "on"
-                    });
+                        columns.Add(new ViewColumnModel
+                        {
+                            Name = colName,
+                            WIP = (int)deliverableNumber,
+                            WIPMax = (int)deliverableNumber,
+                            EstimatedLowBound = int.Parse(lowBound),
+                            EstimatedHighBound = int.Parse(highBound),
+                            IsBuffer = isBuffer == "on"
+                        });
+                    }else
+                    {
+                        columns.Add(new ViewColumnModel
+                        {
+                            Name = colName,
+                            WIP = int.Parse(wip),
+                            WIPMax = int.Parse(wipMax),
+                            EstimatedLowBound = int.Parse(lowBound),
+                            EstimatedHighBound = int.Parse(highBound),
+                            IsBuffer = isBuffer == "on"
+                        });
+                    }
 
-                }
+                }else
                 columns.Add(new ViewColumnModel
                 {
                     Name = colName,
