@@ -1,0 +1,40 @@
+﻿<!-- Button trigger modal
+<button id="openModal" class="bg-[#7e44eb] text-white px-4 py-2 rounded hover:bg-blue-600">
+  Launch demo modal
+</button>
+-->
+<!-- Modal (Full-screen) -->
+<div id="modal-warn"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 @(IsModalVisible ? "" : " hidden")">
+  <div class="modal bg-white rounded-lg shadow-lg w-1/5 flex flex-col">
+
+    <!-- Modal Header -->
+    <div class="px-4 py-2 bg-[#7e44eb] rounded-t-lg flex justify-between items-center border-b">
+      <h2 class="text-white text-lg font-semibold">Are you Sure you want to delete this ?</h2>
+      <button id="closeModalWarn" class="text-white hover:text-black">&times;</button>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-4 py-2 border-t h-fit flex justify-between items-end">
+      <button id="closeModalWarnFooter" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 mr-2">
+        Cancel Request
+      </button>
+      <button id="request-button" hx-delete="/delete-simulation/@ProjectSimulationId" hx-trigger="click"
+        hx-indicator="#spinner" class="bg-[#7e44eb] text-white px-4 py-2 rounded hover:bg-red-400">
+        Issue Request
+      </button>
+      <div id="spinner"
+        class="htmx-indicator spinner inline-block h-6 w-6 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-neutral-50 motion-reduce:animate-[spin_1.5s_linear_infinite]"
+        role="status">
+        <span
+          class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Loading...</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+@code {
+private bool IsModalVisible { get; set; } = false;
+[Parameter] public int ProjectSimulationId { get; set; }
+}

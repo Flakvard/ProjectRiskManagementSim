@@ -3,20 +3,18 @@ function initializeSim() {
     const runSimButton = document.getElementById('run-sim-button');
     const runSimLink = document.getElementById('run-sim-link');
 
-  if(runSimButton)
-  {
-    runSimButton.addEventListener('click', () => {
-        runSimLink.classList.remove('hidden')
-        runSimButton.classList.add('hidden')
-    })
-  }
-  if(runSimLink)
-  {
-    runSimLink.addEventListener('click', () => {
-        runSimButton.classList.remove('hidden')
-        runSimLink.classList.add('hidden')
-    })
-  }
+    if (runSimButton) {
+        runSimButton.addEventListener('click', () => {
+            runSimLink.classList.remove('hidden')
+            runSimButton.classList.add('hidden')
+        })
+    }
+    if (runSimLink) {
+        runSimLink.addEventListener('click', () => {
+            runSimButton.classList.remove('hidden')
+            runSimLink.classList.add('hidden')
+        })
+    }
 }
 initializeSim();
 
@@ -34,63 +32,96 @@ document.addEventListener('initializeSim', function (event) {
 
 
 function initializeModal() {
-  const openModal = document.getElementById('openModal');
-  const openUpdateModal = document.getElementById('openUpdateModal');
-  const modal = document.getElementById('modal');
-  const closeModal = document.getElementById('closeModal');
-  const closeModalFooter = document.getElementById('closeModalFooter');
-    
-  if (openModal) {
-    openModal.addEventListener('click', () => {
-      modal.classList.remove('hidden');
-      document.body.classList.add('overflow-hidden'); // Prevent scrolling on body
-    });
-  }
+    const openModal = document.getElementById('openModal');
+    const openUpdateModal = document.getElementById('openUpdateModal');
+    const modal = document.getElementById('modal');
+    const closeModal = document.getElementById('closeModal');
+    const closeModalFooter = document.getElementById('closeModalFooter');
 
-  if (openUpdateModal) {
-    openUpdateModal.addEventListener('click', () => {
-      modal.classList.remove('hidden');
-      document.body.classList.add('overflow-hidden'); // Prevent scrolling on body
-    });
-  }
+    const modalWarn = document.getElementById('modal-warn');
+    const openWarningModal = document.getElementById('openWarningModal');
+    const closeModalWarn = document.getElementById('closeModalWarn');
+    const closeModalWarnFooter = document.getElementById('closeModalWarnFooter');
 
-  if (closeModal) {
-    closeModal.addEventListener('click', () => {
-      modal.classList.add('hidden');
-      document.body.classList.remove('overflow-hidden'); // Re-enable scrolling
-    });
-  }
 
-  if (closeModalFooter) {
-    closeModalFooter.addEventListener('click', () => {
-      modal.classList.add('hidden');
-      document.body.classList.remove('overflow-hidden'); // Re-enable scrolling
-    });
-  }
-
-  // Close modal if clicking outside of the modal content
-  window.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      modal.classList.add('hidden');
-      document.body.classList.remove('overflow-hidden'); // Re-enable scrolling
+    if (openModal) {
+        openModal.addEventListener('click', () => {
+            modal.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden'); // Prevent scrolling on body
+        });
     }
-  });
+
+    if (openUpdateModal) {
+        openUpdateModal.addEventListener('click', () => {
+            modal.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden'); // Prevent scrolling on body
+        });
+    }
+    if (openWarningModal) {
+        openWarningModal.addEventListener('click', () => {
+            modalWarn.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden'); // Prevent scrolling on body
+        });
+    }
+
+    if (closeModalWarnFooter) {
+        closeModalWarnFooter.addEventListener('click', () => {
+            modalWarn.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden'); // Re-enable scrolling
+        });
+    }
+    if (closeModalWarn) {
+        closeModalWarn.addEventListener('click', () => {
+            modalWarn.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden'); // Re-enable scrolling
+        });
+    }
+
+
+    if (closeModal) {
+        closeModal.addEventListener('click', () => {
+            modal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden'); // Re-enable scrolling
+        });
+    }
+
+    if (closeModalFooter) {
+        closeModalFooter.addEventListener('click', () => {
+            modal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden'); // Re-enable scrolling
+        });
+    }
+
+    // Close modal if clicking outside of the modal content
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden'); // Re-enable scrolling
+        }
+    }); 
+    // Close modal if clicking outside of the modal content
+    window.addEventListener('click', (e) => {
+        if (e.target === modalWarn) {
+            modalWarn.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden'); // Re-enable scrolling
+        }
+    });
 }
 
 // Attach the event listener for HTMX afterSwap event
 document.addEventListener('htmx:afterSwap', (event) => {
-  if (event.detail.target.id === 'modal') {
-    initializeModal();
-  }
+    if (event.detail.target.id === 'modal' || event.detail.target.id === 'modal-warn') {
+        initializeModal();
+    }
 });
 // Attach the event listener for HTMX afterSwap event
 document.addEventListener('htmx:afterSettle', (event) => {
-  if (event.detail.target.id === 'modal') {
-    initializeModal();
-  }
+    if (event.detail.target.id === 'modal' || event.detail.target.id === 'modal-warn') {
+        initializeModal();
+    }
 });
 
-document.body.addEventListener("initializeModal", function(evt){
+document.body.addEventListener("initializeModal", function (evt) {
     initializeModal();
 })
 
@@ -98,10 +129,9 @@ document.body.addEventListener("initializeModal", function(evt){
 // Initial call to initialize the modal when the page loads
 initializeModal();
 
-  <!-- To handle Columns in form -->
-  let columnCount = 11; // Initial count based on the provided columns
+let columnCount = 11; // Initial count based on the provided columns
 
-  function addColumn() {
+function addColumn() {
     columnCount++;
     const form = document.getElementById('kanbanForm');
     const newColumn = document.createElement('div');
@@ -134,4 +164,4 @@ initializeModal();
                 </div>
             `;
     form.insertBefore(newColumn, document.getElementById('addColumnButton'));
-  }
+}
