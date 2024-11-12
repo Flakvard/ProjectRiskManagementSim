@@ -7,7 +7,6 @@
     @apply grow shrink basis-0 self-stretch bg-white/0 border-l border-t border-[#b9b9b9] flex-col justify-center items-start inline-flex;
   }
   .cell-content-border {
-    @apply border-l border-t border-[#b9b9b9];
   }
   .cell-text {
     @apply text-black text-xs font-normal font-['Inter'] leading-none;

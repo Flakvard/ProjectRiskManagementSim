@@ -17,9 +17,16 @@
         {
             <script>
 
-
+                // Extract simulation names to use as categories on the x-axis
+                let simulationNames = [
+                    @foreach (var simulation in sortedSimulations)
+                    {
+                        <text>'@simulation.Name',</text>
+                    }
+                ];
                 // Prepare the data by looping through the C# collection and outputting it as JavaScript
                 window.newChartData = {
+                    categories: simulationNames,  // Assign SimulationName as categories for better alignment
                     simDateData: [
                                     @foreach (var simulation in sortedSimulations)
                                     {
@@ -28,8 +35,9 @@
                                         {
                                             <text>
                                             {
-                                              x: new Date('@(simulation.SimEndDate?.ToString("yyyy-MM-dd") ?? "1970-01-01")').getTime(),
-                                              y: new Date('@(simulation.SimEndDate?.ToString("yyyy-MM-dd") ?? "1970-01-01")').getTime()
+                                              x: '@(simulation.Name.ToString() ?? "NaN")',
+                                              y: new Date('@(simulation.SimEndDate?.ToString("yyyy-MM-dd") ?? "1970-01-01")').getTime(),
+                                              label: '@simulation.Name'
                                             },
                                             </text>
                                         }
@@ -42,8 +50,9 @@
                                             {
                                                 <text>
                                                         {
-                                                            x: new Date('@(simulation.SimEndDate?.ToString("yyyy-MM-dd") ?? "1970-01-01")').getTime(),
-                                                            y: new Date('@(simulation.TargetDate.ToString("yyyy-MM-dd") ?? "1970-01-01")').getTime()
+                                                            x: '@(simulation.Name.ToString() ?? "NaN")',
+                                                            y: new Date('@(simulation.TargetDate.ToString("yyyy-MM-dd") ?? "1970-01-01")').getTime(),
+                                                            label: '@simulation.Name'
                                                         },
                                                 </text>
                                             }

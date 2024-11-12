@@ -1,88 +1,58 @@
 @using ProjectRiskManagementSim.DataAccess.Models
 @using ProjectRiskManagementSim.SimulationBlazor.Components.Pages.Dashboard
-<!-- SimulationsResultTable -->
 
+<div class="w-full border border-gray-300 rounded-lg overflow-hidden bg-white">
+    <!-- Header Row -->
+    <div class="grid grid-cols-12 bg-gray-200 text-gray-700 font-semibold text-center border-b border-gray-300">
+        <div class="cell-header-bg cell-content-border p-1 text-center cell-header-text">Simulations Name</div>
+        <div class="cell-header-bg cell-content-border p-1 text-center cell-header-text">Sim. Date</div>
+        <div class="cell-header-bg cell-content-border p-1 text-center cell-header-text">Target Date</div>
+        <div class="cell-header-bg cell-content-border p-1 text-center cell-header-text">Days</div>
+        <div class="cell-header-bg cell-content-border p-1 text-center cell-header-text">Budget</div>
+        <div class="cell-header-bg cell-content-border p-1 text-center cell-header-text">SimCost</div>
+        <div class="cell-header-bg cell-content-border p-1 text-center cell-header-text">Actual</div>
+        <div class="cell-header-bg cell-content-border p-1 text-center cell-header-text">Cost Difference</div>
+        <div class="cell-header-bg cell-content-border p-1 text-center cell-header-text">Cost/day</div>
+        <div class="cell-header-bg cell-content-border p-1 text-center cell-header-text">SimCost/day</div>
+        <div class="cell-header-bg cell-content-border p-1 text-center cell-header-text">Epics</div>
+        <div class="cell-header-bg cell-content-border p-1 text-center cell-header-text">Bug %</div>
+    </div>
 
-<div class="Table1 grow shrink basis-0 self-stretch flex-col justify-start items-start inline-flex">
-  <table class="Table self-stretch grow shrink basis-0 bg-white rounded border border-[#b9b9b9]">
-    <!-- Table Header -->
-    <thead class="TableHeader sticky top-0 z-10 cell-header-bg">
-      <tr>
-        <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
-          Simulations</th>
-        <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
-          Sim. Date</th>
-        <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
-          Target Date</th>
-        <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
-          Days</th>
-        <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
-          Budget</th>
-        <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
-          SimCost</th>
-        <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
-          Actual</th>
-        <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
-          Cost Difference</th>
-        <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
-          Cost/day</th>
-        <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
-          SimCost/day</th>
-        <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
-          Epics</th>
-        <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
-          Bug %</th>
-      </tr>
-    </thead>
     <!-- Table Body -->
-    <tbody class="TableBody overflow-y-auto max-h-[500px]"> <!-- Set max-height to control body scrolling -->
-      @if (@simulationResults != null && @simulationResults.SimulationsResultTableModels != null)
-      {
-      @foreach (var result in @simulationResults.SimulationsResultTableModels)
-      {
-      <tr href="/dashboard/@result.Id" hx-trigger="click" class="Row @(result.Id == @ProjectSimulationId ? "bg-[#FFBEC3]" : "" )" border-l border-t border-[#b9b9b9]">
-        <td class="cell-content-border p-3 cell-text">
-          @result.SimulationName</td>
-        <td class="cell-content-border p-3 text-center cell-text">
-          @result.SimulationDate</td>
-        <td class="cell-content-border p-3 text-center cell-text">
-          @result.TargetDate</td>
-        <td class="cell-content-border p-3 text-center cell-text">
-          @result.DelayPerDay
-        </td>
-        <td class="cell-content-border p-3 text-center cell-text">
-          @result.Budget</td>
-        <td class="cell-content-border p-3 text-center cell-text">
-          @result.SimCost</td>
-        <td class="cell-content-border p-3 text-center cell-text">
-          @result.ActualCost</td>
-        <td class="cell-content-border p-3 text-center cell-text">
-          @result.CostDifference</td>
-        <td class="cell-content-border p-3 text-center cell-text">
-          @result.CostPerDay</td>
-        <td class="cell-content-border p-3 text-center cell-text">
-          @result.SimCostPerDay</td>
-        <td class="cell-content-border p-3 text-center cell-text">
-          @result.Epics</td>
-        <td class="cell-content-border p-3 text-center cell-text">
-          @result.BugPercentage</td>
-      </tr>
-      }
-
-      }
-    </tbody>
-  </table>
+    <div class="overflow-y-auto max-h-[500px] divide-y divide-gray-200">
+        @if (simulationResults != null && simulationResults.SimulationsResultTableModels != null)
+        {
+            @foreach (var result in simulationResults.SimulationsResultTableModels)
+            {
+                <a href="/dashboard/@result.Id" hx-trigger="apexCharts from:body">
+                    <div class="grid grid-cols-12 items-center text-center hover:bg-gray-100 cursor-pointer @(result.Id == ProjectSimulationId ? "bg-[#FFBEC3]" : "" )" href="/dashboard/@result.Id" hx-trigger="click">
+                        <div class="cell-content-border p-3 cell-text line-clamp-2 hover:line-clamp--none">@result.SimulationName</div>
+                        <div class="cell-content-border p-3 cell-text">@result.SimulationDate</div>
+                        <div class="cell-content-border p-3 cell-text">@result.TargetDate</div>
+                        <div class="cell-content-border p-3 cell-text">@result.DelayPerDay</div>
+                        <div class="cell-content-border p-3 cell-text">@result.Budget</div>
+                        <div class="cell-content-border p-3 cell-text">@result.SimCost</div>
+                        <div class="cell-content-border p-3 cell-text">@result.ActualCost</div>
+                        <div class="cell-content-border p-3 cell-text">@result.CostDifference</div>
+                        <div class="cell-content-border p-3 cell-text">@result.CostPerDay</div>
+                        <div class="cell-content-border p-3 cell-text">@result.SimCostPerDay</div>
+                        <div class="cell-content-border p-3 cell-text">@result.Epics</div>
+                        <div class="cell-content-border p-3 cell-text">@result.BugPercentage</div>
+                    </div>
+                </a>
+            }
+        }
+    </div>
 </div>
 
 @code {
+    [Parameter] public int ProjectSimulationId { get; set; }
+    [Parameter] public List<ProjectSimulationModel> Simulations { get; set; }
+    public ListSimulationsResultTable simulationResults { get; set; }
 
-[Parameter] public int ProjectSimulationId { get; set; }
-[Parameter] public List<ProjectSimulationModel> Simulations { get; set; }
-  public ListSimulationsResultTable simulationResults { get; set; }
-
-  protected override void OnInitialized()
-  {
-  simulationResults = new ListSimulationsResultTable();
-  simulationResults.Init(Simulations);
-  }
-  }
+    protected override void OnInitialized()
+    {
+        simulationResults = new ListSimulationsResultTable();
+        simulationResults.Init(Simulations);
+    }
+}

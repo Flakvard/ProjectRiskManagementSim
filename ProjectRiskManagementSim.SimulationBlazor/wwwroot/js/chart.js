@@ -36,6 +36,9 @@ function optionFactory(newData) {
             width: '100%',
             animations: {
               enabled: false,
+            },
+            toolbar: {
+                show: true
             }
         },
         series: [
@@ -49,7 +52,8 @@ function optionFactory(newData) {
             }
         ],
         xaxis: {
-            type: 'datetime',
+            type: 'category',
+            categories: newData.categories, // Use categories based on SimulationName
             labels: {
                 style: {
                     colors: '#7e44eb',
@@ -75,6 +79,14 @@ function optionFactory(newData) {
                     return date.toLocaleDateString();
                 }
             }
+        },
+        stroke: {
+            width: 5,
+            curve: 'smooth'  // Use 'straight' lines to match the style
+        },
+        markers: {
+            size: 6,
+            shape: "circle"
         },
         colors: ['#ff7c87', '#7e44eb', '#9C27B0'],
         legend: {
