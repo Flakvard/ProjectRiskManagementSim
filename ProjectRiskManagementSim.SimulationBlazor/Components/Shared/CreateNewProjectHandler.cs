@@ -4,6 +4,7 @@ using ProjectRiskManagementSim.DataAccess.Models;
 public class CreateNewProjectHandler
 {
     public int ProjectId { get; set; }
+    public int SimProjectId { get; set; } = 0;
     public string? Name { get; set; }
     public string? ProjectCategory { get; set; }
     public string? Manager { get; set; }
@@ -81,6 +82,12 @@ public class CreateNewProjectHandler
     }
     private async Task FetchProjectInfo(OxygenAnalyticsContext contextAnalytics, OxygenSimulationContext contextSimulation)
     {
+        if (SimProjectId != 0)
+        {
+            var simProjectModel = await contextSimulation.GetSimulationByIdAsync(SimProjectId);
+            MapProjectBackToModal(simProjectModel!.Project, simProjectModel);
+            return;
+        }
         // var projects = await context.Projects.ToListAsync();
         var project = await contextAnalytics.GetProjectByIdAsync(ProjectId);
         if (project == null)
@@ -88,6 +95,7 @@ public class CreateNewProjectHandler
             // Handle the case where the project is not found
             throw new InvalidOperationException($"Project with ID {ProjectId} not found.");
         }
+
         var simProject = contextSimulation.GetProjectById(project.JiraId);
         if (simProject == null)
         {
@@ -110,56 +118,61 @@ public class CreateNewProjectHandler
             // map the last inserted simualtion to the CreateNewProjectHandler
             var listOfSimProject = await contextSimulation.GetProjectSimulationsAsync(simProject.Id);
             ProjectSimulationModel lastSimProject = listOfSimProject.Last();
-            // Map to CreateNewProjectHandler
-            ProjectId = project.Id;
-            Name = project.Name;
-            ProjectCategory = project.ProjectCategory;
-            StartDate = lastSimProject.StartDate;
-            TargetDate = lastSimProject.TargetDate;
-            JiraId = project.JiraId;
-            JiraProjectId = project.JiraProjectId;
-            TotalRevenue = (double)lastSimProject.ActualRevenue;
-            BudgetCosts = lastSimProject.BudgetCosts;
-            TotalCost = (double)lastSimProject.ActualCosts;
-            SimulationCosts = lastSimProject.SimulationCosts;
-            CostPrDay = lastSimProject.CostPrDay;
-            FrontendDevs = lastSimProject.FrontendDevs;
-            BackendDevs = lastSimProject.BackendDevs;
-            Testers = lastSimProject.Testers;
-            ActualDays = lastSimProject.ActualDays;
-            TargetDays = lastSimProject.TargetDays;
-            SimulationDays = lastSimProject.SimulationDays;
-            SimulationDaysOfDelay = lastSimProject.SimulationDaysOfDelay;
-            ActualHours = lastSimProject.ActualHours;
-            CreatedAt = lastSimProject.CreatedAt;
-            UpdatedAt = lastSimProject.UpdatedAt;
-            DeliverablesCount = lastSimProject.DeliverablesCount;
-            IssuesCount = (int)lastSimProject.IssueCount;
-            PercentageLowBound = lastSimProject.PercentageLowBound;
-            PercentageHighBound = lastSimProject.PercentageHighBound;
-
-            EpicCount = (int)lastSimProject.DeliverablesCount;
-            IssuesDoneCount = (int)lastSimProject.IssueDoneCount;
-            BugCount = (int)lastSimProject.BugCount;
-            BugPercentage = lastSimProject.BugPercentage;
-
-            // Map the last inserted simulation to the CreateNewProjectHandler
-
-            var projectLowBound = lastSimProject.Columns.Select(x => x.EstimatedLowBound).ToList();
-            var projectHighBound = lastSimProject.Columns.Select(x => x.EstimatedHighBound).ToList();
-            BacklogPercentiles = new List<double> { projectLowBound[0], projectHighBound[0] };
-            OpenPercentiles = new List<double> { projectLowBound[1], projectHighBound[1] };
-            InProgressPercentiles = new List<double> { projectLowBound[2], projectHighBound[2] };
-            AwaitingCustomerPercentiles = new List<double> { projectLowBound[3], projectHighBound[3] };
-            FinishedPercentiles = new List<double> { projectLowBound[4], projectHighBound[4] };
-            ReadyForTestOnStagePercentiles = new List<double> { projectLowBound[5], projectHighBound[5] };
-            TestingOnStagePercentiles = new List<double> { projectLowBound[6], projectHighBound[6] };
-            WaitingForDeploymentToProductionPercentiles = new List<double> { projectLowBound[7], projectHighBound[7] };
-            ReadyToTestOnProductionPercentiles = new List<double> { projectLowBound[8], projectHighBound[8] };
-            DonePercentiles = new List<double> { projectLowBound[9], projectHighBound[9] };
+            MapProjectBackToModal(lastSimProject.Project, lastSimProject);
 
         }
     }
+
+    private void MapProjectBackToModal(ProjectModel project, ProjectSimulationModel lastSimProject)
+    {
+        // Map to CreateNewProjectHandler
+        ProjectId = project.Id;
+        Name = project.Name;
+        StartDate = lastSimProject.StartDate;
+        TargetDate = lastSimProject.TargetDate;
+        JiraId = project.JiraId;
+        JiraProjectId = project.JiraProjectId;
+        TotalRevenue = (double)lastSimProject.ActualRevenue;
+        BudgetCosts = lastSimProject.BudgetCosts;
+        TotalCost = (double)lastSimProject.ActualCosts;
+        SimulationCosts = lastSimProject.SimulationCosts;
+        CostPrDay = lastSimProject.CostPrDay;
+        FrontendDevs = lastSimProject.FrontendDevs;
+        BackendDevs = lastSimProject.BackendDevs;
+        Testers = lastSimProject.Testers;
+        ActualDays = lastSimProject.ActualDays;
+        TargetDays = lastSimProject.TargetDays;
+        SimulationDays = lastSimProject.SimulationDays;
+        SimulationDaysOfDelay = lastSimProject.SimulationDaysOfDelay;
+        ActualHours = lastSimProject.ActualHours;
+        CreatedAt = lastSimProject.CreatedAt;
+        UpdatedAt = lastSimProject.UpdatedAt;
+        DeliverablesCount = lastSimProject.DeliverablesCount;
+        IssuesCount = (int)lastSimProject.IssueCount;
+        PercentageLowBound = lastSimProject.PercentageLowBound;
+        PercentageHighBound = lastSimProject.PercentageHighBound;
+
+        EpicCount = (int)lastSimProject.DeliverablesCount;
+        IssuesDoneCount = (int)lastSimProject.IssueDoneCount;
+        BugCount = (int)lastSimProject.BugCount;
+        BugPercentage = lastSimProject.BugPercentage;
+
+        // Map the last inserted simulation to the CreateNewProjectHandler
+
+        var projectLowBound = lastSimProject.Columns.Select(x => x.EstimatedLowBound).ToList();
+        var projectHighBound = lastSimProject.Columns.Select(x => x.EstimatedHighBound).ToList();
+        BacklogPercentiles = new List<double> { projectLowBound[0], projectHighBound[0] };
+        OpenPercentiles = new List<double> { projectLowBound[1], projectHighBound[1] };
+        InProgressPercentiles = new List<double> { projectLowBound[2], projectHighBound[2] };
+        AwaitingCustomerPercentiles = new List<double> { projectLowBound[3], projectHighBound[3] };
+        FinishedPercentiles = new List<double> { projectLowBound[4], projectHighBound[4] };
+        ReadyForTestOnStagePercentiles = new List<double> { projectLowBound[5], projectHighBound[5] };
+        TestingOnStagePercentiles = new List<double> { projectLowBound[6], projectHighBound[6] };
+        WaitingForDeploymentToProductionPercentiles = new List<double> { projectLowBound[7], projectHighBound[7] };
+        ReadyToTestOnProductionPercentiles = new List<double> { projectLowBound[8], projectHighBound[8] };
+        DonePercentiles = new List<double> { projectLowBound[9], projectHighBound[9] };
+    }
+
     private async Task CalculateCount(OxygenAnalyticsContext context)
     {
         var issuesCount = 0;
