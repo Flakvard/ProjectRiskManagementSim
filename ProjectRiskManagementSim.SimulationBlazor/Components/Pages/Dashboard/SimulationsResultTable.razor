@@ -23,9 +23,11 @@
         <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
           Actual</th>
         <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
+          Cost Difference</th>
+        <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
           Cost/day</th>
         <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
-          Days</th>
+          SimCost/day</th>
         <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
           Epics</th>
         <th class="cell-header-bg cell-content-border p-1 text-center cell-header-text">
@@ -38,7 +40,7 @@
       {
       @foreach (var result in @simulationResults.SimulationsResultTableModels)
       {
-      <tr class="Row">
+      <tr href="/dashboard/@result.Id" hx-trigger="click" class="Row @(result.Id == @ProjectSimulationId ? "bg-[#FFBEC3]" : "" )" border-l border-t border-[#b9b9b9]">
         <td class="cell-content-border p-3 cell-text">
           @result.SimulationName</td>
         <td class="cell-content-border p-3 text-center cell-text">
@@ -55,9 +57,11 @@
         <td class="cell-content-border p-3 text-center cell-text">
           @result.ActualCost</td>
         <td class="cell-content-border p-3 text-center cell-text">
+          @result.CostDifference</td>
+        <td class="cell-content-border p-3 text-center cell-text">
           @result.CostPerDay</td>
         <td class="cell-content-border p-3 text-center cell-text">
-          @result.Days</td>
+          @result.SimCostPerDay</td>
         <td class="cell-content-border p-3 text-center cell-text">
           @result.Epics</td>
         <td class="cell-content-border p-3 text-center cell-text">
@@ -72,6 +76,7 @@
 
 @code {
 
+[Parameter] public int ProjectSimulationId { get; set; }
 [Parameter] public List<ProjectSimulationModel> Simulations { get; set; }
   public ListSimulationsResultTable simulationResults { get; set; }
 
