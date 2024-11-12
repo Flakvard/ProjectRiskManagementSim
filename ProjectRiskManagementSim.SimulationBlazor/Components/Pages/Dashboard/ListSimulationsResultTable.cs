@@ -10,7 +10,42 @@ public partial class ListSimulationsResultTable
 
     public ListSimulationsResultTable()
     {
-        SimulationsResultTableModels = SimulationsResultTableModel.InitializeSimulationResults();
+        if (Simulations == null)
+            SimulationsResultTableModels = SimulationsResultTableModel.InitializeSimulationResults();
+        if (Simulations != null)
+        {
+            SimulationsResultTableModels = MapProjectSimModelToResultTable(Simulations);
+        }
+    }
+    public void Init(List<ProjectSimulationModel> simulationModels)
+    {
+        Simulations = simulationModels;
+        if (Simulations == null)
+            SimulationsResultTableModels = SimulationsResultTableModel.InitializeSimulationResults();
+        if (Simulations != null)
+        {
+            SimulationsResultTableModels = MapProjectSimModelToResultTable(Simulations);
+        }
+    }
+    private List<SimulationsResultTableModel> MapProjectSimModelToResultTable(List<ProjectSimulationModel> simulations)
+    {
+        List<SimulationsResultTableModel> resultTableModels = new List<SimulationsResultTableModel>();
+        foreach (var simulation in simulations)
+        {
+            resultTableModels.Add(new SimulationsResultTableModel
+            {
+                SimulationName = simulation.Name ?? "N/A",
+                SimulationDate = simulation.SimEndDate?.ToString("dd MMM yyyy") ?? "N/A",
+                TargetDate = simulation.TargetDate.ToString("dd MMM yyyy"),
+                Days = (int)(simulation.SimulationDays ?? 0),
+                Budget = simulation.BudgetCosts?.ToString("N0") ?? "0",
+                ActualCost = simulation.ActualCosts?.ToString("N0") ?? "0",
+                CostPerDay = simulation.CostPrDay?.ToString() ?? "0",
+                DelayPerDay = simulation.SimulationDaysOfDelay?.ToString() ?? "0",
+                Epics = (int)simulation.DeliverablesCount
+            });
+        }
+        return resultTableModels;
     }
 }
 

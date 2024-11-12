@@ -30,6 +30,8 @@
     </thead>
     <!-- Table Body -->
     <tbody class="TableBody overflow-y-auto max-h-[500px]"> <!-- Set max-height to control body scrolling -->
+      @if (@simulationResults != null && @simulationResults.SimulationsResultTableModels != null)
+      {
       @foreach (var result in @simulationResults.SimulationsResultTableModels)
       {
       <tr class="Row">
@@ -53,32 +55,20 @@
           @result.Epics</td>
       </tr>
       }
+
+      }
     </tbody>
   </table>
 </div>
 
 @code {
 
-[Parameter] public List<ProjectSimulationModel> Simulations { get; set; }
-  public ListSimulationsResultTable simulationResults { get; set; }
+    [Parameter] public List<ProjectSimulationModel> Simulations { get; set; }
+    public ListSimulationsResultTable simulationResults { get; set; }
 
-  protected override void OnInitialized()
-  {
-  simulationResults = new ListSimulationsResultTable();
-  // foreach (var simulation in Simulations)
-  // {
-  // simulationResults.Add(new SimulationsResultTableModel
-  // {
-  // SimulationName = simulation.Name,
-  // SimulationDate = simulation.SimulationDate,
-  // TargetDate = simulation.TargetDate,
-  // Days = simulation.Days,
-  // Budget = simulation.Budget,
-  // ActualCost = simulation.ActualCost,
-  // CostPerDay = simulation.CostPerDay,
-  // DelayPerDay = simulation.DelayPerDay,
-  // Epics = simulation.Epics
-  // });
-  // }
-  }
+    protected override void OnInitialized()
+    {
+        simulationResults = new ListSimulationsResultTable();
+        simulationResults.Init(Simulations);
+    }
   }

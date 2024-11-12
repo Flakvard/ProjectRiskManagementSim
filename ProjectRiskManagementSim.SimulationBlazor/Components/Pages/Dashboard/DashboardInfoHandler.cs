@@ -27,9 +27,7 @@ public class DashboardInfoHandler
             // Get all simulations for the project
             if (project != null)
             {
-                var simulations = await context.GetProjectSimulationsAsync(project.Id);
-                if (simulations != null)
-                    _simulations = simulations;
+                    _simulations = project.ProjectSimulationModels.ToList();
             }
         }
     }

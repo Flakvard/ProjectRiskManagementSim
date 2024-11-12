@@ -19,9 +19,9 @@
         <div class="w-full h-full items-start">
           <div class="p-4 bg-[#ffb4ba]/25 rounded-2xl">
             <div class="overflow-auto h-full w-full">
-              @if (@dashboardInfoHandler != null && @dashboardInfoHandler._simulations != null)
+                            @if (@dashboardInfoHandler != null && @dashboardInfoHandler._simulations != null && @dashboardInfoHandler._simulations.Count() != 0)
               {
-              <SimulationsResultTable Simulations=@dashboardInfoHandler._simulations />
+                                <SimulationsResultTable Simulations=@dashboardInfoHandler._simulations />
               }
             </div>
           </div>
