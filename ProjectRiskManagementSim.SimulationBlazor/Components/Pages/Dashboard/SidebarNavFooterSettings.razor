@@ -31,9 +31,14 @@
       <TrashButton />
     </button>
 
-    <button>
-      <SettingsIcon />
-    </button>
+    <div>
+      <button id="openUpdateModal" hx-put="/update-new-project-modal/@ProjectSimulationId"
+        hx-vals='{ "SimProjectId": @ProjectSimulationId }' hx-trigger="click" hx-target="#modal" hx-swap="innerHTML"
+        hx-indicator=".modal-indicator, .modal">
+        <SettingsIcon />
+      </button>
+      <Modal />
+    </div>
   </div>
 </div>
 @code {

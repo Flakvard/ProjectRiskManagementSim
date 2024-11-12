@@ -35,12 +35,20 @@ document.addEventListener('initializeSim', function (event) {
 
 function initializeModal() {
   const openModal = document.getElementById('openModal');
+  const openUpdateModal = document.getElementById('openUpdateModal');
   const modal = document.getElementById('modal');
   const closeModal = document.getElementById('closeModal');
   const closeModalFooter = document.getElementById('closeModalFooter');
     
   if (openModal) {
     openModal.addEventListener('click', () => {
+      modal.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden'); // Prevent scrolling on body
+    });
+  }
+
+  if (openUpdateModal) {
+    openUpdateModal.addEventListener('click', () => {
       modal.classList.remove('hidden');
       document.body.classList.add('overflow-hidden'); // Prevent scrolling on body
     });

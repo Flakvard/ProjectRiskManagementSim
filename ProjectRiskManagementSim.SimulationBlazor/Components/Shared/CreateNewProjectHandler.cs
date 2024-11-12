@@ -75,6 +75,7 @@ public class CreateNewProjectHandler
     public double DeliverablesCount { get; private set; }
     public double PercentageLowBound { get; private set; }
     public double PercentageHighBound { get; private set; }
+    public string NameOfSim { get; set; } = "";
 
     public async Task InitializeProjectsAsync(OxygenAnalyticsContext context, OxygenSimulationContext context1)
     {
@@ -85,8 +86,13 @@ public class CreateNewProjectHandler
         if (SimProjectId != 0)
         {
             var simProjectModel = await contextSimulation.GetSimulationByIdAsync(SimProjectId);
-            MapProjectBackToModal(simProjectModel!.Project, simProjectModel);
-            return;
+
+            if (simProjectModel != null && simProjectModel.Name != null)
+            {
+                NameOfSim = simProjectModel.Name;
+                MapProjectBackToModal(simProjectModel!.Project, simProjectModel);
+                return;
+            }
         }
         // var projects = await context.Projects.ToListAsync();
         var project = await contextAnalytics.GetProjectByIdAsync(ProjectId);
@@ -121,6 +127,17 @@ public class CreateNewProjectHandler
             MapProjectBackToModal(lastSimProject.Project, lastSimProject);
 
         }
+    }
+    private async Task UpdateAndFetchProjectInfor(int simProjectId, OxygenAnalyticsContext contextAnalytics, OxygenSimulationContext contextSimulation)
+    {
+        SimProjectId = simProjectId;
+        if (SimProjectId != 0)
+        {
+            var simProjectModel = await contextSimulation.GetSimulationByIdAsync(SimProjectId);
+            MapProjectBackToModal(simProjectModel!.Project, simProjectModel);
+            return;
+        }
+
     }
 
     private void MapProjectBackToModal(ProjectModel project, ProjectSimulationModel lastSimProject)
