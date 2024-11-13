@@ -137,24 +137,31 @@ public class CreateNewProjectHandler
             JiraId = project.JiraId;
             JiraProjectId = project.JiraProjectId;
 
-
-
             await CalculateCount(contextAnalytics);
-
             CalculatePercentiles();
             AlreadySimulated = false;
             return;
         }
-        else
+        else if (simProject != null)
         {
-            // map the last inserted simualtion to the CreateNewProjectHandler
-            var listOfSimProject = await contextSimulation.GetProjectSimulationsAsync(simProject.Id);
-            ProjectSimulationModel lastSimProject = listOfSimProject.Last();
-            await CalculateCount(contextAnalytics);
-            CalculatePercentiles();
-            AlreadySimulated = true;
-            MapProjectBackToModal(lastSimProject.Project, lastSimProject);
-            return;
+            var allSimulations = simProject.ProjectSimulationModels.ToList();
+            if (allSimulations != null && allSimulations.Count != 0)
+            {
+                // map the last inserted simualtion to the CreateNewProjectHandler
+                var listOfSimProject = await contextSimulation.GetProjectSimulationsAsync(simProject.Id);
+                ProjectSimulationModel lastSimProject = listOfSimProject.Last();
+                await CalculateCount(contextAnalytics);
+                CalculatePercentiles();
+                AlreadySimulated = true;
+                MapProjectBackToModal(lastSimProject.Project, lastSimProject);
+                return;
+            }
+            else
+            {
+                await CalculateCount(contextAnalytics);
+                CalculatePercentiles();
+                return;
+            }
 
         }
     }
@@ -252,7 +259,7 @@ public class CreateNewProjectHandler
         }
         foreach (var issueLeadTime in IssueLeadTimes)
         {
-            if (issueLeadTime.IssueType == "Task" || issueLeadTime.IssueType == "Sub-task" || issueLeadTime.IssueType == "Subtask" || issueLeadTime.IssueType == "Tech Task")
+            if (issueLeadTime.IssueType == "Task" || issueLeadTime.IssueType == "Sub-task" || issueLeadTime.IssueType == "Subtask" || issueLeadTime.IssueType == "Tech Task" || issueLeadTime.IssueType == "Story")
             {
                 issuesCount += 1;
                 if (issueLeadTime.CurrentStatus == "Done" || issueLeadTime.CurrentStatus == "Closed" || issueLeadTime.CurrentStatus == "Resolved")
@@ -316,9 +323,9 @@ public class CreateNewProjectHandler
         AwaitCustCount = awaitCust;
         AwaitTaskCount = awaitTask;
         Await3pCount = await3P;
-        if (issuesDoneCount > 0)
+        if (issuesCount > 0)
         {
-            BugPercentage = (double)bugCount / issuesDoneCount * 100;
+            BugPercentage = (double)bugCount / issuesCount * 100;
 
         }
         else
@@ -346,46 +353,49 @@ public class CreateNewProjectHandler
         {
             return;
         }
-        OpenPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.Open).ToList());
-        InProgressPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.InProgress).ToList());
-        ReopenedPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.Reopened).ToList());
-        ResolvedPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.Resolved).ToList());
-        ClosedPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.Closed).ToList());
-        BacklogPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.Backlog).ToList());
-        SelectedForDevelopmentPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.SelectedForDevelopment).ToList());
-        DonePercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.Done).ToList());
-        FinishedPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.Finished).ToList());
-        ReadyForTestOnStagePercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.ReadyForTestOnStage).ToList());
-        AwaitingCustomerPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.AwaitingCustomer).ToList());
-        AwaitingThirdPartyPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.AwaitingThirdParty).ToList());
-        AwaitingTaskPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.AwaitingTask).ToList());
-        TestingOnStagePercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.TestingOnStage).ToList());
-        WaitingForDeploymentToProductionPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.WaitingForDeploymentToProduction).ToList());
-        ReadyToTestOnProductionPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.ReadyToTestOnProduction).ToList());
-        AnsweredPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.Answered).ToList());
-        FailedTestPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.FailedTest).ToList());
-        ReadyForTestOnDevPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.ReadyForTestOnDev).ToList());
-        TestingOnDevPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.TestingOnDev).ToList());
-        WaitingForDeploymentToStagePercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.WaitingForDeploymentToStage).ToList());
-        ToDoPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.ToDo).ToList());
-        AwaitingEstimationPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.AwaitingEstimation).ToList());
-        InRefinementPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.InRefinement).ToList());
-        AwaitingApprovalPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.AwaitingApproval).ToList());
-        InDesignPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.InDesign).ToList());
-        AwaitingRefinementPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.AwaitingRefinement).ToList());
-        OnHoldPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.OnHold).ToList());
-        CreatedPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.Created).ToList());
+        OpenPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.Open > 0).Select(x => x.Open).ToList());
+        InProgressPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.InProgress > 0).Select(x => x.InProgress).ToList());
+        ReopenedPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.Reopened > 0).Select(x => x.Reopened).ToList());
+        ResolvedPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.Resolved > 0).Select(x => x.Resolved).ToList());
+        ClosedPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.Closed > 0).Select(x => x.Closed).ToList());
+        BacklogPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.Backlog > 0).Select(x => x.Backlog).ToList());
+        SelectedForDevelopmentPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.SelectedForDevelopment > 0).Select(x => x.SelectedForDevelopment).ToList());
+        DonePercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.Done > 0).Select(x => x.Done).ToList());
+        FinishedPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.Finished > 0).Select(x => x.Finished).ToList());
+        ReadyForTestOnStagePercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.ReadyForTestOnStage > 0).Select(x => x.ReadyForTestOnStage).ToList());
+        AwaitingCustomerPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.AwaitingCustomer > 0).Select(x => x.AwaitingCustomer).ToList());
+        AwaitingThirdPartyPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.AwaitingThirdParty > 0).Select(x => x.AwaitingThirdParty).ToList());
+        AwaitingTaskPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.AwaitingTask > 0).Select(x => x.AwaitingTask).ToList());
+        TestingOnStagePercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.TestingOnStage > 0).Select(x => x.TestingOnStage).ToList());
+        WaitingForDeploymentToProductionPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.WaitingForDeploymentToProduction > 0).Select(x => x.WaitingForDeploymentToProduction).ToList());
+        ReadyToTestOnProductionPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.ReadyToTestOnProduction > 0).Select(x => x.ReadyToTestOnProduction).ToList());
+        AnsweredPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.Answered > 0).Select(x => x.Answered).ToList());
+        FailedTestPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.FailedTest > 0).Select(x => x.FailedTest).ToList());
+        ReadyForTestOnDevPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.ReadyForTestOnDev > 0).Select(x => x.ReadyForTestOnDev).ToList());
+        TestingOnDevPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.TestingOnDev > 0).Select(x => x.TestingOnDev).ToList());
+        WaitingForDeploymentToStagePercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.WaitingForDeploymentToStage > 0).Select(x => x.WaitingForDeploymentToStage).ToList());
+        ToDoPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.ToDo > 0).Where(x => x.ToDo > 0).Select(x => x.ToDo).ToList());
+        AwaitingEstimationPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.AwaitingEstimation > 0).Select(x => x.AwaitingEstimation).ToList());
+        InRefinementPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.InRefinement > 0).Select(x => x.InRefinement).ToList());
+        AwaitingApprovalPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.AwaitingApproval > 0).Select(x => x.AwaitingApproval).ToList());
+        InDesignPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.InDesign > 0).Select(x => x.InDesign).ToList());
+        AwaitingRefinementPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.AwaitingRefinement > 0).Select(x => x.AwaitingRefinement).ToList());
+        OnHoldPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.OnHold > 0).Select(x => x.OnHold).ToList());
+        CreatedPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.Created > 0).Select(x => x.Created).ToList());
 
         // Filter out null CycleTime values before calculating percentiles
+
         CycleTimePercentiles = CalculatePercentile(
             IssueLeadTimes
                 .Where(x => x.CycleTime.HasValue) // Filters out null CycleTime values
+                .Where(x => x.CycleTime > 0) // Filters out 0 CycleTime values
                 .Select(x => x.CycleTime!.Value)   // Selects only the non-null values
                 .ToList()
           );
         BugCycleTimePercentiles = CalculatePercentile(
             ListOfBugIssues
                 .Where(x => x.CycleTime.HasValue) // Filters out null CycleTime values
+                .Where(x => x.CycleTime > 0) // Filters out 0 CycleTime values
                 .Select(x => x.CycleTime!.Value)   // Selects only the non-null values
                 .ToList()
           );
@@ -406,6 +416,7 @@ public class CreateNewProjectHandler
 
         // Update BugCycleTimePercentiles list
         BugCycleTimePercentiles = new List<double> { bugCycleTimeMultiplierLow, bugCycleTimeMultiplierHigh };
+
 
 
 

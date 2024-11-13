@@ -102,6 +102,16 @@ public static class PageRoutes
             {
                 return Results.NotFound();
             }
+            var allSimulations = await _context.GetProjectSimulationsAsync(simulation.ProjectId);
+            if (allSimulations == null)
+            {
+                return Results.NotFound();
+            }
+            // last sim in project delete projectModel aswell
+            if (allSimulations.Count == 1)
+            {
+                _context.ProjectModel.Remove(simulation.Project);
+            }
             _context.Remove(simulation);
             _context.SaveChanges();
             // Delete the simulation with the given ID
