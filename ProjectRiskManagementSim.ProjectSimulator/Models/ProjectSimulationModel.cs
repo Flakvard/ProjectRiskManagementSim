@@ -56,6 +56,21 @@ public class ProjectSimulationModel
                 WIP = c.WIP,
                 IsBuffer = c.IsBuffer
 
+            }).ToList(),
+            Defects = original.Defects.Select(d => new DefectModel
+            {
+                Name = d.Name,
+                DefectPercentage = d.DefectPercentage,
+                DefectsPercentageLowBound = d.DefectsPercentageLowBound,
+                DefectsPercentageHighBound = d.DefectsPercentageHighBound,
+            }).ToList(),
+
+            BlockingEvents = original.BlockingEvents.Select(b => new BlockingEventModel
+            {
+                Name = b.Name,
+                BlockingEventPercentage = b.BlockingEventPercentage,
+                BlockingEventsPercentageHighBound = b.BlockingEventsPercentageHighBound,
+                BlockingEventsPercentageLowBound = b.BlockingEventsPercentageLowBound,
             }).ToList()
         };
     }

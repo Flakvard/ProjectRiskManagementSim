@@ -137,6 +137,10 @@ public class MonteCarloSimulation : IMonteCarloSimulation
         {
             // Increment the current day for each iteration
             currentDay++;
+            if (currentDay > 3600)
+            {
+                throw new InvalidOperationException("Simulation took too long > 10 years");
+            }
 
             foreach (var column in columns)
             {
@@ -594,7 +598,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
                             if (defect != null && defect.DefectPercentage != 0)
                             {
                                 var randomVal = ThreadSafeRandom.ThisThreadsRandom.NextDouble();
-                                var defectPercentage = defect.DefectPercentage/100;
+                                var defectPercentage = defect.DefectPercentage / 100;
                                 if (randomVal < defectPercentage)
                                 {
 
@@ -737,8 +741,8 @@ public class MonteCarloSimulation : IMonteCarloSimulation
             var newProjectSimModel = projectSimModel.CloneProjectSimModel(projectSimModel, defectName);
             // Modify the estimated bounds of the specific defect
             var defectToModify = newProjectSimModel.Defects[i];
-            // defectToModify.DefectsPercentageLowBound *= estimateMultiplier;
-            // defectToModify.DefectsPercentageHighBound *= estimateMultiplier;
+            defectToModify.DefectsPercentageLowBound *= estimateMultiplier;
+            defectToModify.DefectsPercentageHighBound *= estimateMultiplier;
             defectToModify.DefectPercentage /= estimateMultiplier;
 
             projectWithModifiedEstimates.Add(newProjectSimModel);
