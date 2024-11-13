@@ -41,11 +41,11 @@
 
         <div>
             <button id="openUpdateModal" hx-put="/update-new-project-modal/@ProjectSimulationId"
-                    hx-vals='{ "SimProjectId": @ProjectSimulationId }' hx-trigger="click" hx-target="#modal" hx-swap="innerHTML"
-                    hx-indicator=".modal-indicator, .modal">
+                    hx-vals='{ "SimProjectId": @ProjectSimulationId }' hx-trigger="click" hx-target="#model-update" hx-swap="outerHTML"
+                    hx-indicator=".modal-indicator, .modal-update">
                 <SettingsIcon />
             </button>
-            <Modal />
+            <UpdateNewProjectModal ProjectSimulationId="@ProjectSimulationId" />
         </div>
     </div>
 </div>
