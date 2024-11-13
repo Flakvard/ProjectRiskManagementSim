@@ -17,6 +17,14 @@ public class CreateNewProjectHandler
     public int BugCount { get; set; }
     public double BugPercentage { get; set; }
 
+    public double AwaitCustPercentage { get; set; }
+    public double AwaitTaskPercentage { get; set; }
+    public double Await3pPercentage { get; set; }
+
+    public int AwaitCustCount { get; set; }
+    public int AwaitTaskCount { get; set; }
+    public int Await3pCount { get; set; }
+
     // Properties for percentiles
     public List<double> OpenPercentiles { get; set; } = new List<double> { 0, 0 };
     public List<double> InProgressPercentiles { get; set; } = new List<double> { 0, 0 };
@@ -48,6 +56,18 @@ public class CreateNewProjectHandler
     public List<double> OnHoldPercentiles { get; set; } = new List<double> { 0, 0 };
     public List<double> CreatedPercentiles { get; set; } = new List<double> { 0, 0 };
 
+    public List<double> CycleTimePercentiles { get; set; } = new List<double> { 0, 0 };
+    public List<double> BugCycleTimePercentiles { get; set; } = new List<double> { 0, 0 };
+    public List<double> AwaitCustPercentiles { get; set; } = new List<double> { 0, 0 };
+    public List<double> AwaitTaskPercentiles { get; set; } = new List<double> { 0, 0 };
+    public List<double> Await3PPercentiles { get; set; } = new List<double> { 0, 0 };
+
+    public List<IssueLeadTime> ListOfBugIssues { get; set; } = new List<IssueLeadTime>();
+    public List<IssueLeadTime> ListOfAwaitCust { get; set; } = new List<IssueLeadTime>();
+    public List<IssueLeadTime> ListOfAwaitTask { get; set; } = new List<IssueLeadTime>();
+    public List<IssueLeadTime> ListOfAwait3P { get; set; } = new List<IssueLeadTime>();
+
+
     public DateTime StartDate { get; set; } = new DateTime();
     public DateTime? SimEndDate { get; set; }
     public DateTime? TargetDate { get; set; } = new DateTime();
@@ -76,6 +96,7 @@ public class CreateNewProjectHandler
     public double PercentageLowBound { get; private set; }
     public double PercentageHighBound { get; private set; }
     public string NameOfSim { get; set; } = "";
+    public bool AlreadySimulated { get; set; } = false;
 
     public async Task InitializeProjectsAsync(OxygenAnalyticsContext context, OxygenSimulationContext context1)
     {
@@ -91,6 +112,7 @@ public class CreateNewProjectHandler
             {
                 NameOfSim = simProjectModel.Name;
                 MapProjectBackToModal(simProjectModel!.Project, simProjectModel);
+                AlreadySimulated = true;
                 return;
             }
         }
@@ -101,6 +123,11 @@ public class CreateNewProjectHandler
             // Handle the case where the project is not found
             throw new InvalidOperationException($"Project with ID {ProjectId} not found.");
         }
+        IssueLeadTimes = await contextAnalytics.GetIssueLeadTimesByProjectAsync(project.Name);
+        if (IssueLeadTimes == null || IssueLeadTimes.Count == 0)
+        {
+            IssueLeadTimes = new List<IssueLeadTime>(); // Ensure it’s an empty list instead of null
+        }
 
         var simProject = contextSimulation.GetProjectById(project.JiraId);
         if (simProject == null)
@@ -109,31 +136,44 @@ public class CreateNewProjectHandler
             ProjectCategory = project.ProjectCategory;
             JiraId = project.JiraId;
             JiraProjectId = project.JiraProjectId;
-            IssueLeadTimes = await contextAnalytics.GetIssueLeadTimesByProjectAsync(project.Name);
-            if (IssueLeadTimes == null || IssueLeadTimes.Count == 0)
-            {
-                IssueLeadTimes = new List<IssueLeadTime>(); // Ensure it’s an empty list instead of null
-            }
+
+
 
             await CalculateCount(contextAnalytics);
 
             CalculatePercentiles();
+            AlreadySimulated = false;
+            return;
         }
         else
         {
             // map the last inserted simualtion to the CreateNewProjectHandler
             var listOfSimProject = await contextSimulation.GetProjectSimulationsAsync(simProject.Id);
             ProjectSimulationModel lastSimProject = listOfSimProject.Last();
+            await CalculateCount(contextAnalytics);
+            CalculatePercentiles();
+            AlreadySimulated = true;
             MapProjectBackToModal(lastSimProject.Project, lastSimProject);
+            return;
 
         }
     }
-    private async Task UpdateAndFetchProjectInfor(int simProjectId, OxygenAnalyticsContext contextAnalytics, OxygenSimulationContext contextSimulation)
+    public async Task UpdateAndFetchProjectInfor(int simProjectId, OxygenAnalyticsContext contextAnalytics, OxygenSimulationContext contextSimulation)
     {
         SimProjectId = simProjectId;
         if (SimProjectId != 0)
         {
+
             var simProjectModel = await contextSimulation.GetSimulationByIdAsync(SimProjectId);
+
+            IssueLeadTimes = await contextAnalytics.GetIssueLeadTimesByProjectAsync(simProjectModel.Project.Name);
+            if (IssueLeadTimes == null || IssueLeadTimes.Count == 0)
+            {
+                IssueLeadTimes = new List<IssueLeadTime>(); // Ensure it’s an empty list instead of null
+            }
+
+            await CalculateCount(contextAnalytics);
+            CalculatePercentiles();
             MapProjectBackToModal(simProjectModel!.Project, simProjectModel);
             return;
         }
@@ -196,12 +236,18 @@ public class CreateNewProjectHandler
         var epicCount = 0;
         var bugCount = 0;
         var issuesDoneCount = 0;
+        var awaitCust = 0;
+        var awaitTask = 0;
+        var await3P = 0;
         if (IssueLeadTimes == null)
         {
             IssuesCount = issuesCount;
             IssuesDoneCount = issuesDoneCount;
             EpicCount = epicCount;
             BugCount = bugCount;
+            AwaitCustCount = awaitCust;
+            AwaitTaskCount = awaitTask;
+            Await3pCount = await3P;
             return;
         }
         foreach (var issueLeadTime in IssueLeadTimes)
@@ -217,6 +263,7 @@ public class CreateNewProjectHandler
             else if (issueLeadTime.IssueType == "Bug" || issueLeadTime.IssueType == "Sub-bug")
             {
                 bugCount += 1;
+                ListOfBugIssues.Add(issueLeadTime);
             }
             else if (issueLeadTime.IssueType == "Epic")
             {
@@ -246,15 +293,44 @@ public class CreateNewProjectHandler
             {
                 LastIssueDate = issueUpdatedDate;
             }
+            if (issueLeadTime.AwaitingCustomer > 0)
+            {
+                awaitCust += 1;
+                ListOfAwaitCust.Add(issueLeadTime);
+            }
+            if (issueLeadTime.AwaitingTask > 0)
+            {
+                awaitTask += 1;
+                ListOfAwaitTask.Add(issueLeadTime);
+            }
+            if (issueLeadTime.AwaitingThirdParty > 0)
+            {
+                await3P += 1;
+                ListOfAwait3P.Add(issueLeadTime);
+            }
         }
         IssuesCount = issuesCount;
         EpicCount = epicCount;
         BugCount = bugCount;
         IssuesDoneCount = issuesDoneCount;
+        AwaitCustCount = awaitCust;
+        AwaitTaskCount = awaitTask;
+        Await3pCount = await3P;
         if (issuesDoneCount > 0)
         {
             BugPercentage = (double)bugCount / issuesDoneCount * 100;
 
+        }
+        else
+        {
+            BugPercentage = 0; // Default to 0 if no issues are done
+        }
+
+        if (issuesCount > 0)
+        {
+            AwaitCustPercentage = ((double)awaitCust / issuesCount) * 100;
+            AwaitTaskPercentage = ((double)awaitTask / issuesCount) * 100;
+            Await3pPercentage = ((double)await3P / issuesCount) * 100;
         }
         var totalHours = Issues.Sum(x => x.TimeSpentSeconds) / 3600;
         TotalHours = totalHours != null ? (double)totalHours : 0.0;
@@ -299,10 +375,62 @@ public class CreateNewProjectHandler
         AwaitingRefinementPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.AwaitingRefinement).ToList());
         OnHoldPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.OnHold).ToList());
         CreatedPercentiles = CalculatePercentile(IssueLeadTimes.Select(x => x.Created).ToList());
+
+        // Filter out null CycleTime values before calculating percentiles
+        CycleTimePercentiles = CalculatePercentile(
+            IssueLeadTimes
+                .Where(x => x.CycleTime.HasValue) // Filters out null CycleTime values
+                .Select(x => x.CycleTime!.Value)   // Selects only the non-null values
+                .ToList()
+          );
+        BugCycleTimePercentiles = CalculatePercentile(
+            ListOfBugIssues
+                .Where(x => x.CycleTime.HasValue) // Filters out null CycleTime values
+                .Select(x => x.CycleTime!.Value)   // Selects only the non-null values
+                .ToList()
+          );
+        AwaitCustPercentiles = CalculatePercentile(
+            ListOfAwaitCust
+            .Where(x => x.AwaitingCustomer > 0) // Filters out null CycleTime values
+                .Select(x => x.AwaitingCustomer)   // Selects only the non-null values
+                .ToList()
+            );
+        var cycleTimeLowBound = CycleTimePercentiles[0];
+        var cycleTimeHighBound = CycleTimePercentiles[1];
+        var bugCycleTimeLow = BugCycleTimePercentiles[0];
+        var bugCycleTimeHigh = BugCycleTimePercentiles[1];
+
+        // Safely calculate multipliers with checks for zero values to avoid NaN results
+        double bugCycleTimeMultiplierLow = (bugCycleTimeLow != 0) ? (bugCycleTimeLow / cycleTimeLowBound) * 100 : 0;
+        double bugCycleTimeMultiplierHigh = (bugCycleTimeHigh != 0) ? (bugCycleTimeHigh / cycleTimeHighBound) * 100 : 0;
+
+        // Update BugCycleTimePercentiles list
+        BugCycleTimePercentiles = new List<double> { bugCycleTimeMultiplierLow, bugCycleTimeMultiplierHigh };
+
+
+
+
+
+        AwaitTaskPercentiles = CalculatePercentile(
+            ListOfAwaitTask
+            .Where(x => x.AwaitingTask > 0) // Filters out null CycleTime values
+                .Select(x => x.AwaitingTask)   // Selects only the non-null values
+                .ToList()
+            );
+        Await3PPercentiles = CalculatePercentile(
+            ListOfAwait3P
+            .Where(x => x.AwaitingThirdParty > 0) // Filters out null CycleTime values
+                .Select(x => x.AwaitingThirdParty)   // Selects only the non-null values
+                .ToList()
+            );
+
+
     }
 
     private List<double> CalculatePercentile(List<double> values)
     {
+        if (values.Count == 0)
+            return new List<double> { 0, 0 };
         values.Sort();
         var lowerBound = values.Percentile(0.05);
         var upperBound = values.Percentile(0.95);

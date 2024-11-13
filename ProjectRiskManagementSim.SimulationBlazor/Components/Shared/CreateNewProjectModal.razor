@@ -11,8 +11,7 @@
     <div class="px-4 py-2 bg-[#7e44eb] rounded-t-lg flex justify-start items-center border-b flex">
         <h2 class="text-white text-lg font-semibold justify-start">New Simulation</h2>
         <div class="flex justify-end grow shrink self-stretch">
-            <button id="closeModal" class="text-white hover:text-black p-2 w-12 h-12 "><RefreshButton /></button>
-            <button id="closeModal" class="text-white hover:text-black p-2 w-12 h-12 "><CloseButton /></button>
+            <button type="button" id="closeModal" class="text-white hover:text-black p-2 w-12 h-12 "><CloseButton /></button>
         </div>
     </div>
 
@@ -459,7 +458,7 @@
     <!-- Modal Footer -->
     <div class="px-4 py-2 border-t h-fit flex justify-between">
         <div class="flex justify-start">
-            <button id="closeModalFooter" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 mr-2">
+            <button id="closeModalFooter" type="button" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 mr-2">
                 Close
             </button>
             <button type="submit" class="bg-[#7e44eb] text-white px-4 py-2 rounded hover:bg-red-400" hx-put="/select-project"
@@ -485,7 +484,7 @@
     [Parameter] public int ProjectId { get; set; }
     [SupplyParameterFromForm] public int SimProjectId { get; set; }
     public CreateNewProjectHandler NewProjectHandler { get; set; } = new CreateNewProjectHandler();
-    public bool AlreadyExists { get; set; }
+    [SupplyParameterFromForm] public bool AlreadyExists { get; set; }
     protected override async Task OnInitializedAsync()
     {
         NewProjectHandler.ProjectId = ProjectId;

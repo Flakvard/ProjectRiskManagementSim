@@ -473,55 +473,55 @@
                                             </div>
                                             <div>
                                                 <label>Bug %:</label>
-                                                <input class="input-border" type="number" step="1" name="BugPercentage" required
-                                                       value="@double.Round(@NewProjectHandler.BugPercentage,2)" />
+                                            <input class="input-border" type="number" step="0.01" name="BugPercentage" required
+                                                   value="@double.Round(@NewProjectHandler.BugPercentage,2).ToString(System.Globalization.CultureInfo.InvariantCulture)" />
                                             </div>
                                             <div class="">
                                                 <label>Bug Percentage Low Bound:</label>
-                                                <input class="input-border" type="number" step="1" name="BugCycleTimePercentilesLowBound" required value="@NewProjectHandler.BugCycleTimePercentiles[0]" />
+                                            <input class="input-border" type="number" step="0.01" name="BugCycleTimePercentilesLowBound" required value="@double.Round(@NewProjectHandler.BugCycleTimePercentiles[0],2).ToString(System.Globalization.CultureInfo.InvariantCulture)" />
                                             </div>
                                             <div class="">
                                                 <label>Bug Percentage High Bound:</label>
-                                                <input class="input-border" type="number" step="1" name="BugCycleTimePercentilesHighBound" required value="@NewProjectHandler.BugCycleTimePercentiles[1]" />
+                                            <input class="input-border" type="number" step="0.01" name="BugCycleTimePercentilesHighBound" required value="@double.Round(@NewProjectHandler.BugCycleTimePercentiles[1],2).ToString(System.Globalization.CultureInfo.InvariantCulture)" />
                                             </div>
                                             <div>
                                                 <label>Awaiting Customer %:</label>
-                                                <input class="input-border" type="number" step="1" name="AwaitCustPercentage" required
-                                                       value="@double.Round(@NewProjectHandler.AwaitCustPercentage,2)" />
+                                            <input class="input-border" type="number" step="0.01" name="AwaitCustPercentage" required
+                                                   value="@double.Round(@NewProjectHandler.AwaitCustPercentage,2).ToString(System.Globalization.CultureInfo.InvariantCulture)" />
                                             </div>
                                             <div class="">
                                                 <label>Awaiting Customer Low Bound:</label>
-                                                <input class="input-border" type="number" step="1" name="AwaitCustPercentilesLowBound" required value="@NewProjectHandler.AwaitCustPercentiles[0]" />
+                                            <input class="input-border" type="number" step="1" name="AwaitCustPercentilesLowBound" required value="@double.Round(@NewProjectHandler.AwaitCustPercentiles[0],0).ToString(System.Globalization.CultureInfo.InvariantCulture)" />
                                             </div>
                                             <div class="">
                                                 <label>Awaiting Customer High Bound:</label>
-                                                <input class="input-border" type="number" step="1" name="AwaitCustPercentilesHighBound" required value="@NewProjectHandler.AwaitCustPercentiles[1]" />
+                                            <input class="input-border" type="number" step="1" name="AwaitCustPercentilesHighBound" required value="@double.Round(@NewProjectHandler.AwaitCustPercentiles[1],0).ToString(System.Globalization.CultureInfo.InvariantCulture)" />
                                             </div>
                                             <div>
                                                 <label>Awaiting Task %:</label>
-                                                <input class="input-border" type="number" step="1" name="AwaitTaskPercentage" required
-                                                       value="@double.Round(@NewProjectHandler.AwaitTaskPercentage,2)" />
+                                            <input class="input-border" type="number" step="0.01" name="AwaitTaskPercentage" required
+                                                   value="@double.Round(@NewProjectHandler.AwaitTaskPercentage,2).ToString(System.Globalization.CultureInfo.InvariantCulture)" />
                                             </div>
                                             <div class="">
                                                 <label>Awaiting Task Low Bound:</label>
-                                                <input class="input-border" type="number" step="1" name="AwaitTaskPercentilesLowBound" required value="@NewProjectHandler.AwaitTaskPercentiles[0]" />
+                                            <input class="input-border" type="number" step="1" name="AwaitTaskPercentilesLowBound" required value="@double.Round(@NewProjectHandler.AwaitTaskPercentiles[0],0).ToString(System.Globalization.CultureInfo.InvariantCulture)" />
                                             </div>
                                             <div class="">
                                                 <label>Awaiting Task High Bound:</label>
-                                                <input class="input-border" type="number" step="1" name="AwaitTaskPercentilesHighBound" required value="@NewProjectHandler.AwaitTaskPercentiles[1]" />
+                                            <input class="input-border" type="number" step="1" name="AwaitTaskPercentilesHighBound" required value="@double.Round(@NewProjectHandler.AwaitTaskPercentiles[1],0).ToString(System.Globalization.CultureInfo.InvariantCulture)" />
                                             </div>
                                             <div>
                                                 <label>Awaiting Third Party %:</label>
-                                                <input class="input-border" type="number" step="1" name="Await3pPercentage" required
-                                                       value="@double.Round(@NewProjectHandler.Await3pPercentage,2)" />
+                                            <input class="input-border" type="number" step="0.01" name="Await3pPercentage" required
+                                                   value="@double.Round(@NewProjectHandler.Await3pPercentage,2).ToString(System.Globalization.CultureInfo.InvariantCulture)" />
                                             </div>
                                             <div class="">
                                                 <label>Awaiting Third  Low Bound:</label>
-                                                <input class="input-border" type="number" step="1" name="Await3PPercentilesLowBound" required value="@NewProjectHandler.Await3PPercentiles[0]" />
+                                            <input class="input-border" type="number" step="0.01" name="Await3PPercentilesLowBound" required value="@double.Round(@NewProjectHandler.Await3PPercentiles[0],0).ToString(System.Globalization.CultureInfo.InvariantCulture)" />
                                             </div>
                                             <div class="">
                                                 <label>Awaiting Third  High Bound:</label>
-                                                <input class="input-border" type="number" step="1" name="Await3PPercentilesHighBound" required value="@NewProjectHandler.Await3PPercentiles[1]" />
+                                            <input class="input-border" type="number" step="0.01" name="Await3PPercentilesHighBound" required value="@double.Round(@NewProjectHandler.Await3PPercentiles[1],0).ToString(System.Globalization.CultureInfo.InvariantCulture)" />
                                             </div>
 
                                         </div>
@@ -594,7 +594,6 @@
     }
     private async Task HandleUpdate(HtmxEventArgs args)
     {
-        await Task.Delay(2500);
         NewProjectHandler.SimProjectId = SimProjectId;
         await NewProjectHandler.UpdateAndFetchProjectInfor(SimProjectId, AnalyticsContext, SimContext);
         IsModalVisible = true;
