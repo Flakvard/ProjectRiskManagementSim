@@ -38,6 +38,11 @@ function initializeModal() {
     const closeModal = document.getElementById('closeModal');
     const closeModalFooter = document.getElementById('closeModalFooter');
 
+    const modalUpdate = document.getElementById('modal-update');
+    const closeModalUpdate = document.getElementById('closeModalUpdate');
+    const closeModalUpdateFooter = document.getElementById('closeModalUpdateFooter');
+
+    
     const modalWarn = document.getElementById('modal-warn');
     const openWarningModal = document.getElementById('openWarningModal');
     const closeModalWarn = document.getElementById('closeModalWarn');
@@ -53,7 +58,7 @@ function initializeModal() {
 
     if (openUpdateModal) {
         openUpdateModal.addEventListener('click', () => {
-            modal.classList.remove('hidden');
+            modalUpdate.classList.remove('hidden');
             document.body.classList.add('overflow-hidden'); // Prevent scrolling on body
         });
     }
@@ -92,9 +97,27 @@ function initializeModal() {
         });
     }
 
+    if (closeModalUpdate) {
+        closeModalUpdate.addEventListener('click', () => {
+            modalUpdate.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden'); // Re-enable scrolling
+        });
+    }
+
+    if (closeModalUpdateFooter) {
+        closeModalUpdateFooter.addEventListener('click', () => {
+            modalUpdate.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden'); // Re-enable scrolling
+        });
+    }
+
     // Close modal if clicking outside of the modal content
     window.addEventListener('click', (e) => {
         if (e.target === modal) {
+            modal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden'); // Re-enable scrolling
+        }
+        if (e.target === modalUpdate) {
             modal.classList.add('hidden');
             document.body.classList.remove('overflow-hidden'); // Re-enable scrolling
         }
@@ -110,13 +133,13 @@ function initializeModal() {
 
 // Attach the event listener for HTMX afterSwap event
 document.addEventListener('htmx:afterSwap', (event) => {
-    if (event.detail.target.id === 'modal' || event.detail.target.id === 'modal-warn') {
+    if (event.detail.target.id === 'modal' || event.detail.target.id === 'modal-warn' || event.detail.target.id === 'modal-update') {
         initializeModal();
     }
 });
 // Attach the event listener for HTMX afterSwap event
 document.addEventListener('htmx:afterSettle', (event) => {
-    if (event.detail.target.id === 'modal' || event.detail.target.id === 'modal-warn') {
+    if (event.detail.target.id === 'modal' || event.detail.target.id === 'modal-warn' || event.detail.target.id === 'modal-update') {
         initializeModal();
     }
 });

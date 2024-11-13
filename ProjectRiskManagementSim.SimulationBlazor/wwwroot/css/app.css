@@ -106,6 +106,14 @@
       display: none;
   }
 
+  .htmx-request .modal-update {
+      display: none;
+  }
+
+  .htmx-request.modal-update {
+      display: none;
+  }
+
   .spinner{
     display: none;
   }
