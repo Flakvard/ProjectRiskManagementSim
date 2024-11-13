@@ -9,9 +9,11 @@
   <div class="modal bg-white rounded-lg shadow-lg w-1/5 flex flex-col">
 
     <!-- Modal Header -->
-    <div class="px-4 py-2 bg-[#7e44eb] rounded-t-lg flex justify-between items-center border-b">
+    <div class="px-4 py-2 bg-[#7e44eb] rounded-t-lg flex justify-start items-center border-b flex">
       <h2 class="text-white text-lg font-semibold">Are you Sure you want to delete this ?</h2>
-      <button id="closeModalWarn" class="text-white hover:text-black">&times;</button>
+            <div class="flex justify-end grow shrink self-stretch">
+                <button id="closeModalWarn" class="text-white hover:text-black p-2 w-12 h-12 "><CloseButton /></button>
+            </div>
     </div>
 
     <!-- Modal Footer -->

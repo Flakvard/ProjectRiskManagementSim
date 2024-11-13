@@ -10,9 +10,12 @@
           hx-target="#simulation-update-result" hx-swap="outerHTML">
 
         <!-- Modal Header -->
-        <div class="px-4 py-2 bg-[#7e44eb] rounded-t-lg flex justify-between items-center border-b">
-            <h2 class="text-white text-lg font-semibold">Update Simulation</h2>
-            <button id="closeModal" class="text-white hover:text-black">&times;</button>
+        <div class="px-4 py-2 bg-[#7e44eb] rounded-t-lg flex justify-start items-center border-b">
+            <h2 class="text-white text-lg font-semibold justify-start">Update Simulation</h2>
+            <div class="flex justify-end grow shrink self-stretch">
+                <button id="closeModal" class="text-white hover:text-black p-2 w-12 h-12 "><RefreshButton /></button>
+                <button id="closeModal" class="text-white hover:text-black p-2 w-12 h-12 "><CloseButton /></button>
+            </div>
         </div>
 
         <!-- Modal Body -->
@@ -89,17 +92,17 @@
                                 <label>Testers:</label>
                                 <input class="input-border" type="number" name="Testers" value="@NewProjectHandler.Testers" required />
                             </div>
-                            <div class="">
+                            <div class="hidden">
                                 <label>Revenue Amount:</label>
                                 <input class="input-border" type="number" name="RevenueAmount"
                                        value="@double.Round(NewProjectHandler.TotalRevenue)" required />
                             </div>
-                            <div class="">
+                            <div class="hidden">
                                 <label>Cost:</label>
                                 <input class="input-border" type="number" name="Cost" value="@double.Round(NewProjectHandler.TotalCost)"
                                        required />
                             </div>
-                            <div class="">
+                            <div class="hidden">
                                 <label>Hours:</label>
                                 <input class="input-border" type="number" name="hours"
                                        value="@double.Round(NewProjectHandler.TotalHours)" required />
