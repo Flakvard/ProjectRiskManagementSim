@@ -3,21 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectRiskManagementSim.UnitTest", "ProjectRiskManagementSim.UnitTest\ProjectRiskManagementSim.UnitTest.csproj", "{C077067F-5BB0-4BFB-81F0-43E2A6D735D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectRiskManagementSim.UnitTest", "ProjectRiskManagementSim.UnitTest\ProjectRiskManagementSim.UnitTest.csproj", "{C077067F-5BB0-4BFB-81F0-43E2A6D735D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectRiskManagementSim.ProjectSimulator", "ProjectRiskManagementSim.ProjectSimulator\ProjectRiskManagementSim.ProjectSimulator.csproj", "{430779C4-CFE9-4479-B4D4-AE209AC04C29}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectRiskManagementSim.ProjectSimulator", "ProjectRiskManagementSim.ProjectSimulator\ProjectRiskManagementSim.ProjectSimulator.csproj", "{430779C4-CFE9-4479-B4D4-AE209AC04C29}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectRiskManagementSim.SimulationBlazor", "ProjectRiskManagementSim.SimulationBlazor\ProjectRiskManagementSim.SimulationBlazor.csproj", "{DCBEF4FD-0E4D-4A54-9EF0-946EC6A1D317}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectRiskManagementSim.SimulationBlazor", "ProjectRiskManagementSim.SimulationBlazor\ProjectRiskManagementSim.SimulationBlazor.csproj", "{DCBEF4FD-0E4D-4A54-9EF0-946EC6A1D317}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectRiskManagementSim.DataAccess", "ProjectRiskManagementSim.DataAccess\ProjectRiskManagementSim.DataAccess.csproj", "{252EAED3-20FB-450F-A184-7B78A96940C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectRiskManagementSim.DataAccess", "ProjectRiskManagementSim.DataAccess\ProjectRiskManagementSim.DataAccess.csproj", "{252EAED3-20FB-450F-A184-7B78A96940C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{C077067F-5BB0-4BFB-81F0-43E2A6D735D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -36,5 +33,11 @@ Global
 		{252EAED3-20FB-450F-A184-7B78A96940C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{252EAED3-20FB-450F-A184-7B78A96940C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{252EAED3-20FB-450F-A184-7B78A96940C7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C6801804-60F6-4BF3-B8CD-A5D9F3DD6CBB}
 	EndGlobalSection
 EndGlobal
