@@ -77,6 +77,7 @@ public class OxygenSimulationContext : DbContext
     public DbSet<ForecastModel> ForecastModel { get; set; }
     public DbSet<SensitivityModel> SensitivityModel { get; set; }
     public DbSet<StaffAnalysisModel> StaffAnalysisModel { get; set; }
+    // public DbSet<DefectModel> DefectModel { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -105,6 +106,16 @@ public class OxygenSimulationContext : DbContext
         // Configure ProjectSimulationModel to StaffAnalysisModel (one-to-many)
         modelBuilder.Entity<ProjectSimulationModel>()
                     .HasMany(ps => ps.StaffAnalyses)
+                    .WithOne(sa => sa.ProjectSimulationModel)
+                    .HasForeignKey(sa => sa.ProjectSimulationModelId);
+        // Configure ProjectSimulationModel to StaffAnalysisModel (one-to-many)
+        modelBuilder.Entity<ProjectSimulationModel>()
+                    .HasMany(ps => ps.Defects)
+                    .WithOne(sa => sa.ProjectSimulationModel)
+                    .HasForeignKey(sa => sa.ProjectSimulationModelId);
+        // Configure ProjectSimulationModel to StaffAnalysisModel (one-to-many)
+        modelBuilder.Entity<ProjectSimulationModel>()
+                    .HasMany(ps => ps.BlockingEvents)
                     .WithOne(sa => sa.ProjectSimulationModel)
                     .HasForeignKey(sa => sa.ProjectSimulationModelId);
     }
@@ -141,6 +152,8 @@ public class OxygenSimulationContext : DbContext
             .Include(p => p.Forecasts)
             .Include(p => p.Sensitivities)
             .Include(p => p.StaffAnalyses)
+            .Include(p => p.Defects)
+            .Include(p => p.BlockingEvents)
             .FirstOrDefaultAsync(p => p.Id == simulationProjectId);
     }
     public async Task<ProjectModel?> GetProjectBySimulationIdAsync(int simulationProjectId)

@@ -51,6 +51,10 @@ public class ProjectSimulationModel
     // Navigation property for one-to-many relationship
     public ICollection<StaffAnalysisModel> StaffAnalyses { get; set; }
 
+    // Navigation property for one-to-many relationship
+    public ICollection<DefectModel> Defects { get; set; }
+    public ICollection<BlockingEventModel> BlockingEvents { get; set; }
+
     // Deliverables info
     public double DeliverablesCount { get; set; }
     public double IssueCount { get; set; }
