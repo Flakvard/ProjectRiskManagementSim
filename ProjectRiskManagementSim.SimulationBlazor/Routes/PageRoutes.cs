@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
 using ProjectRiskManagementSim.DataAccess;
 using ProjectRiskManagementSim.DataAccess.Models;
+using System.Globalization;
+using Microsoft.EntityFrameworkCore.Storage.Json;
 
 namespace ProjectRiskManagementSim.SimulationBlazor.Routes;
 
@@ -111,12 +113,60 @@ public static class PageRoutes
             var form = await request.ReadFormAsync();
 
             string? jiraProjectId, jiraId, jiraProjectName, name;
-            double hours, revenueAmount, cost, budget, backendDevs, frontendDevs, testers, issueNumber, deliverableNumber, percentageLowBound, percentageHighBound, issueDoneCount, bugCount, bugPercentage, costPrDay, targetDays;
+            double hours, revenueAmount, cost, budget, backendDevs, frontendDevs, testers, issueNumber, deliverableNumber, percentageLowBound, percentageHighBound, issueDoneCount, costPrDay, targetDays;
+
+            double awaitCustPercentage, awaitCustPercentilesLowBound, awaitCustPercentilesHighBound;
+            double awaitTaskPercentage, awaitTaskPercentilesLowBound, awaitTaskPercentilesHighBound;
+            double await3pPercentage, await3PPercentilesLowBound, await3PPercentilesHighBound;
+            double bugCount, bugPercentage, bugCycleTimePercentilesLowBound, bugCycleTimePercentilesHighBound;
+
             DateTime startDate, targetDate;
             int daysSinceStartInt;
             int? simProjectId;
             List<ViewColumnModel> columns;
-            ParseAndExtractForm(form, out simProjectId, out jiraProjectId, out jiraId, out jiraProjectName, out name, out hours, out startDate, out targetDate, out revenueAmount, out cost, out budget, out backendDevs, out frontendDevs, out testers, out issueNumber, out deliverableNumber, out percentageLowBound, out percentageHighBound, out issueDoneCount, out bugCount, out bugPercentage, out daysSinceStartInt, out costPrDay, out columns, out targetDays);
+            List<ViewDefectModel> defects;
+            List<ViewBlockingEventModel> blockingEvents;
+
+            ParseAndExtractForm(form,
+                                out simProjectId,
+                                out jiraProjectId,
+                                out jiraId,
+                                out jiraProjectName,
+                                out name,
+                                out hours,
+                                out startDate,
+                                out targetDate,
+                                out revenueAmount,
+                                out cost,
+                                out budget,
+                                out backendDevs,
+                                out frontendDevs,
+                                out testers,
+                                out issueNumber,
+                                out deliverableNumber,
+                                out percentageLowBound,
+                                out percentageHighBound,
+                                out issueDoneCount,
+                                out bugCount,
+                                out bugPercentage,
+                                out awaitCustPercentage,
+                                out awaitTaskPercentage,
+                                out await3pPercentage,
+                                out daysSinceStartInt,
+                                out costPrDay,
+                                out columns,
+                                out targetDays,
+                                out awaitCustPercentilesLowBound,
+                                out awaitCustPercentilesHighBound,
+                                out awaitTaskPercentilesLowBound,
+                                out awaitTaskPercentilesHighBound,
+                                out await3PPercentilesLowBound,
+                                out await3PPercentilesHighBound,
+                                out bugCycleTimePercentilesLowBound,
+                                out bugCycleTimePercentilesHighBound,
+                                out defects,
+                                out blockingEvents
+                                  );
 
             // Store simulation in database
             int simIdFromDb = 0; // Access the ID for later use
@@ -160,6 +210,26 @@ public static class PageRoutes
                     return column;
                 }).ToList();
 
+                // update existing Defects
+                existingSimProject.Defects.Select((column, index) =>
+                {
+                    column.Name = defects[index].Name;
+                    column.DefectPercentage = defects[index].DefectPercentage;
+                    column.DefectsPercentageLowBound = defects[index].DefectsPercentageLowBound;
+                    column.DefectsPercentageHighBound = defects[index].DefectsPercentageHighBound;
+                    return column;
+                }).ToList();
+
+                // update existing BlockingEvents
+                existingSimProject.BlockingEvents.Select((column, index) =>
+                {
+                    column.Name = blockingEvents[index].Name;
+                    column.BlockingEventPercentage = blockingEvents[index].BlockingEventPercentage;
+                    column.BlockingEventsPercentageLowBound = blockingEvents[index].BlockingEventsPercentageLowBound;
+                    column.BlockingEventsPercentageHighBound = blockingEvents[index].BlockingEventsPercentageHighBound;
+                    return column;
+                }).ToList();
+
                 await _context.UpdateSimulationAsync(existingSimProject);
                 // Save all changes at once
             };
@@ -180,13 +250,60 @@ public static class PageRoutes
         {
             var form = await request.ReadFormAsync();
 
-            int? simProjectId;
             string? jiraProjectId, jiraId, jiraProjectName, name;
-            double hours, revenueAmount, cost, budget, backendDevs, frontendDevs, testers, issueNumber, deliverableNumber, percentageLowBound, percentageHighBound, issueDoneCount, bugCount, bugPercentage, costPrDay, targetDays;
+            double hours, revenueAmount, cost, budget, backendDevs, frontendDevs, testers, issueNumber, deliverableNumber, percentageLowBound, percentageHighBound, issueDoneCount, costPrDay, targetDays;
+
+            double awaitCustPercentage, awaitCustPercentilesLowBound, awaitCustPercentilesHighBound;
+            double awaitTaskPercentage, awaitTaskPercentilesLowBound, awaitTaskPercentilesHighBound;
+            double await3pPercentage, await3PPercentilesLowBound, await3PPercentilesHighBound;
+            double bugCount, bugPercentage, bugCycleTimePercentilesLowBound, bugCycleTimePercentilesHighBound;
+
             DateTime startDate, targetDate;
             int daysSinceStartInt;
+            int? simProjectId;
             List<ViewColumnModel> columns;
-            ParseAndExtractForm(form, out simProjectId, out jiraProjectId, out jiraId, out jiraProjectName, out name, out hours, out startDate, out targetDate, out revenueAmount, out cost, out budget, out backendDevs, out frontendDevs, out testers, out issueNumber, out deliverableNumber, out percentageLowBound, out percentageHighBound, out issueDoneCount, out bugCount, out bugPercentage, out daysSinceStartInt, out costPrDay, out columns, out targetDays);
+            List<ViewDefectModel> defects;
+            List<ViewBlockingEventModel> blockingEvents;
+            ParseAndExtractForm(form,
+                                out simProjectId,
+                                out jiraProjectId,
+                                out jiraId,
+                                out jiraProjectName,
+                                out name,
+                                out hours,
+                                out startDate,
+                                out targetDate,
+                                out revenueAmount,
+                                out cost,
+                                out budget,
+                                out backendDevs,
+                                out frontendDevs,
+                                out testers,
+                                out issueNumber,
+                                out deliverableNumber,
+                                out percentageLowBound,
+                                out percentageHighBound,
+                                out issueDoneCount,
+                                out bugCount,
+                                out bugPercentage,
+                                out awaitCustPercentage,
+                                out awaitTaskPercentage,
+                                out await3pPercentage,
+                                out daysSinceStartInt,
+                                out costPrDay,
+                                out columns,
+                                out targetDays,
+                                out awaitCustPercentilesLowBound,
+                                out awaitCustPercentilesHighBound,
+                                out awaitTaskPercentilesLowBound,
+                                out awaitTaskPercentilesHighBound,
+                                out await3PPercentilesLowBound,
+                                out await3PPercentilesHighBound,
+                                out bugCycleTimePercentilesLowBound,
+                                out bugCycleTimePercentilesHighBound,
+                                out defects,
+                                out blockingEvents
+                                  );
 
             // Store simulation in database
             int simIdFromDb = 0; // Access the ID for later use
@@ -228,7 +345,9 @@ public static class PageRoutes
 
                     PercentageLowBound = percentageLowBound,
                     PercentageHighBound = percentageHighBound,
-                    Columns = new List<ColumnModel>()
+                    Columns = new List<ColumnModel>(),
+                    Defects = new List<DefectModel>(),
+                    BlockingEvents = new List<BlockingEventModel>()
                 };
                 // Log the number of columns
 
@@ -244,6 +363,28 @@ public static class PageRoutes
                         IsBuffer = column.IsBuffer,
                     };
                     projectSimulationModel.Columns.Add(columnModel);
+                }
+                foreach (var defect in defects)
+                {
+                    DefectModel defectModel = new DefectModel
+                    {
+                        Name = defect.Name,
+                        DefectPercentage = defect.DefectPercentage,
+                        DefectsPercentageLowBound = defect.DefectsPercentageLowBound,
+                        DefectsPercentageHighBound = defect.DefectsPercentageHighBound,
+                    };
+                    projectSimulationModel.Defects.Add(defectModel);
+                }
+                foreach (var blockingEvent in blockingEvents)
+                {
+                    BlockingEventModel blockingEventModel = new BlockingEventModel
+                    {
+                        Name = blockingEvent.Name,
+                        BlockingEventPercentage = blockingEvent.BlockingEventPercentage,
+                        BlockingEventsPercentageLowBound = blockingEvent.BlockingEventsPercentageLowBound,
+                        BlockingEventsPercentageHighBound = blockingEvent.BlockingEventsPercentageHighBound,
+                    };
+                    projectSimulationModel.BlockingEvents.Add(blockingEventModel);
                 }
                 // Add ProjectSimulationModel to ProjectModel
                 projectModel.ProjectSimulationModels.Add(projectSimulationModel);
@@ -283,7 +424,9 @@ public static class PageRoutes
 
                     PercentageLowBound = percentageLowBound,
                     PercentageHighBound = percentageHighBound,
-                    Columns = new List<ColumnModel>()
+                    Columns = new List<ColumnModel>(),
+                    Defects = new List<DefectModel>(),
+                    BlockingEvents = new List<BlockingEventModel>(),
                 };
                 // Log the number of columns
 
@@ -299,6 +442,29 @@ public static class PageRoutes
                         IsBuffer = column.IsBuffer,
                     };
                     projectSimulationModel.Columns.Add(columnModel);
+                }
+
+                foreach (var defect in defects)
+                {
+                    DefectModel defectModel = new DefectModel
+                    {
+                        Name = defect.Name,
+                        DefectPercentage = defect.DefectPercentage,
+                        DefectsPercentageLowBound = defect.DefectsPercentageLowBound,
+                        DefectsPercentageHighBound = defect.DefectsPercentageHighBound,
+                    };
+                    projectSimulationModel.Defects.Add(defectModel);
+                }
+                foreach (var blockingEvent in blockingEvents)
+                {
+                    BlockingEventModel blockingEventModel = new BlockingEventModel
+                    {
+                        Name = blockingEvent.Name,
+                        BlockingEventPercentage = blockingEvent.BlockingEventPercentage,
+                        BlockingEventsPercentageLowBound = blockingEvent.BlockingEventsPercentageLowBound,
+                        BlockingEventsPercentageHighBound = blockingEvent.BlockingEventsPercentageHighBound,
+                    };
+                    projectSimulationModel.BlockingEvents.Add(blockingEventModel);
                 }
                 // Add ProjectSimulationModel to ProjectModel
                 existingProject.ProjectSimulationModels.Add(projectSimulationModel);
@@ -372,7 +538,46 @@ public static class PageRoutes
         return app;
     }
 
-    private static void ParseAndExtractForm(IFormCollection form, out int? simProjectId, out string? jiraProjectId, out string? jiraId, out string? jiraProjectName, out string? name, out double hours, out DateTime startDate, out DateTime targetDate, out double revenueAmount, out double cost, out double budget, out double backendDevs, out double frontendDevs, out double testers, out double issueNumber, out double deliverableNumber, out double percentageLowBound, out double percentageHighBound, out double issueDoneCount, out double bugCount, out double bugPercentage, out int daysSinceStartInt, out double costPrDay, out List<ViewColumnModel> columns, out double targetDays)
+    private static void ParseAndExtractForm(IFormCollection form,
+                                            out int? simProjectId,
+                                            out string? jiraProjectId,
+                                            out string? jiraId,
+                                            out string? jiraProjectName,
+                                            out string? name,
+                                            out double hours,
+                                            out DateTime startDate,
+                                            out DateTime targetDate,
+                                            out double revenueAmount,
+                                            out double cost,
+                                            out double budget,
+                                            out double backendDevs,
+                                            out double frontendDevs,
+                                            out double testers,
+                                            out double issueNumber,
+                                            out double deliverableNumber,
+                                            out double percentageLowBound,
+                                            out double percentageHighBound,
+                                            out double issueDoneCount,
+                                            out double bugCount,
+                                            out double bugPercentage,
+                                            out double awaitCustPercentage,
+                                            out double awaitTaskPercentage,
+                                            out double await3pPercentage,
+                                            out int daysSinceStartInt,
+                                            out double costPrDay,
+                                            out List<ViewColumnModel> columns,
+                                            out double targetDays,
+                                            out double awaitCustPercentilesLowBound,
+                                            out double awaitCustPercentilesHighBound,
+                                            out double awaitTaskPercentilesLowBound,
+                                            out double awaitTaskPercentilesHighBound,
+                                            out double await3PPercentilesLowBound,
+                                            out double await3PPercentilesHighBound,
+                                            out double bugCycleTimePercentilesLowBound,
+                                            out double bugCycleTimePercentilesHighBound,
+                                            out List<ViewDefectModel> defects,
+                                            out List<ViewBlockingEventModel> blockingEvents
+                                            )
     {
         // Extract and parse form data
         string? stringSimProjectId = form["SimProjectId"];
@@ -397,6 +602,18 @@ public static class PageRoutes
         string? stringIssueDoneCount = form["IssuesDoneCount"];
         string? stringBugCount = form["BugCount"];
         string? stringBugPercentage = form["BugPercentage"];
+        string? stringAwaitCustPercentage = form["AwaitCustPercentage"];
+        string? stringAwaitTaskPercentage = form["AwaitTaskPercentage"];
+        string? stringAwait3pPercentage = form["Await3pPercentage"];
+        string? stringAwaitCustPercentilesLowBound = form["AwaitCustPercentilesLowBound"];
+        string? stringAwaitCustPercentilesHighBound = form["AwaitCustPercentilesHighBound"];
+        string? stringAwaitTaskPercentilesLowBound = form["AwaitTaskPercentilesLowBound"];
+        string? stringAwaitTaskPercentilesHighBound = form["AwaitTaskPercentilesHighBound"];
+        string? stringAwait3PPercentilesLowBound = form["Await3PPercentilesLowBound"];
+        string? stringAwait3PPercentilesHighBound = form["Await3PPercentilesHighBound"];
+        string? stringBugCycleTimePercentilesLowBound = form["BugCycleTimePercentilesLowBound"];
+        string? stringBugCycleTimePercentilesHighBound = form["BugCycleTimePercentilesHighBound"];
+
         if (jiraProjectName == null
             || jiraId == null
             || jiraProjectId == null
@@ -417,6 +634,17 @@ public static class PageRoutes
             || stringIssueDoneCount == null
             || stringBugCount == null
             || stringBugPercentage == null
+            || stringAwaitCustPercentage == null
+            || stringAwaitTaskPercentage == null
+            || stringAwait3pPercentage == null
+            || stringAwaitCustPercentilesLowBound == null
+            || stringAwaitCustPercentilesHighBound == null
+            || stringAwaitTaskPercentilesLowBound == null
+            || stringAwaitTaskPercentilesHighBound == null
+            || stringAwait3PPercentilesLowBound == null
+            || stringAwait3PPercentilesHighBound == null
+            || stringBugCycleTimePercentilesLowBound == null
+            || stringBugCycleTimePercentilesHighBound == null
             )
         {
             throw new ArgumentException("Invalid input.");
@@ -431,24 +659,37 @@ public static class PageRoutes
             simProjectId = int.Parse(stringSimProjectId);
         }
 
-        hours = double.Parse(stringHours);
+
+        hours = double.Parse(stringHours.Replace(',', '.'), CultureInfo.InvariantCulture);
         startDate = DateTime.Parse(stringStartDate);
         var lastDate = DateTime.Parse(stringLastDate);
         targetDate = DateTime.Parse(stringTargetDate);
-        revenueAmount = double.Parse(stringRevenueAmount);
-        cost = double.Parse(stringCost);
-        budget = double.Parse(stringBudget);
-        backendDevs = double.Parse(stringBackendDevs);
-        frontendDevs = double.Parse(stringFrontendDevs);
-        testers = double.Parse(stringTesters);
+        revenueAmount = double.Parse(stringRevenueAmount.Replace(',', '.'), CultureInfo.InvariantCulture);
+        cost = double.Parse(stringCost.Replace(',', '.'), CultureInfo.InvariantCulture);
+        budget = double.Parse(stringBudget.Replace(',', '.'), CultureInfo.InvariantCulture);
+        backendDevs = double.Parse(stringBackendDevs.Replace(',', '.'), CultureInfo.InvariantCulture);
+        frontendDevs = double.Parse(stringFrontendDevs.Replace(',', '.'), CultureInfo.InvariantCulture);
+        testers = double.Parse(stringTesters.Replace(',', '.'), CultureInfo.InvariantCulture);
         var totalDevelopers = backendDevs + frontendDevs;
-        issueNumber = double.Parse(stringIssueNumber);
-        deliverableNumber = double.Parse(stringDeliverablesNumber);
-        percentageLowBound = double.Parse(stringPercentageLowBound) / 100;
-        percentageHighBound = double.Parse(stringPercentageHighBound) / 100;
-        issueDoneCount = double.Parse(stringIssueDoneCount);
-        bugCount = double.Parse(stringBugCount);
-        bugPercentage = double.Parse(stringBugPercentage);
+        issueNumber = double.Parse(stringIssueNumber.Replace(',', '.'), CultureInfo.InvariantCulture);
+        deliverableNumber = double.Parse(stringDeliverablesNumber.Replace(',', '.'), CultureInfo.InvariantCulture);
+        percentageLowBound = double.Parse(stringPercentageLowBound.Replace(',', '.'), CultureInfo.InvariantCulture) / 100;
+        percentageHighBound = double.Parse(stringPercentageHighBound.Replace(',', '.'), CultureInfo.InvariantCulture) / 100;
+        issueDoneCount = double.Parse(stringIssueDoneCount.Replace(',', '.'), CultureInfo.InvariantCulture);
+        bugCount = double.Parse(stringBugCount.Replace(',', '.'), CultureInfo.InvariantCulture);
+        bugPercentage = double.Parse(stringBugPercentage.Replace(',', '.'), CultureInfo.InvariantCulture);
+        awaitCustPercentage = double.Parse(stringAwaitCustPercentage.Replace(',', '.'), CultureInfo.InvariantCulture);
+        awaitTaskPercentage = double.Parse(stringAwaitTaskPercentage.Replace(',', '.'), CultureInfo.InvariantCulture);
+        await3pPercentage = double.Parse(stringAwait3pPercentage.Replace(',', '.'), CultureInfo.InvariantCulture);
+        awaitCustPercentilesLowBound = double.Parse(stringAwaitCustPercentilesLowBound.Replace(',', '.'), CultureInfo.InvariantCulture);
+        awaitCustPercentilesHighBound = double.Parse(stringAwaitCustPercentilesHighBound.Replace(',', '.'), CultureInfo.InvariantCulture);
+        awaitTaskPercentilesLowBound = double.Parse(stringAwaitTaskPercentilesLowBound.Replace(',', '.'), CultureInfo.InvariantCulture);
+        awaitTaskPercentilesHighBound = double.Parse(stringAwaitTaskPercentilesHighBound.Replace(',', '.'), CultureInfo.InvariantCulture);
+        await3PPercentilesLowBound = double.Parse(stringAwait3PPercentilesLowBound.Replace(',', '.'), CultureInfo.InvariantCulture);
+        await3PPercentilesHighBound = double.Parse(stringAwait3PPercentilesHighBound.Replace(',', '.'), CultureInfo.InvariantCulture);
+        bugCycleTimePercentilesLowBound = double.Parse(stringBugCycleTimePercentilesLowBound.Replace(',', '.'), CultureInfo.InvariantCulture);
+        bugCycleTimePercentilesHighBound = double.Parse(stringBugCycleTimePercentilesHighBound.Replace(',', '.'), CultureInfo.InvariantCulture);
+
 
         if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(jiraProjectId) || string.IsNullOrWhiteSpace(jiraProjectName))
         {
@@ -478,6 +719,50 @@ public static class PageRoutes
 
         }
         costPrDay = cost / daysSinceStartInt;
+
+        //defects = new List<ViewDefectModel>();
+
+        for (int i = 0; i < 1; i++)
+        {
+
+        }
+
+        defects = new List<ViewDefectModel>();
+        var defect = new ViewDefectModel
+        {
+            Name = "Bugs",
+            DefectPercentage = bugPercentage,
+            DefectsPercentageLowBound = bugCycleTimePercentilesLowBound,
+            DefectsPercentageHighBound = bugCycleTimePercentilesHighBound
+        };
+        defects.Add(defect);
+
+        blockingEvents = new List<ViewBlockingEventModel>();
+        var blockCustomer = new ViewBlockingEventModel
+        {
+            Name = "Awaiting Customer",
+            BlockingEventPercentage = awaitCustPercentage,
+            BlockingEventsPercentageLowBound = awaitCustPercentilesLowBound,
+            BlockingEventsPercentageHighBound = awaitCustPercentilesHighBound
+        };
+        blockingEvents.Add(blockCustomer);
+        var blockTask = new ViewBlockingEventModel
+        {
+            Name = "Awaiting Task",
+            BlockingEventPercentage = awaitTaskPercentage,
+            BlockingEventsPercentageLowBound = awaitTaskPercentilesLowBound,
+            BlockingEventsPercentageHighBound = awaitTaskPercentilesHighBound
+        };
+        blockingEvents.Add(blockTask);
+        var block3p = new ViewBlockingEventModel
+        {
+            Name = "Awaiting 3rd Party",
+            BlockingEventPercentage = await3pPercentage,
+            BlockingEventsPercentageLowBound = await3PPercentilesLowBound,
+            BlockingEventsPercentageHighBound = await3PPercentilesHighBound
+        };
+        blockingEvents.Add(block3p);
+
 
         columns = new List<ViewColumnModel>();
         for (int i = 0; i <= 11; i++)
