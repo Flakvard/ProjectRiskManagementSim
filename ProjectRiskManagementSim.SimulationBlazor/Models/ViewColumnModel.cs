@@ -9,11 +9,22 @@ public class ViewColumnModel
     public int WIP { get; set; }
     public int WIPMax { get; set; }
     public bool IsBuffer { get; set; } = false;
+    public bool IsDefectsColumn { get; set; } = false;
+    public bool IsBlockingEventsColumn { get; set; } = false;
+
+
+    public double DefectPercentage { get; set; } = 0;
+    public double BlockingEventPercentage { get; set; } = 0;
+
+    public double BlockingEventsPercentageLowBound { get; set; } = 0;
+    public double BlockingEventsPercentageHighBound { get; set; } = 0;
+
+    public double DefectsPercentageLowBound { get; set; } = 0;
+    public double DefectsPercentageHighBound { get; set; } = 0;
     // public List<CardModel> Cards { get; set; }
     // public List<PhaseModel> Phases { get; set; }
-    // public List<BlockingEventModel> BlockingEvents { get; set; }
-    // public List<DefectModel> Defects { get; set; }
     // Constructor
+
     public ViewColumnModel(int? wip = null, int? wipMax = null)
     {
         WIP = wip ?? 0;

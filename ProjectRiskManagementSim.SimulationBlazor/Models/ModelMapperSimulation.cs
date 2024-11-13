@@ -28,7 +28,9 @@ public static class ModelMapper
                     AccumulatedDays = d.AccumulatedDays,
                     ColumnIndex = d.ColumnIndex,
                     IsCalculated = d.IsCalculated,
-                    WaitTime = d.WaitTime
+                    WaitTime = d.WaitTime,
+                    IsBlocked = d.IsBlocked,
+                    IsBug = d.IsBug
                 }).ToList(),
                 PercentageLowBound = source.Backlog.PercentageLowBound,
                 PercentageHighBound = source.Backlog.PercentageHighBound
@@ -40,7 +42,21 @@ public static class ModelMapper
                 EstimatedHighBound = c.EstimatedHighBound,
                 WIP = c.WIP,
                 WIPMax = c.WIPMax,
-                IsBuffer = c.IsBuffer
+                IsBuffer = c.IsBuffer,
+            }).ToList(),
+            Defects = source.Defects.Select(d => new ProjectRiskManagementSim.ProjectSimulation.Models.DefectModel
+            {
+                Name = d.Name,
+                DefectPercentage = d.DefectPercentage,
+                DefectsPercentageLowBound = d.DefectsPercentageLowBound,
+                DefectsPercentageHighBound = d.DefectsPercentageHighBound,
+            }).ToList(),
+            BlockingEvents = source.BlockingEvents.Select(b => new ProjectRiskManagementSim.ProjectSimulation.Models.BlockingEventModel
+            {
+                Name = b.Name,
+                BlockingEventPercentage = b.BlockingEventPercentage,
+                BlockingEventsPercentageHighBound = b.BlockingEventsPercentageHighBound,
+                BlockingEventsPercentageLowBound = b.BlockingEventsPercentageLowBound,
             }).ToList()
         };
     }
@@ -55,7 +71,7 @@ public static class ModelMapper
             EstimatedHighBound = source.EstimatedHighBound,
             WIP = source.WIP,
             WIPMax = source.WIPMax,
-            IsBuffer = source.IsBuffer
+            IsBuffer = source.IsBuffer,
         };
     }
 
@@ -70,7 +86,9 @@ public static class ModelMapper
             ColumnIndex = source.ColumnIndex,
             IsCalculated = source.IsCalculated,
             WaitTime = source.WaitTime,
-            StoppedWorkingTime = source.StoppedWorkingTime
+            StoppedWorkingTime = source.StoppedWorkingTime,
+            IsBlocked = source.IsBlocked,
+            IsBug = source.IsBug,
         };
     }
 
@@ -84,7 +102,7 @@ public static class ModelMapper
             EstimatedHighBound = source.EstimatedHighBound,
             WIP = source.WIP,
             WIPMax = source.WIPMax,
-            IsBuffer = source.IsBuffer
+            IsBuffer = source.IsBuffer,
         };
     }
 
@@ -99,7 +117,9 @@ public static class ModelMapper
             ColumnIndex = source.ColumnIndex,
             IsCalculated = source.IsCalculated,
             WaitTime = source.WaitTime,
-            StoppedWorkingTime = source.StoppedWorkingTime
+            StoppedWorkingTime = source.StoppedWorkingTime,
+            IsBlocked = source.IsBlocked,
+            IsBug = source.IsBug,
         };
     }
 
@@ -130,7 +150,9 @@ public static class ModelMapper
                     AccumulatedDays = d.AccumulatedDays,
                     ColumnIndex = d.ColumnIndex,
                     IsCalculated = d.IsCalculated,
-                    WaitTime = d.WaitTime
+                    WaitTime = d.WaitTime,
+                    IsBlocked = d.IsBlocked,
+                    IsBug = d.IsBug,
                 }).ToList(),
                 PercentageLowBound = source.Backlog.PercentageLowBound,
                 PercentageHighBound = source.Backlog.PercentageHighBound
@@ -142,7 +164,21 @@ public static class ModelMapper
                 EstimatedHighBound = c.EstimatedHighBound,
                 WIP = c.WIP,
                 WIPMax = c.WIPMax,
-                IsBuffer = c.IsBuffer
+                IsBuffer = c.IsBuffer,
+            }).ToList(),
+            Defects = source.Defects.Select(d => new ProjectRiskManagementSim.SimulationBlazor.Models.ViewDefectModel
+            {
+                Name = d.Name,
+                DefectPercentage = d.DefectPercentage,
+                DefectsPercentageLowBound = d.DefectsPercentageLowBound,
+                DefectsPercentageHighBound = d.DefectsPercentageHighBound,
+            }).ToList(),
+            BlockingEvents = source.BlockingEvents.Select(b => new ProjectRiskManagementSim.SimulationBlazor.Models.ViewBlockingEventModel
+            {
+                Name = b.Name,
+                BlockingEventPercentage = b.BlockingEventPercentage,
+                BlockingEventsPercentageHighBound = b.BlockingEventsPercentageHighBound,
+                BlockingEventsPercentageLowBound = b.BlockingEventsPercentageLowBound,
             }).ToList()
         };
     }
@@ -215,8 +251,24 @@ public static class ModelMapper
                 EstimatedHighBound = c.EstimatedHighBound,
                 WIP = c.WIP,
                 WIPMax = c.WIPMax,
-                IsBuffer = c.IsBuffer
-            }).ToList()
+                IsBuffer = c.IsBuffer,
+
+            }).ToList(),
+            Defects = source.Defects.Select(d => new ProjectRiskManagementSim.ProjectSimulation.Models.DefectModel
+            {
+                Name = d.Name,
+                DefectPercentage = d.DefectPercentage,
+                DefectsPercentageLowBound = d.DefectsPercentageLowBound,
+                DefectsPercentageHighBound = d.DefectsPercentageHighBound,
+            }).ToList(),
+            BlockingEvents = source.BlockingEvents.Select(b => new ProjectRiskManagementSim.ProjectSimulation.Models.BlockingEventModel
+            {
+                Name = b.Name,
+                BlockingEventPercentage = b.BlockingEventPercentage,
+                BlockingEventsPercentageHighBound = b.BlockingEventsPercentageHighBound,
+                BlockingEventsPercentageLowBound = b.BlockingEventsPercentageLowBound,
+            }).ToList(),
+
         };
     }
     public static ProjectRiskManagementSim.SimulationBlazor.Models.ViewProjectSimulationModel MapDBProjectSimulationModelToViewProjectSimulationModel(ProjectRiskManagementSim.DataAccess.Models.ProjectSimulationModel source)
@@ -289,7 +341,23 @@ public static class ModelMapper
                 EstimatedHighBound = c.EstimatedHighBound,
                 WIP = c.WIP,
                 WIPMax = c.WIPMax,
-                IsBuffer = c.IsBuffer
+                IsBuffer = c.IsBuffer,
+
+            }).ToList(),
+            Defects = source.Defects.Select(d => new ProjectRiskManagementSim.SimulationBlazor.Models.ViewDefectModel
+            {
+                Name = d.Name,
+                DefectPercentage = d.DefectPercentage,
+                DefectsPercentageLowBound = d.DefectsPercentageLowBound,
+                DefectsPercentageHighBound = d.DefectsPercentageHighBound,
+            }).ToList(),
+
+            BlockingEvents = source.BlockingEvents.Select(b => new ProjectRiskManagementSim.SimulationBlazor.Models.ViewBlockingEventModel
+            {
+                Name = b.Name,
+                BlockingEventPercentage = b.BlockingEventPercentage,
+                BlockingEventsPercentageHighBound = b.BlockingEventsPercentageHighBound,
+                BlockingEventsPercentageLowBound = b.BlockingEventsPercentageLowBound,
             }).ToList()
         };
     }

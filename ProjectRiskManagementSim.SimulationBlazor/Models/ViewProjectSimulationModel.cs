@@ -12,8 +12,8 @@ public class ViewProjectSimulationModel
     public BacklogModel? Backlog { get; set; }
     public List<ViewColumnModel?>? Columns { get; set; }
     // public List<PhaseModel> Phases { get; set; }
-    // public List<DefectModel> Defects { get; set; }
-    // public List<BlockingEventModel> BlockingEvents { get; set; }
+    public List<ViewDefectModel> Defects { get; set; }
+    public List<ViewBlockingEventModel> BlockingEvents { get; set; }
 
     // Function to deep copy a ProjectSimulationModel
     internal ViewProjectSimulationModel CloneProjectSimModel(ViewProjectSimulationModel original, string Name)
