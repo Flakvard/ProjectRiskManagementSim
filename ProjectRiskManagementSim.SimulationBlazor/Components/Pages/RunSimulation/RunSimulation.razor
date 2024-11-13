@@ -116,12 +116,35 @@
 
                                                     @foreach (var deliverable in runSimulationHandler.columnDeliverables[column])
                                                     {
+                                                        @if(!deliverable.IsBug)
+                                                        {
                                                         <div class="bg-[#7e44eb] w-f h-f p-2 text-white">
                                                             <strong>Task: @deliverable.Nr</strong><br />
                                                             Completion Days: @Math.Round(deliverable.CompletionDays)<br />
                                                             Wait Time: @Math.Round(deliverable.WaitTime)<br />
                                                             Stopped Time: @Math.Round(deliverable.StoppedWorkingTime)
-                                                        </div>
+                                                            </div>
+                                                        }
+                                                        else if(deliverable.IsBug)
+                                                        {
+                                                            <div class="bg-[#ffbec3] w-f h-f p-2 text-white">
+                                                                <strong>Task: @deliverable.Nr</strong><br />
+                                                                Completion Days: @Math.Round(deliverable.CompletionDays)<br />
+                                                                Wait Time: @Math.Round(deliverable.WaitTime)<br />
+                                                                Stopped Time: @Math.Round(deliverable.StoppedWorkingTime)
+                                                            </div>
+                                                            
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="bg-[#d9d9d9] w-f h-f p-2 text-white">
+                                                                <strong>Task: @deliverable.Nr</strong><br />
+                                                                Completion Days: @Math.Round(deliverable.CompletionDays)<br />
+                                                                Wait Time: @Math.Round(deliverable.WaitTime)<br />
+                                                                Stopped Time: @Math.Round(deliverable.StoppedWorkingTime)
+                                                            </div>
+
+                                                        }
                                                     }
                                                 }
                                             </div>
