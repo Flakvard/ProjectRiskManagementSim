@@ -10,6 +10,10 @@ public class DeliverableModel : IComparer<DeliverableModel>
     public bool IsCalculated { get; set; } = false;
     public double WaitTime { get; set; } = 0;
     public double StoppedWorkingTime { get; set; } = 0;
+    public bool IsBug { get; set; } = false;
+    public bool IsBlocked { get; set; } = false;
+    public int DefectIndex { get; set; } = 0;
+    public int BlockingEventIndex { get; set; } = 0;
 
     public DeliverableModel()
     {

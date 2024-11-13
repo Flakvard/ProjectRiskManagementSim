@@ -48,6 +48,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
         var cost = projectSimulationModel.Costs;
         var backlog = projectSimulationModel.Backlog;
         var columns = projectSimulationModel.Columns;
+        var defects = projectSimulationModel.Defects;
 
         ValidateProps(staff, revenue, cost, backlog);
 
@@ -74,7 +75,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
         var simulationsCostResults = new List<double>();
         for (int i = 0; i < _simulationCount; ++i)
         {
-            simulationList = MonteCarloSimulation.RunSimulation(backlog, columns, totalDays, estimatedRevenuePerDay, estimatedCostPerDay);
+            simulationList = MonteCarloSimulation.RunSimulation(backlog, columns, totalDays, estimatedRevenuePerDay, estimatedCostPerDay, defects);
             simulationListofList.Add(simulationList);
             simulationDays.Add(simulationList.Max(d => d.AccumulatedDays));
             simulationsSalesResults.Add(simulationList.Max(d => d.AccumulatedDays) * estimatedRevenuePerDay);
@@ -93,7 +94,8 @@ public class MonteCarloSimulation : IMonteCarloSimulation
                                       List<ColumnModel> columns,
                                       double totalDays,
                                       double? revenuePerDay,
-                                      double costPerDay
+                                      double costPerDay,
+                                      List<DefectModel> defects
                                       )
     {
         // Simulation logic
@@ -174,7 +176,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
                 var deliverablesToMove = new List<DeliverableModel>();
 
                 // Calculate the deliverable completion day and add to list 
-                CalculateDeliverableCompletionDayANDAddToList(backlog, currentDay, column, wipQueue, wipStack, deliverablesToMove);
+                CalculateDeliverableCompletionDayANDAddToList(backlog, currentDay, column, wipQueue, wipStack, deliverablesToMove, defects);
 
                 // Check how many are working on the deliverable in columns and add a day to the ones that are postponed for the next day.
                 if (column.WIP < wipQueue.Count)
@@ -187,7 +189,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
                 }
 
                 // Move deliverables to the next column if possible
-                MoveDeliverablesToNextColumnIfPossible(columns, columnDeliverables, currentDay, column, wipQueue, wipStack, deliverablesToMove);
+                MoveDeliverablesToNextColumnIfPossible(columns, columnDeliverables, currentDay, column, wipQueue, wipStack, deliverablesToMove, defects, deliverablesCopy);
 
                 int devStack = developerColumn != null && columnDeliverables.ContainsKey(developerColumn) && columnDeliverables[developerColumn] != null ? columnDeliverables[developerColumn].Count : 0;
 
@@ -269,6 +271,8 @@ public class MonteCarloSimulation : IMonteCarloSimulation
         var cost = projectSimulationModel.Costs;
         var backlog = projectSimulationModel.Backlog;
         var columns = projectSimulationModel.Columns;
+        var defects = projectSimulationModel.Defects;
+        var blockingEvents = projectSimulationModel.BlockingEvents;
 
         ValidateProps(staff, revenue, cost, backlog);
 
@@ -292,7 +296,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
         var simulationList = new List<DeliverableModel>();
         for (int i = 0; i < simulationCount; ++i)
         {
-            simulationList = MonteCarloSimulation.RunSlowSimulation(backlog, columns, totalDays, estimatedRevenuePerDay, estimatedCostPerDay);
+            simulationList = MonteCarloSimulation.RunSlowSimulation(backlog, columns, totalDays, estimatedRevenuePerDay, estimatedCostPerDay, defects);
         }
         IsCompleted = true;
     }
@@ -313,7 +317,8 @@ public class MonteCarloSimulation : IMonteCarloSimulation
                                       List<ColumnModel> columns,
                                       double totalDays,
                                       double? revenuePerDay,
-                                      double costPerDay
+                                      double costPerDay,
+                                      List<DefectModel> defects
                                       )
     {
         // Simulation logic
@@ -394,7 +399,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
                 var deliverablesToMove = new List<DeliverableModel>();
 
                 // Calculate the deliverable completion day and add to list 
-                CalculateDeliverableCompletionDayANDAddToList(backlog, currentDay, column, wipQueue, wipStack, deliverablesToMove);
+                CalculateDeliverableCompletionDayANDAddToList(backlog, currentDay, column, wipQueue, wipStack, deliverablesToMove, defects);
 
                 // Check how many are working on the deliverable in columns and add a day to the ones that are postponed for the next day.
                 if (column.WIP < wipQueue.Count)
@@ -407,7 +412,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
                 }
 
                 // Move deliverables to the next column if possible
-                MoveDeliverablesToNextColumnIfPossible(columns, columnDeliverables, currentDay, column, wipQueue, wipStack, deliverablesToMove);
+                MoveDeliverablesToNextColumnIfPossible(columns, columnDeliverables, currentDay, column, wipQueue, wipStack, deliverablesToMove, defects, deliverablesCopy);
 
                 int devStack = developerColumn != null && columnDeliverables.ContainsKey(developerColumn) && columnDeliverables[developerColumn] != null ? columnDeliverables[developerColumn].Count : 0;
 
@@ -479,11 +484,11 @@ public class MonteCarloSimulation : IMonteCarloSimulation
         return orderdedByAccumulated;
     }
 
-    private static void CalculateDeliverableCompletionDayANDAddToList(BacklogModel backlog, double currentDay, ColumnModel column, List<DeliverableModel> wipQueue, List<DeliverableModel> wipStack, List<DeliverableModel> deliverablesToMove)
+    private static void CalculateDeliverableCompletionDayANDAddToList(BacklogModel backlog, double currentDay, ColumnModel column, List<DeliverableModel> wipQueue, List<DeliverableModel> wipStack, List<DeliverableModel> deliverablesToMove, List<DefectModel> defects)
     {
         foreach (var deliverable in wipQueue.ToList()) // iterate over a copy of the list
         {
-            if (!deliverable.IsCalculated && column.IsBuffer == false)
+            if (!deliverable.IsCalculated && column.IsBuffer == false && deliverable.IsBug == false)
             {
                 // Probability is always a random % between the low and high bounds
                 var probability = backlog.PercentageLowBound
@@ -498,6 +503,34 @@ public class MonteCarloSimulation : IMonteCarloSimulation
                 // Random generated completionDay for deliverable
                 deliverable!.CompletionDays = currentDay + (completionDays * probability);
                 deliverable.IsCalculated = true;
+            }
+            if (!deliverable.IsCalculated && column.IsBuffer == false && deliverable.IsBug == true)
+            {
+                // check if defect exists
+                var defect = defects[deliverable.DefectIndex];
+                if (defect != null)
+                {
+
+                    // Probability is always a random % between the low and high bounds which noramlly is 0-100
+                    // because defects are generally faster than normal deliverables we make it f.x. 0-43
+                    var lowBound = defect.DefectsPercentageLowBound / 100;
+                    var highBound = defect.DefectsPercentageHighBound / 100;
+                    var probability = lowBound
+                                      + (highBound - lowBound)
+                                      * ThreadSafeRandom.ThisThreadsRandom.NextDouble();
+
+                    var columnNewLowBound = column.EstimatedLowBound * lowBound;
+                    var ColumnNewHighBound = column.EstimatedHighBound * highBound;
+                    // CompletionDays is always a random day between the low and high bounds for the column
+                    var completionDays = columnNewLowBound
+                                         + (ColumnNewHighBound - columnNewLowBound)
+                                         * ThreadSafeRandom.ThisThreadsRandom.NextDouble();
+
+                    // Random generated completionDay for deliverable
+                    deliverable!.CompletionDays = currentDay + (completionDays * probability);
+                    deliverable.IsCalculated = true;
+                }
+
             }
             // No calucaltion for buffer coulmns, because they only function as buffers
             if (column.IsBuffer == true)
@@ -529,7 +562,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
         }
     }
 
-    private static void MoveDeliverablesToNextColumnIfPossible(List<ColumnModel> columns, Dictionary<ColumnModel, List<DeliverableModel>> columnDeliverables, double currentDay, ColumnModel column, List<DeliverableModel> wipQueue, List<DeliverableModel> wipStack, List<DeliverableModel> deliverablesToMove)
+    private static void MoveDeliverablesToNextColumnIfPossible(List<ColumnModel> columns, Dictionary<ColumnModel, List<DeliverableModel>> columnDeliverables, double currentDay, ColumnModel column, List<DeliverableModel> wipQueue, List<DeliverableModel> wipStack, List<DeliverableModel> deliverablesToMove, List<DefectModel> defects, List<DeliverableModel> deliverablesCopy)
     {
         foreach (var deliverable in deliverablesToMove)
         {
@@ -550,6 +583,39 @@ public class MonteCarloSimulation : IMonteCarloSimulation
                     deliverable.IsCalculated = false;
                     columnDeliverables[nextColumn].Add(deliverable);
                     wipStack.Remove(deliverable);
+
+                    // Check if next column is the Done Column
+                    // If so, check for a new bug and add to the first column
+                    if (nextColumn.Name == "Done")
+                    {
+                        for (int i = 0; i < defects.Count; i++)
+                        {
+                            DefectModel? defect = defects[i];
+                            if (defect != null && defect.DefectPercentage != 0)
+                            {
+                                var randomVal = ThreadSafeRandom.ThisThreadsRandom.NextDouble();
+                                var defectPercentage = defect.DefectPercentage/100;
+                                if (randomVal < defectPercentage)
+                                {
+
+                                    var newDeliverable = new DeliverableModel
+                                    {
+                                        Nr = deliverablesCopy.Count + 1,
+                                        CompletionDays = 0.0,
+                                        AccumulatedDays = 0.0,
+                                        IsCalculated = false,
+                                        ColumnIndex = 0,
+                                        IsBug = true
+                                    };
+                                    columnDeliverables[columns.First()].Add(newDeliverable);
+                                    deliverablesCopy.Add(newDeliverable);
+                                    var doneColumn = columns.Last();
+                                    doneColumn.WIP += 1;
+                                    doneColumn.WIPMax += 1;
+                                }
+                            }
+                        }
+                    }
                 }
                 else
                 {
@@ -633,6 +699,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
         const double estimateMultiplier = 0.5;
         var projectWithModifiedEstimates = new List<ProjectSimulationModel> { projectSimModel };
         ProjectColumnMultiplier(projectSimModel, estimateMultiplier, projectWithModifiedEstimates);
+        ProjectDefectMultiplier(projectSimModel, estimateMultiplier, projectWithModifiedEstimates);
 
         int projectsCount = projectWithModifiedEstimates.Count;
         var orderedByTotalDays = await RunSimulationAsync(projectWithModifiedEstimates, projectSimulationsCount);
@@ -660,6 +727,23 @@ public class MonteCarloSimulation : IMonteCarloSimulation
         IsCompleted = true;
     }
 
+    private static void ProjectDefectMultiplier(ProjectSimulationModel projectSimModel, double estimateMultiplier, List<ProjectSimulationModel> projectWithModifiedEstimates)
+    {
+        // Loop through each defect and modify EstimatedLowBound and EstimatedHighBound
+        for (int i = 0; i < projectSimModel.Defects.Count; i++)
+        {
+            var defectName = projectSimModel.Defects[i].Name!;
+            // Clone the original model
+            var newProjectSimModel = projectSimModel.CloneProjectSimModel(projectSimModel, defectName);
+            // Modify the estimated bounds of the specific defect
+            var defectToModify = newProjectSimModel.Defects[i];
+            // defectToModify.DefectsPercentageLowBound *= estimateMultiplier;
+            // defectToModify.DefectsPercentageHighBound *= estimateMultiplier;
+            defectToModify.DefectPercentage /= estimateMultiplier;
+
+            projectWithModifiedEstimates.Add(newProjectSimModel);
+        }
+    }
     private static void ProjectColumnMultiplier(ProjectSimulationModel projectSimModel, double estimateMultiplier, List<ProjectSimulationModel> projectWithModifiedEstimates)
     {
         // Loop through each column and modify EstimatedLowBound and EstimatedHighBound
@@ -860,7 +944,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
 
         if (ColumnDeliverables.Any(kvp => kvp.Value.Count > 0))
         {
-            simulationList = MonteCarloSimulation.RunStepSlowSimulation(projectSimulationModel.Backlog, DeliverablesCopy, projectSimulationModel.Columns, currentDay, ColumnDeliverables);
+            simulationList = MonteCarloSimulation.RunStepSlowSimulation(projectSimulationModel.Backlog, DeliverablesCopy, projectSimulationModel.Columns, currentDay, ColumnDeliverables, projectSimulationModel.Defects);
             return (ProjectSimulationModel.Columns, simulationList);
         }
         IsCompleted = true;
@@ -873,7 +957,8 @@ public class MonteCarloSimulation : IMonteCarloSimulation
                                       List<DeliverableModel> deliverablesCopy,
                                       List<ColumnModel> columns,
                                       int currentDay,
-                                      Dictionary<ColumnModel, List<DeliverableModel>> columnDeliverables
+                                      Dictionary<ColumnModel, List<DeliverableModel>> columnDeliverables,
+                                      List<DefectModel> defects
                                       )
     {
 
@@ -925,7 +1010,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
                 var deliverablesToMove = new List<DeliverableModel>();
 
                 // Calculate the deliverable completion day and add to list 
-                CalculateDeliverableCompletionDayANDAddToList(backlog, currentSimDay, column, wipQueue, wipStack, deliverablesToMove);
+                CalculateDeliverableCompletionDayANDAddToList(backlog, currentSimDay, column, wipQueue, wipStack, deliverablesToMove, defects);
 
                 // Check how many are working on the deliverable in columns and add a day to the ones that are postponed for the next day.
                 if (column.WIP < wipQueue.Count)
@@ -937,8 +1022,9 @@ public class MonteCarloSimulation : IMonteCarloSimulation
                     }
                 }
 
+
                 // Move deliverables to the next column if possible
-                MoveDeliverablesToNextColumnIfPossible(columns, columnDeliverables, currentSimDay, column, wipQueue, wipStack, deliverablesToMove);
+                MoveDeliverablesToNextColumnIfPossible(columns, columnDeliverables, currentSimDay, column, wipQueue, wipStack, deliverablesToMove, defects, deliverablesCopy);
 
                 int devStack = developerColumn != null && columnDeliverables.ContainsKey(developerColumn) && columnDeliverables[developerColumn] != null ? columnDeliverables[developerColumn].Count : 0;
 

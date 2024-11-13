@@ -13,7 +13,7 @@ var backLogModel = new BacklogModel
 {
     Deliverables = deliverableModel,
     PercentageLowBound = 0.5,
-    PercentageHighBound = 0.8
+    PercentageHighBound = 0.8,
 };
 
 var wip = 30;
@@ -42,6 +42,8 @@ var projectSimModel = new ProjectSimulationModel
         new ColumnModel(wip: backLogModel.Deliverables.Count) { Name = "Backlog", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 54 },
         new ColumnModel(wip: wip, wipMax: wip) { Name = "Open", IsBuffer=true,  EstimatedLowBound = 1, EstimatedHighBound = 54 },
         new ColumnModel(wip: 5, wipMax: 5) { Name = "In Progress", EstimatedLowBound = 1, EstimatedHighBound = 47 },
+        new ColumnModel(wip: wip, wipMax: wip) { Name = "Stuck", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 50 },
+        new ColumnModel(wip: wip, wipMax: wip) { Name = "Finish", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 50 },
         new ColumnModel(wip: wip, wipMax: wip) { Name = "Ready to test on Development", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 50 },
         new ColumnModel(wip: 0, wipMax: 2) { Name = "Testing on Development", EstimatedLowBound = 1, EstimatedHighBound = 11 },
         new ColumnModel(wip: wip, wipMax: wip) { Name = "Waiting Deployment on Production", IsBuffer=true, EstimatedLowBound = 1, EstimatedHighBound = 22 },

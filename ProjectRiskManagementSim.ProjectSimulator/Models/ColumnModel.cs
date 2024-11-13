@@ -11,8 +11,6 @@ public class ColumnModel
     public bool IsBuffer { get; set; } = false;
     // public List<CardModel> Cards { get; set; }
     // public List<PhaseModel> Phases { get; set; }
-    // public List<BlockingEventModel> BlockingEvents { get; set; }
-    // public List<DefectModel> Defects { get; set; }
     // Constructor
     public ColumnModel(int? wip = null, int? wipMax = null)
     {

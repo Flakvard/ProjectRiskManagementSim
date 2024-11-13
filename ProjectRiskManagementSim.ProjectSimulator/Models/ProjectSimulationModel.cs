@@ -11,9 +11,8 @@ public class ProjectSimulationModel
     public required CostModel Costs { get; set; }
     public required BacklogModel Backlog { get; set; }
     public required List<ColumnModel> Columns { get; set; }
-    // public List<PhaseModel> Phases { get; set; }
-    // public List<DefectModel> Defects { get; set; }
-    // public List<BlockingEventModel> BlockingEvents { get; set; }
+    public List<DefectModel> Defects { get; set; }
+    public List<BlockingEventModel> BlockingEvents { get; set; }
 
     // Function to deep copy a ProjectSimulationModel
     internal ProjectSimulationModel CloneProjectSimModel(ProjectSimulationModel original, string Name)
