@@ -7,7 +7,7 @@ $folders = Get-ChildItem -Path $rootDir -Directory
 # Initialize total line count and folder-based summary
 $totalLines = 0
 $folderLineCounts = @{}
-$fileTypes = @("cs", "razor")
+$fileTypes = @("cs", "razor", "js")
 $fileTypeLineCounts = @{}
 
 # Initialize line counts for each file type
@@ -96,7 +96,18 @@ foreach ($entry in $sortedFolders) {
 
 # Output the total number of lines for each file type
 Write-Host "`n--------------------------------------------------------------------------------------------------------------------------------------"
+Write-Host ($headerFormat -f "File Type", "Lines of Code", "Percentage")
+Write-Host "--------------------------------------------------------------------------------------------------------------------------------------"
+
 foreach ($fileType in $fileTypes) {
-    Write-Host "`tTotal lines of code in .$fileType files: $($fileTypeLineCounts[$fileType])" -ForegroundColor Yellow
+    $fileTypeLines = $fileTypeLineCounts[$fileType]
+    $percentage = [math]::Round(($fileTypeLines / $totalLines) * 100, 2)
+
+    # Output file type in green and lines of code and percentage in normal color
+    Write-Host -NoNewline ("`t{0,-80}" -f ".$fileType") -ForegroundColor Yellow
+    Write-Host -NoNewline ("{0,-20}" -f $fileTypeLines)
+    Write-Host ("{0,-5}%" -f $percentage)
 }
+
+Write-Host "`n--------------------------------------------------------------------------------------------------------------------------------------"
 Write-Host "`tTotal lines of code in all files: $totalLines" -ForegroundColor Yellow
