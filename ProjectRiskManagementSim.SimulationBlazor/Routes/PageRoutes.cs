@@ -114,8 +114,34 @@ public static class PageRoutes
             }
             _context.Remove(simulation);
             _context.SaveChanges();
-            // Delete the simulation with the given ID
+
+            if (allSimulations.Count == 1)
+            {
+
+                var html = ($@"
+                <a href=""/simulations"" type=""button"" id=""response-button"" 
+                          class=""bg-[#7e44eb] text-white px-4 py-2 rounded hover:bg-red-400"">
+                          Successfully deleted
+                        </a>
+                      ");
+                return Results.Content(html, "text/html");
+            }
+
+            var lastSim = allSimulations.FirstOrDefault(i => i.Id != SimulationId);
+            if (lastSim != null)
+            {
+                var htmlLastId = ($@"
+                <a href=""/dashboard/{lastSim.Id}"" type=""button"" id=""response-button"" 
+                          class=""bg-[#7e44eb] text-white px-4 py-2 rounded hover:bg-red-400"">
+                          Successfully deleted
+                        </a>
+                      ");
+                return Results.Content(htmlLastId, "text/html");
+                //return Context.Results.Redirect($"/dashboard/{lastSim.Id}");
+            }
+            //return Results.Redirect("/simulations");
             return Results.Ok();
+
         });
 
         app.MapPost("/update-simulation", async (HttpRequest request, IMonteCarloSimulation MCS, OxygenSimulationContext _context) =>
@@ -243,17 +269,19 @@ public static class PageRoutes
                 await _context.UpdateSimulationAsync(existingSimProject);
                 // Save all changes at once
             };
-            // Prepare simulation result HTML to return
-            var htmlContent = $@"
-                        <div class=""flex justify-end  id=""simulation-dashboar-result"">
-                            <button class=""bg-[#7e44eb] flex gap-2 text-white px-4 py-2 rounded hover:bg-red-400"">
-                                <a href=""/dashboard/{simIdFromDb.ToString()}"" hx-get>
-                                        <div >Open Dashboard</div>
-                                      </a>
-                            </button>
-                        </div>
-                  ";
-            return Results.Content(htmlContent, "text/html");
+            if (simProjectId != null && simProjectId != 0)
+            {
+                // Prepare simulation result HTML to return
+                var htmlContent = $@"
+                <div class=""flex justify-end"" id=""simulation-dashboar-result"">
+                    <button type=""button"" class=""bg-[#7e44eb] flex gap-2 text-white px-4 py-2 rounded hover:bg-red-400"" onclick=""window.location.href='/dashboard/{simProjectId.ToString()}'"">
+                        <div>Open Dashboard</div>
+                    </button>
+                </div>
+            ";
+                return Results.Content(htmlContent, "text/html");
+            }
+            return Results.Redirect("/simulations");
         });
 
         app.MapPost("/create-simulation", async (HttpRequest request, IMonteCarloSimulation MCS, OxygenSimulationContext _context) =>
@@ -485,14 +513,12 @@ public static class PageRoutes
             }
             // Prepare simulation result HTML to return
             var htmlContent = $@"
-                        <div class=""flex justify-end  id=""simulation-dashboar-result"">
-                            <button class=""bg-[#7e44eb] flex gap-2 text-white px-4 py-2 rounded hover:bg-red-400"">
-                                <a href=""/dashboard/{simIdFromDb.ToString()}"" hx-get>
-                                        <div >Open Dashboard</div>
-                                      </a>
-                            </button>
-                        </div>
-                  ";
+                <div class=""flex justify-end"" id=""simulation-dashboar-result"">
+                    <button type=""button"" class=""bg-[#7e44eb] flex gap-2 text-white px-4 py-2 rounded hover:bg-red-400"" onclick=""window.location.href='/dashboard/{simIdFromDb.ToString()}'"">
+                        <div>Open Dashboard</div>
+                    </button>
+                </div>
+            ";
             return Results.Content(htmlContent, "text/html");
         });
 
