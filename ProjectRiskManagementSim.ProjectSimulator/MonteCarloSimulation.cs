@@ -140,9 +140,9 @@ public class MonteCarloSimulation : IMonteCarloSimulation
         {
             // Increment the current day for each iteration
             currentDay++;
-            if (currentDay > 3600)
+            if (currentDay > 36000)
             {
-                throw new InvalidOperationException("Simulation took too long > 10 years");
+                throw new InvalidOperationException("Simulation took too long > 100 years");
             }
 
             foreach (var column in columns)
