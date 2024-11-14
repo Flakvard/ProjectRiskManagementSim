@@ -40,7 +40,7 @@ public class ProjectListViewModel
         Projects = await FetchProjectsAsync(context);
     }
 
-    public string HandleProjectSelection(int? projectId, ProjectListViewModel plvm)
+    public void HandleProjectSelection(int? projectId, ProjectListViewModel plvm)
     {
         var handlerProjectListViewModel = plvm; // Assuming ProjectsView is already populated
         if (handlerProjectListViewModel.Projects.Any())
@@ -57,29 +57,20 @@ public class ProjectListViewModel
                     }
                 }
                 project.Selected = !project.Selected;
-                string html = "";
-                foreach (var p in handlerProjectListViewModel.Projects)
-                {
-                    var activeTdClass = (p.Selected == true ? "bg-[#7e44eb] text-white border-b border-gray-300" : "border-b border-gray-300");
-                    html += $@"
-                <tr id='{p.Id}'
-                  hx-put='/select-project/{p.Id}?projectListViewModelId={p.ProjectListViewModelId}'
-                  hx-trigger='click' hx-target='#ProjectsInTable' hx-swap='outerHTML'>
-                    <td class='hidden'>{p.Id}</td>
-                    <td class='hidden'>{p.ProjectListViewModelId}</td>
-                    <td class='{activeTdClass}'>{p.Name}</td>
-                    <td class='{activeTdClass}'>{p.ProjectCategory}</td>
-                    <td class='{activeTdClass}'>{p.Manager}</td>
-                    <td class='{activeTdClass}'>{p.Status}</td>
-                    <td class='{activeTdClass}'>{p.Selected}</td>
-                </tr>";
-                }
-                return html;
             }
         }
-        return string.Empty;
     }
 
+    public void HandleProjectSearch(string search, ProjectListViewModel plvm)
+    {
+        var handlerProjectListViewModel = plvm;
+        if (handlerProjectListViewModel.Projects.Any())
+        {
+            var projects = handlerProjectListViewModel.Projects.Where(p => p.Name.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+            handlerProjectListViewModel.Projects = projects;
+        }
+
+    }
     private async Task<List<ProjectViewModel>> FetchProjectsAsync(OxygenAnalyticsContext context)
     {
         // var projects = await context.Projects.ToListAsync();
