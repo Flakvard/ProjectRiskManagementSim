@@ -22,12 +22,17 @@
             <script>
 
                 // Extract simulation names to use as categories on the x-axis
-                let simulationNames = [
+                let simulationNamesWithKey = [
                     @foreach (var simulation in sortedSimulations)
                     {
-                        <text>'@simulation.Name',</text>
+                    <text>
+                    { name: '@(simulation.Name.ToString() ?? "NaN")' },
+                     </text>
                     }
                 ];
+
+                let simulationNames = simulationNamesWithKey.map(item => item.name);
+                console.log(simulationNames);
                 // Prepare the data by looping through the C# collection and outputting it as JavaScript
                 window.newChartData = {
                     categories: simulationNames,  // Assign SimulationName as categories for better alignment
@@ -48,7 +53,7 @@
                                     }
                                   ],
                     targetDateData: [
-                                        @foreach (var simulation in dashboardInfoHandler._simulations)
+                                    @foreach (var simulation in sortedSimulations)
                                         {
                                             @if (simulation.SimEndDate != null)
                                             {
