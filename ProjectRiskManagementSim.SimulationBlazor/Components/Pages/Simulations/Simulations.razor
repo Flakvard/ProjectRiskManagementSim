@@ -24,7 +24,7 @@
 
           @foreach (var project in listSimulationsHandler._projects)
           {
-          var activeTdClass = (project.ProjectSelected == true ? "bg-[#7e44eb] text-white border-b border-gray-300" :
+          var activeTdClass = (project.ProjectSelected == true ? "bg-[#FFBEC3] text-black border-b border-gray-300" :
           "border-b border-gray-300");
           <tr id="@project.Id" hx-put="/simulations" hx-trigger="click" hx-target="#simulationspage"
             hx-vals='{ "ProjectId": @(project.Id) }' hx-swap="outerHTML" @onput="HandleProjectSelection">
@@ -32,7 +32,11 @@
             <td class="@activeTdClass px-3 py-2.5 text-center cell-text">@project.JiraId</td>
             <td class="@activeTdClass px-3 py-2.5 text-center cell-text">@project.Name</td>
             <td class="@activeTdClass px-3 py-2.5 text-center cell-text">
-              <button>Open</button>
+              <button class="bg-[#ff7c87] rounded-lg p-1">
+                <span class="px-3 py-2.5 text-white text-center cell-text hover:text-purple-100">
+                  Open
+                </span>
+              </button>
             </td>
           </tr>
           }

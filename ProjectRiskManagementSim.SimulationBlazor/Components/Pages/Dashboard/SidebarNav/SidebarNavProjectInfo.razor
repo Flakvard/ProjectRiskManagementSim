@@ -4,18 +4,21 @@
 <div class="self-stretch shrink basis-0 p-1 flex-col justify-start items-start gap-1 flex">
   <div class="SimulationHeader self-stretch p-1 flex-col justify-start items-start gap-1 flex">
     <div class="SimHeadContainer self-stretch p-1 rounded-[22px] flex-col justify-center items-center gap-2.5 flex">
-      <div class="CostDelaySection px-2.5 py-[5px] justify-start items-start gap-2.5 inline-flex">
+      <div class="CostDelaySection px-2.5 py-[5px] justify-start items-start gap-2.5 flex flex-col">
         <div
-          class="CostDelayValue w-[113px] text-right text-white text-base font-bold font-['Outfit'] capitalize leading-none">
+          class="CostDelayValue w-[113px] text-center text-white text-xl font-bold font-['Outfit'] capitalize line-clamp-2">
           @if (@Project != null)
           {
           @Project.Name
           ;
           }
         </div>
-        <button>
-          <Editbutton />
-        </button>
+        <div class="text-white text-lg font-bold font-['Outfit'] capitalize line-clamp-2">
+          @if (@Simulation != null && @Simulation.Name != null)
+          {
+          @Simulation.Name.ToString();
+          }
+        </div>
       </div>
     </div>
   </div>
@@ -54,7 +57,7 @@
     <div class="EndDateValue text-right text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
       @if (@Simulation != null && @Simulation.SimEndDate != null)
       {
-        @Simulation.SimEndDate?.ToShortDateString()
+      @Simulation.SimEndDate?.ToShortDateString()
       ;
       }
     </div>
@@ -120,27 +123,27 @@
     <div class="DevelopersValue text-right text-white text-lg font-bold font-['Outfit'] capitalize leading-relaxed">
       @if (@Simulation != null)
       {
-        @TotalDevelopers.ToString();
+      @TotalDevelopers.ToString();
       }
     </div>
   </div>
 </div>
 @code {
-    [Parameter] public ProjectSimulationModel Simulation { get; set; }
-    [Parameter] public ProjectModel Project { get; set; }
-    public double TotalDevelopers { get; set; }
+[Parameter] public ProjectSimulationModel Simulation { get; set; }
+[Parameter] public ProjectModel Project { get; set; }
+public double TotalDevelopers { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
-        if (@Simulation != null)
-        {
-            var back = @Simulation.BackendDevs;
-            var front = @Simulation.FrontendDevs;
-            var testers = @Simulation.Testers;
-            var total = back + front + testers;
-            TotalDevelopers = total;
-        }
-        
-    }
+protected override async Task OnInitializedAsync()
+{
+if (@Simulation != null)
+{
+var back = @Simulation.BackendDevs;
+var front = @Simulation.FrontendDevs;
+var testers = @Simulation.Testers;
+var total = back + front + testers;
+TotalDevelopers = total;
+}
+
+}
 
 }

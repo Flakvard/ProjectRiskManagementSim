@@ -2,16 +2,16 @@
 <nav class="w-full self-stretch px-[180px] justify-between items-center flex">
   <div class="w-40 h-12 justify-left items-center flex">
     <a hx-get="/" hx-target="#hero-content" hx-swap="outerHTML" hx-on::after-request="initializeModal()"
-      class="w-[75px] text-white text-xl font-semibold font-['Inter'] hover:text-red-400">Oxygen</a>
+      class="w-[75px] text-white text-xl font-semibold font-['Inter'] hover:text-purple-100">Oxygen</a>
   </div>
   <div class="flex space-x-9">
-    <a href="/htmx-test"
-      class="w-[76.93px] text-white text-xl font-normal font-['Inter'] hover:text-red-400">Projects</a>
-    <button hx-put="/htmx-test" hx-swap="outerHTML" hx-vals='{ "Message": "Hello from Blazor" }'
-      class="w-[108.90px] text-white text-xl font-normal font-['Inter'] hover:text-red-400">HTMX-test</button>
-    <a href="/dashboard"
-      class="Dashboard w-[103.90px] text-white text-xl font-normal font-['Inter'] hover:text-red-400">Dashboard</a>
     <a href="/simulations"
-      class="w-[108.90px] text-white text-xl font-normal font-['Inter'] hover:text-red-400">Simulations</a>
+      class="w-[76.93px] text-white text-xl font-normal font-['Inter'] hover:text-purple-100">Projects</a>
+    <a href="/simulations"
+      class="Dashboard w-[103.90px] text-white text-xl font-normal font-['Inter'] hover:text-purple-100">Dashboard</a>
+    <a href="/simulations"
+      class="w-[108.90px] text-white text-xl font-normal font-['Inter'] hover:text-purple-100">Simulations</a>
+    <a href="/simulations"
+      class="w-[108.90px] text-white text-xl font-normal font-['Inter'] hover:text-purple-100">User</a>
   </div>
 </nav>
