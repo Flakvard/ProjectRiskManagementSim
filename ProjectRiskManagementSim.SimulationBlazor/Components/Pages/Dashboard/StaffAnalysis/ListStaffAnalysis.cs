@@ -89,12 +89,12 @@ public class ListStaffAnalysis
     public void UpdateStaffAnalysis()
     {
         StaffAnalysisList.Clear();
-        for (int i = 1; i <= 5; i++)
+        for (int i = 5; i >= 1; i--)
         {
             if (WipAnalysis == null || !WipAnalysis!.ContainsKey(i)) continue;
             var staffName = WipAnalysis![i].Item1;
             var days = WipAnalysis[i].Item2;
-            var staffPriority = i;
+            var staffPriority = 6 - i;
             DateTime listOfEndDays = listOfEndDays = Simulation!.StartDate.AddDays(days);
             var endDate = listOfEndDays.ToString("dd MMM yyyy");
             StaffAnalysisList.Add(new StaffAnalysis { Priority = staffPriority, StaffName = staffName, Days = days, EndDate = endDate });
