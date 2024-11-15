@@ -826,7 +826,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
             var defectToModify = newProjectSimModel.Defects[i];
             defectToModify.DefectsPercentageLowBound *= estimateMultiplier;
             defectToModify.DefectsPercentageHighBound *= estimateMultiplier;
-            defectToModify.DefectPercentage /= estimateMultiplier;
+            defectToModify.DefectPercentage *= estimateMultiplier;
 
             projectWithModifiedEstimates.Add(newProjectSimModel);
         }
