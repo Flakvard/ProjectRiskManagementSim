@@ -413,6 +413,8 @@ public class CreateNewProjectHandler
         // Safely calculate multipliers with checks for zero values to avoid NaN results
         double bugCycleTimeMultiplierLow = (bugCycleTimeLow != 0) ? (bugCycleTimeLow / cycleTimeLowBound) * 100 : 0;
         double bugCycleTimeMultiplierHigh = (bugCycleTimeHigh != 0) ? (bugCycleTimeHigh / cycleTimeHighBound) * 100 : 0;
+        if (bugCycleTimeMultiplierLow > bugCycleTimeMultiplierHigh)
+            bugCycleTimeMultiplierLow = 0;
 
         // Update BugCycleTimePercentiles list
         BugCycleTimePercentiles = new List<double> { bugCycleTimeMultiplierLow, bugCycleTimeMultiplierHigh };
