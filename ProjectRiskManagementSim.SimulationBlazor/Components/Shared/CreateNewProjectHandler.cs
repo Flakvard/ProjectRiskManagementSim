@@ -367,8 +367,26 @@ public class CreateNewProjectHandler
         AwaitingThirdPartyPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.AwaitingThirdParty > 0).Select(x => x.AwaitingThirdParty).ToList());
         AwaitingTaskPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.AwaitingTask > 0).Select(x => x.AwaitingTask).ToList());
         TestingOnStagePercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.TestingOnStage > 0).Select(x => x.TestingOnStage).ToList());
+        // If both percentiles are 0, then nothing is TestingOnStagePercentiles or nothing is in Done
+        if (TestingOnStagePercentiles[0] == 0 && ReadyForTestOnStagePercentiles[1] == 0)
+        {
+            var today = DateTime.Today;
+            var listOfCycleTimes = IssueLeadTimes.Where(x => x.OpenDate != null).Select(x => today - DateTime.Parse(x.OpenDate)).ToList();
+            var listOfNumericCycleTimes = listOfCycleTimes.Select(x => (double)x.Days).ToList();
+            TestingOnStagePercentiles = CalculatePercentile(listOfNumericCycleTimes);
+        }
         WaitingForDeploymentToProductionPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.WaitingForDeploymentToProduction > 0).Select(x => x.WaitingForDeploymentToProduction).ToList());
         ReadyToTestOnProductionPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.ReadyToTestOnProduction > 0).Select(x => x.ReadyToTestOnProduction).ToList());
+
+        // If both percentiles are 0, then nothing is ReadyToTestOnProductionPercentiles or nothing is in Done
+        if (ReadyToTestOnProductionPercentiles[0] == 0 && ReadyToTestOnProductionPercentiles[1] == 0)
+        {
+            var today = DateTime.Today;
+            var listOfCycleTimes = IssueLeadTimes.Where(x => x.OpenDate != null).Select(x => today - DateTime.Parse(x.OpenDate)).ToList();
+            var listOfNumericCycleTimes = listOfCycleTimes.Select(x => (double)x.Days).ToList();
+            ReadyToTestOnProductionPercentiles = CalculatePercentile(listOfNumericCycleTimes);
+        }
+
         AnsweredPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.Answered > 0).Select(x => x.Answered).ToList());
         FailedTestPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.FailedTest > 0).Select(x => x.FailedTest).ToList());
         ReadyForTestOnDevPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.ReadyForTestOnDev > 0).Select(x => x.ReadyForTestOnDev).ToList());
