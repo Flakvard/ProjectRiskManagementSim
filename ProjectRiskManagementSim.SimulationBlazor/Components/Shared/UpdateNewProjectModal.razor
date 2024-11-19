@@ -570,7 +570,7 @@
     [Parameter] public EventCallback<int> OnForecastSave { get; set; }
     [Parameter] public int ProjectSimulationId { get; set; } = 0;
 
-    [SupplyParameterFromForm] public bool AlreadyExists { get; set; }
+    [SupplyParameterFromForm] public bool AlreadyExists { get; set; } = true;
     protected override async Task OnInitializedAsync()
     {
         if (ProjectId != 0)
@@ -584,7 +584,7 @@
         {
             NewProjectHandler.SimProjectId = ProjectSimulationId;
         }
-        await NewProjectHandler.InitializeProjectsAsync(AnalyticsContext, SimContext);
+        await NewProjectHandler.InitializeProjectsAsync(AnalyticsContext, SimContext, AlreadyExists);
         AlreadyExists = NewProjectHandler.AlreadySimulated; AlreadyExists = NewProjectHandler.AlreadySimulated;
     }
     private async Task HandleForecastAnalysis(HtmxEventArgs args)

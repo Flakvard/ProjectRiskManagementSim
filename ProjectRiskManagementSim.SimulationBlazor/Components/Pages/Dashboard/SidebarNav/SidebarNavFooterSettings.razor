@@ -6,7 +6,7 @@
     <div class="p-2 flex flex-row gap-4 overflow-auto">
         <div>
             <button id="openModal" hx-put="/create-new-project-modal/@ProjectSimulationId"
-                    hx-vals='{ "SimProjectId": @ProjectSimulationId }' hx-trigger="click" hx-target="#modal" hx-swap="innerHTML"
+                    hx-vals='{ "SimProjectId": @ProjectSimulationId, "AlreadyExists": false }' hx-trigger="click" hx-target="#modal" hx-swap="innerHTML"
                     hx-indicator=".modal-indicator, .modal">
                 <AddButton />
             </button>

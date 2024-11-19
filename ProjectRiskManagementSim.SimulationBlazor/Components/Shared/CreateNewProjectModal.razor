@@ -532,12 +532,12 @@
     [Parameter] public int ProjectId { get; set; }
     [SupplyParameterFromForm] public int SimProjectId { get; set; }
     public CreateNewProjectHandler NewProjectHandler { get; set; } = new CreateNewProjectHandler();
-    [SupplyParameterFromForm] public bool AlreadyExists { get; set; }
+    [SupplyParameterFromForm] public bool AlreadyExists { get; set; } = true;
     protected override async Task OnInitializedAsync()
     {
         NewProjectHandler.ProjectId = ProjectId;
         NewProjectHandler.SimProjectId = SimProjectId;
-        await NewProjectHandler.InitializeProjectsAsync(AnalyticsContext, SimContext);
+        await NewProjectHandler.InitializeProjectsAsync(AnalyticsContext, SimContext, AlreadyExists);
         AlreadyExists = NewProjectHandler.AlreadySimulated;
     }
 }

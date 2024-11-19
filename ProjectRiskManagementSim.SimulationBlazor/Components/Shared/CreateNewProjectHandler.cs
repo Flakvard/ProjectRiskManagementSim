@@ -98,13 +98,14 @@ public class CreateNewProjectHandler
     public string NameOfSim { get; set; } = "";
     public bool AlreadySimulated { get; set; } = false;
 
-    public async Task InitializeProjectsAsync(OxygenAnalyticsContext context, OxygenSimulationContext context1)
+    public async Task InitializeProjectsAsync(OxygenAnalyticsContext context, OxygenSimulationContext context1, bool alreadyExists)
     {
-        await FetchProjectInfo(context, context1);
+        await FetchProjectInfo(context, context1, alreadyExists);
     }
-    private async Task FetchProjectInfo(OxygenAnalyticsContext contextAnalytics, OxygenSimulationContext contextSimulation)
+    private async Task FetchProjectInfo(OxygenAnalyticsContext contextAnalytics, OxygenSimulationContext contextSimulation, bool alreadyExists)
     {
-        if (SimProjectId != 0)
+        // When we want to fetch the simulaiton
+        if (SimProjectId != 0 && alreadyExists)
         {
             var simProjectModel = await contextSimulation.GetSimulationByIdAsync(SimProjectId);
 
@@ -116,6 +117,30 @@ public class CreateNewProjectHandler
                 return;
             }
         }
+
+        // When we create a new simulation from other simulation
+        else if (SimProjectId != 0 && !alreadyExists)
+        {
+            var simProjectModel = await contextSimulation.GetSimulationByIdAsync(SimProjectId);
+
+            if (simProjectModel != null && simProjectModel.Name != null && simProjectModel.Project != null && simProjectModel.Project.Name != null)
+            {
+                IssueLeadTimes = await contextAnalytics.GetIssueLeadTimesByProjectAsync(simProjectModel.Project.Name);
+                if (IssueLeadTimes == null || IssueLeadTimes.Count == 0)
+                {
+                    IssueLeadTimes = new List<IssueLeadTime>(); // Ensure it’s an empty list instead of null
+                }
+                NameOfSim = simProjectModel.Name;
+                MapProjectBackToModal(simProjectModel!.Project, simProjectModel);
+                await CalculateCount(contextAnalytics);
+                CalculatePercentiles();
+                AlreadySimulated = true;
+                return;
+            }
+        }
+
+        // When we create a new project from Jira projects and a new simulaiotn
+
         // var projects = await context.Projects.ToListAsync();
         var project = await contextAnalytics.GetProjectByIdAsync(ProjectId);
         if (project == null)
@@ -142,6 +167,7 @@ public class CreateNewProjectHandler
             AlreadySimulated = false;
             return;
         }
+
         else if (simProject != null)
         {
             var allSimulations = simProject.ProjectSimulationModels.ToList();
@@ -165,6 +191,8 @@ public class CreateNewProjectHandler
 
         }
     }
+    
+        // When we press the refresh button
     public async Task UpdateAndFetchProjectInfor(int simProjectId, OxygenAnalyticsContext contextAnalytics, OxygenSimulationContext contextSimulation)
     {
         SimProjectId = simProjectId;
@@ -179,9 +207,9 @@ public class CreateNewProjectHandler
                 IssueLeadTimes = new List<IssueLeadTime>(); // Ensure it’s an empty list instead of null
             }
 
+            MapProjectBackToModal(simProjectModel!.Project, simProjectModel);
             await CalculateCount(contextAnalytics);
             CalculatePercentiles();
-            MapProjectBackToModal(simProjectModel!.Project, simProjectModel);
             return;
         }
 
