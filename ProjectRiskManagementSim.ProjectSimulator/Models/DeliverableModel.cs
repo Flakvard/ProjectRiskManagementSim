@@ -12,6 +12,7 @@ public class DeliverableModel : IComparer<DeliverableModel>
     public double StoppedWorkingTime { get; set; } = 0;
     public bool IsBug { get; set; } = false;
     public bool IsBlocked { get; set; } = false;
+    public bool WasBlocked { get; set; } = false;
     public int DefectIndex { get; set; } = 0;
     public int BlockingEventIndex { get; set; } = 0;
 

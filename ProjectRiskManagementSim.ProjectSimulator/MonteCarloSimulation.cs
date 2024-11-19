@@ -588,7 +588,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
             }
 
             // column index 3 == stuck
-            if (deliverable.IsBlocked == false && deliverable.ColumnIndex == 3)
+            if (deliverable.IsBlocked == false && deliverable.ColumnIndex == 3 && deliverable.WasBlocked == false)
             {
                 for (int i = 0; i < blockingEvents.Count(); i++)
                 {
@@ -602,6 +602,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
                         if (randomVal < blockingPercentage)
                         {
                             deliverable.IsBlocked = true;
+                            deliverable.WasBlocked = true;
                             IsBlocked = true;
                             // CompletionDays is always a random day between the low and high bounds for the column
                             completionDays = blockingEvent.BlockingEventsPercentageLowBound
