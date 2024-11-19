@@ -671,7 +671,7 @@ public class MonteCarloSimulation : IMonteCarloSimulation
 
                     // Check if next column is the Done Column
                     // If so, check for a new bug and add to the first column
-                    if (nextColumn.Name == "Done")
+                    if (nextColumn.Name == "Done" && deliverable.IsBug == false)
                     {
                         for (int i = 0; i < defects.Count; i++)
                         {
