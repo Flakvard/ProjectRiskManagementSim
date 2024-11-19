@@ -1177,16 +1177,21 @@ public class MonteCarloSimulation : IMonteCarloSimulation
                     ReallocateWIP(developersHelping, developerColumn, testingProdColumn);
                 }
 
-                // if there is no work "In Progress" reallocate to test on stage
+                // if there is no work "In Progress" reallocate to test on stage (>20 days otherwise it will be too soon)
                 if (devStack == 0 && rdyForTestDevStack > 0 && backlogStack == 0 && currentSimDay > 20)
                 {
                     ReallocateWIP(developersHelping, testingDevColumn, developerColumn);
                 }
 
-                // if there is no work "In Progress" and no work in "Test Stage" reallocate to test prod
+                // if there is no work "In Progress" and no work in "Test Stage" reallocate to test prod (>20 days otherwise it will be too soon)
                 if (devStack == 0 && testDevStack == 0 && rdyForTestDevStack == 0 && backlogStack == 0 && currentSimDay > 20)
                 {
                     ReallocateWIP(developersHelping, testingProdColumn, testingDevColumn);
+                }
+                // if there is no work "In Progress" and no work in "Testing on  Prod" reallocate to test on Stage (>20 days otherwise it will be too soon)
+                if (devStack == 0 && testProdStack == 0 && rdyForTestDevStack != 0 && backlogStack == 0 && currentSimDay > 20)
+                {
+                    ReallocateWIP(developersHelping, testingDevColumn, testingProdColumn);
                 }
             }
             var orderdedByAccumulated = deliverablesCopy.OrderBy(d => d.AccumulatedDays).ToList();
