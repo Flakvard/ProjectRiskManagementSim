@@ -19,6 +19,7 @@ using ProjectRiskManagementSim.DataAccess;
 using ProjectRiskManagementSim.DataAccess.Models;
 using System.Globalization;
 using Microsoft.EntityFrameworkCore.Storage.Json;
+using System;
 
 namespace ProjectRiskManagementSim.SimulationBlazor.Routes;
 
@@ -162,6 +163,7 @@ public static class PageRoutes
             List<ViewColumnModel> columns;
             List<ViewDefectModel> defects;
             List<ViewBlockingEventModel> blockingEvents;
+            bool isOngoing;
 
             ParseAndExtractForm(form,
                                 out simProjectId,
@@ -201,7 +203,8 @@ public static class PageRoutes
                                 out bugCycleTimePercentilesLowBound,
                                 out bugCycleTimePercentilesHighBound,
                                 out defects,
-                                out blockingEvents
+                                out blockingEvents,
+                                out isOngoing
                                   );
 
             // Store simulation in database
@@ -299,6 +302,7 @@ public static class PageRoutes
             DateTime startDate, targetDate;
             int daysSinceStartInt;
             int? simProjectId;
+            bool isOngoing;
             List<ViewColumnModel> columns;
             List<ViewDefectModel> defects;
             List<ViewBlockingEventModel> blockingEvents;
@@ -340,7 +344,8 @@ public static class PageRoutes
                                 out bugCycleTimePercentilesLowBound,
                                 out bugCycleTimePercentilesHighBound,
                                 out defects,
-                                out blockingEvents
+                                out blockingEvents,
+                                out isOngoing
                                   );
 
             // Store simulation in database
@@ -612,7 +617,8 @@ public static class PageRoutes
                                             out double bugCycleTimePercentilesLowBound,
                                             out double bugCycleTimePercentilesHighBound,
                                             out List<ViewDefectModel> defects,
-                                            out List<ViewBlockingEventModel> blockingEvents
+                                            out List<ViewBlockingEventModel> blockingEvents,
+                                            out bool isOngoing
                                             )
     {
         // Extract and parse form data
@@ -649,6 +655,7 @@ public static class PageRoutes
         string? stringAwait3PPercentilesHighBound = form["Await3PPercentilesHighBound"];
         string? stringBugCycleTimePercentilesLowBound = form["BugCycleTimePercentilesLowBound"];
         string? stringBugCycleTimePercentilesHighBound = form["BugCycleTimePercentilesHighBound"];
+        string? stringIsOngoing = form["IsOngoing"];
 
         if (jiraProjectName == null
             || jiraId == null
@@ -725,6 +732,7 @@ public static class PageRoutes
         await3PPercentilesHighBound = double.Parse(stringAwait3PPercentilesHighBound.Replace(',', '.'), CultureInfo.InvariantCulture);
         bugCycleTimePercentilesLowBound = double.Parse(stringBugCycleTimePercentilesLowBound.Replace(',', '.'), CultureInfo.InvariantCulture);
         bugCycleTimePercentilesHighBound = double.Parse(stringBugCycleTimePercentilesHighBound.Replace(',', '.'), CultureInfo.InvariantCulture);
+         isOngoing = stringIsOngoing == "on";
 
 
         if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(jiraProjectId) || string.IsNullOrWhiteSpace(jiraProjectName))
@@ -811,6 +819,8 @@ public static class PageRoutes
                 string? wipMax = form[$"wipMax{i}"];
                 string? lowBound = form[$"lowBound{i}"];
                 string? highBound = form[$"highBound{i}"];
+                string? lowBoundOngoing = form[$"lowBoundOngoing{i}"];
+                string? highBoundOngoing = form[$"highBoundOngoing{i}"];
                 string? isBuffer = form[$"isBuffer{i}"];
                 if (colName == null || wip == null || wipMax == null || lowBound == null || highBound == null)
                 {
@@ -874,15 +884,90 @@ public static class PageRoutes
                 }
                 else if (colName == "Testing on Development")
                 {
-                    if (int.Parse(wip) < testers || int.Parse(wipMax) < testers)
+                    if (isOngoing)
                     {
+                        double lowBoundParsed = 0;
+                        double highBoundParsed = 0;
+                        if (lowBoundOngoing != null && highBoundOngoing != null)
+                        {
+                            lowBoundParsed = double.Parse(lowBoundOngoing);
+                            highBoundParsed = double.Parse(highBoundOngoing);
+                        }
+
+
+                        if (int.Parse(wip) < testers || int.Parse(wipMax) < testers)
+                        {
+                            columns.Add(new ViewColumnModel
+                            {
+                                Name = colName,
+                                WIP = (int)testers,
+                                WIPMax = (int)testers,
+                                EstimatedLowBound = lowBoundParsed,
+                                EstimatedHighBound = highBoundParsed,
+                                IsBuffer = isBuffer == "on"
+                            });
+                        }
+                        else
+                        {
+                            columns.Add(new ViewColumnModel
+                            {
+                                Name = colName,
+                                WIP = int.Parse(wip),
+                                WIPMax = int.Parse(wipMax),
+                                EstimatedLowBound = lowBoundParsed,
+                                EstimatedHighBound = highBoundParsed,
+                                IsBuffer = isBuffer == "on"
+                            });
+                        }
+                    }
+                    else
+                    {
+                        if (int.Parse(wip) < testers || int.Parse(wipMax) < testers)
+                        {
+                            columns.Add(new ViewColumnModel
+                            {
+                                Name = colName,
+                                WIP = (int)testers,
+                                WIPMax = (int)testers,
+                                EstimatedLowBound = int.Parse(lowBound),
+                                EstimatedHighBound = int.Parse(highBound),
+                                IsBuffer = isBuffer == "on"
+                            });
+                        }
+                        else
+                        {
+                            columns.Add(new ViewColumnModel
+                            {
+                                Name = colName,
+                                WIP = int.Parse(wip),
+                                WIPMax = int.Parse(wipMax),
+                                EstimatedLowBound = double.Parse(lowBound),
+                                EstimatedHighBound = double.Parse(highBound),
+                                IsBuffer = isBuffer == "on"
+                            });
+                        }
+                    }
+                }
+                else if (colName == "Ready to test on Production")
+                {
+                    if (isOngoing)
+                    {
+                        double lowBoundParsed = 0;
+                        double highBoundParsed = 0;
+                        if (lowBoundOngoing != null && highBoundOngoing != null)
+                        {
+                            lowBoundParsed = double.Parse(lowBoundOngoing);
+                            highBoundParsed = double.Parse(highBoundOngoing);
+                        }
+
+
                         columns.Add(new ViewColumnModel
                         {
                             Name = colName,
-                            WIP = (int)testers,
-                            WIPMax = (int)testers,
-                            EstimatedLowBound = int.Parse(lowBound),
-                            EstimatedHighBound = int.Parse(highBound),
+                            WIP = int.Parse(wip),
+                            WIPMax = int.Parse(wipMax),
+                            EstimatedLowBound = lowBoundParsed,
+                            EstimatedHighBound = highBoundParsed,
                             IsBuffer = isBuffer == "on"
                         });
                     }
@@ -893,11 +978,12 @@ public static class PageRoutes
                             Name = colName,
                             WIP = int.Parse(wip),
                             WIPMax = int.Parse(wipMax),
-                            EstimatedLowBound = int.Parse(lowBound),
-                            EstimatedHighBound = int.Parse(highBound),
+                            EstimatedLowBound = double.Parse(lowBound),
+                            EstimatedHighBound = double.Parse(highBound),
                             IsBuffer = isBuffer == "on"
                         });
                     }
+
                 }
                 else
                     columns.Add(new ViewColumnModel

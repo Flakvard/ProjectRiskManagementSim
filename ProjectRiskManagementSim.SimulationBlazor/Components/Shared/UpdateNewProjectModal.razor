@@ -107,6 +107,12 @@
                                         <label>Testers:</label>
                                         <input class="input-border" type="number" name="Testers" value="@NewProjectHandler.Testers" required />
                                     </div>
+                                    <div class="hidden flex w-full">
+                                        <label class="flex flex-fit" for="isOngoing">Is Project Ongoing?:</label>
+                                        <div class="flex w-full justify-items-end">
+                                            <input class="input-border" type="checkbox" id="isOngoing" name="isOngoing">
+                                        </div>
+                                    </div>
                                     <div class="hidden">
                                         <label>Revenue Amount:</label>
                                         <input class="input-border" type="number" name="RevenueAmount"
@@ -315,7 +321,7 @@
                                                 <div class="column-input-border">
                                                     <div class="flex flex-row gap-2 justify-center items-center">
                                                         <label class="label-input" for="name6">Name:</label>
-                                                        <input class="input-border" type="text" id="name6" name="name6" value="Testing on Development">
+                                                    <input class="input-border" type="text" id="name6" name="name6" value="Testing on Development">
                                                     </div>
                                                     <div class="flex flex-row gap-2 justify-center items-center">
                                                         <label class="label-input" for="wip6">WIP:</label>
@@ -335,6 +341,16 @@
                                                         <input class="input-border" type="number" id="highBound6" name="highBound6"
                                                                value="@double.Round(NewProjectHandler.TestingOnStagePercentiles[1])">
                                                     </div>
+                                                <div class="flex flex-row gap-2 justify-center items-center">
+                                                    <label class="label-input" for="lowBound6">Estimated Low Bound (Ongoing):</label>
+                                                    <input class="input-border" type="number" id="lowBound6" name="lowBound6"
+                                                           value="@double.Round(NewProjectHandler.TestingOnStagePercentilesOngoing[0])">
+                                                </div>
+                                                <div class="flex flex-row gap-2 justify-center items-center">
+                                                    <label class="label-input" for="highBound6">Estimated High Bound (Ongoing):</label>
+                                                    <input class="input-border" type="number" id="highBound6" name="highBound6"
+                                                           value="@double.Round(NewProjectHandler.TestingOnStagePercentilesOngoing[1])">
+                                                </div>
                                                     <div class="flex flex-row gap-2 justify-center items-center">
                                                         <label class="label-input" for="isBuffer6">Is Buffer:</label>
                                                         <input class="input-border" type="checkbox" id="isBuffer6" name="isBuffer6">
@@ -395,6 +411,16 @@
                                                         <input class="input-border" type="number" id="highBound8" name="highBound8"
                                                                value="@double.Round(NewProjectHandler.ReadyToTestOnProductionPercentiles[1])">
                                                     </div>
+                                                <div class="flex flex-row gap-2 justify-center items-center">
+                                                    <label class="label-input" for="lowBoundOngoing8">Estimated Low Bound (Ongoing):</label>
+                                                    <input class="input-border" type="number" id="lowBoundOngoing8" name="lowBoundOngoing8"
+                                                           value="@double.Round(NewProjectHandler.ReadyToTestOnProductionPercentilesOngoing[0])">
+                                                </div>
+                                                <div class="flex flex-row gap-2 justify-center items-center">
+                                                    <label class="label-input" for="highBoundOngoing8">Estimated High Bound (Ongoing):</label>
+                                                    <input class="input-border" type="number" id="highBoundOngoing8" name="highBoundOngoing8"
+                                                           value="@double.Round(NewProjectHandler.ReadyToTestOnProductionPercentilesOngoing[1])">
+                                                </div>
                                                     <div class="flex flex-row gap-2 justify-center items-center">
                                                         <label class="label-input" for="isBuffer8">Is Buffer:</label>
                                                         <input class="input-border" type="checkbox" id="isBuffer8" name="isBuffer8">

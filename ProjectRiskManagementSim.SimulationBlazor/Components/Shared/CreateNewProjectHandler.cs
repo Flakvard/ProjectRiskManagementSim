@@ -40,8 +40,10 @@ public class CreateNewProjectHandler
     public List<double> AwaitingThirdPartyPercentiles { get; set; } = new List<double> { 0, 0 };
     public List<double> AwaitingTaskPercentiles { get; set; } = new List<double> { 0, 0 };
     public List<double> TestingOnStagePercentiles { get; set; } = new List<double> { 0, 0 };
+    public List<double> TestingOnStagePercentilesOngoing { get; set; } = new List<double> { 0, 0 };
     public List<double> WaitingForDeploymentToProductionPercentiles { get; set; } = new List<double> { 0, 0 };
     public List<double> ReadyToTestOnProductionPercentiles { get; set; } = new List<double> { 0, 0 };
+    public List<double> ReadyToTestOnProductionPercentilesOngoing { get; set; } = new List<double> { 0, 0 };
     public List<double> AnsweredPercentiles { get; set; } = new List<double> { 0, 0 };
     public List<double> FailedTestPercentiles { get; set; } = new List<double> { 0, 0 };
     public List<double> ReadyForTestOnDevPercentiles { get; set; } = new List<double> { 0, 0 };
@@ -191,8 +193,8 @@ public class CreateNewProjectHandler
 
         }
     }
-    
-        // When we press the refresh button
+
+    // When we press the refresh button
     public async Task UpdateAndFetchProjectInfor(int simProjectId, OxygenAnalyticsContext contextAnalytics, OxygenSimulationContext contextSimulation)
     {
         SimProjectId = simProjectId;
@@ -260,8 +262,10 @@ public class CreateNewProjectHandler
         FinishedPercentiles = new List<double> { projectLowBound[4], projectHighBound[4] };
         ReadyForTestOnStagePercentiles = new List<double> { projectLowBound[5], projectHighBound[5] };
         TestingOnStagePercentiles = new List<double> { projectLowBound[6], projectHighBound[6] };
+        TestingOnStagePercentilesOngoing = new List<double> { projectLowBound[6], projectHighBound[6] };
         WaitingForDeploymentToProductionPercentiles = new List<double> { projectLowBound[7], projectHighBound[7] };
         ReadyToTestOnProductionPercentiles = new List<double> { projectLowBound[8], projectHighBound[8] };
+        ReadyToTestOnProductionPercentilesOngoing = new List<double> { projectLowBound[8], projectHighBound[8] };
         DonePercentiles = new List<double> { projectLowBound[9], projectHighBound[9] };
     }
 
@@ -395,24 +399,48 @@ public class CreateNewProjectHandler
         AwaitingThirdPartyPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.AwaitingThirdParty > 0).Select(x => x.AwaitingThirdParty).ToList());
         AwaitingTaskPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.AwaitingTask > 0).Select(x => x.AwaitingTask).ToList());
         TestingOnStagePercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.TestingOnStage > 0).Select(x => x.TestingOnStage).ToList());
+
         // If both percentiles are 0, then nothing is TestingOnStagePercentiles or nothing is in Done
-        if (TestingOnStagePercentiles[0] == 0 && ReadyForTestOnStagePercentiles[1] == 0)
+        var today = DateTime.Today;
+        if (TestingOnStagePercentiles[0] == 0 && TestingOnStagePercentiles[1] == 0)
         {
-            var today = DateTime.Today;
-            var listOfCycleTimes = IssueLeadTimes.Where(x => x.OpenDate != null).Select(x => today - DateTime.Parse(x.OpenDate)).ToList();
-            var listOfNumericCycleTimes = listOfCycleTimes.Select(x => (double)x.Days).ToList();
-            TestingOnStagePercentiles = CalculatePercentile(listOfNumericCycleTimes);
+            var listOfCycleTimesDev = IssueLeadTimes
+                                          .Where(x => x.OpenDate != null)
+                                          .Where(x => x.IssueType == "Task" || x.IssueType == "Sub-task" || x.IssueType == "Subtask" || x.IssueType == "Tech Task" || x.IssueType == "Story")
+                                          .Select(x => today - DateTime.Parse(x.OpenDate)).ToList();
+            var listOfNumericCycleTimesDev = listOfCycleTimesDev.Select(x => (double)x.Days).ToList();
+            TestingOnStagePercentiles = CalculatePercentile(listOfNumericCycleTimesDev);
         }
         WaitingForDeploymentToProductionPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.WaitingForDeploymentToProduction > 0).Select(x => x.WaitingForDeploymentToProduction).ToList());
         ReadyToTestOnProductionPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.ReadyToTestOnProduction > 0).Select(x => x.ReadyToTestOnProduction).ToList());
 
         // If both percentiles are 0, then nothing is ReadyToTestOnProductionPercentiles or nothing is in Done
+        var listOfCycleTimes = IssueLeadTimes
+                                  .Where(x => x.OpenDate != null)
+                                  .Where(x => x.IssueType == "Task" || x.IssueType == "Sub-task" || x.IssueType == "Subtask" || x.IssueType == "Tech Task" || x.IssueType == "Story")
+                                  .Select(x => today - DateTime.Parse(x.OpenDate)).ToList();
+        var listOfNumericCycleTimes = listOfCycleTimes.Select(x => (double)x.Days).ToList();
         if (ReadyToTestOnProductionPercentiles[0] == 0 && ReadyToTestOnProductionPercentiles[1] == 0)
         {
-            var today = DateTime.Today;
-            var listOfCycleTimes = IssueLeadTimes.Where(x => x.OpenDate != null).Select(x => today - DateTime.Parse(x.OpenDate)).ToList();
-            var listOfNumericCycleTimes = listOfCycleTimes.Select(x => (double)x.Days).ToList();
             ReadyToTestOnProductionPercentiles = CalculatePercentile(listOfNumericCycleTimes);
+        }
+        var rdyToTestOnProdPerc = CalculatePercentile(listOfNumericCycleTimes);
+        if (rdyToTestOnProdPerc[0] != 0 && rdyToTestOnProdPerc[1] != 0)
+        {
+            // Use rdyToTestOnProdPerc if the days are higher than ReadyToTestOnProductionPercentiles
+            if (ReadyToTestOnProductionPercentiles[0] < rdyToTestOnProdPerc[0])
+            {
+                ReadyToTestOnProductionPercentilesOngoing[0] = rdyToTestOnProdPerc[0];
+            }
+            if (ReadyToTestOnProductionPercentiles[1] < rdyToTestOnProdPerc[1])
+            {
+                ReadyToTestOnProductionPercentilesOngoing[1] = rdyToTestOnProdPerc[1];
+            }
+        }
+        if (IssuesDoneCount < 30)
+        {
+            ReadyToTestOnProductionPercentiles[0] = rdyToTestOnProdPerc[0];
+            ReadyToTestOnProductionPercentiles[1] = rdyToTestOnProdPerc[1];
         }
 
         AnsweredPercentiles = CalculatePercentile(IssueLeadTimes.Where(x => x.Answered > 0).Select(x => x.Answered).ToList());
@@ -445,6 +473,15 @@ public class CreateNewProjectHandler
                 .Select(x => x.CycleTime!.Value)   // Selects only the non-null values
                 .ToList()
           );
+        // if both percentiles are 0, then nothing is in Done
+        if (BugCycleTimePercentiles[0] == 0 && BugCycleTimePercentiles[1] == 0)
+        {
+            var listOfCycleTimesBugs = ListOfBugIssues
+                                          .Where(x => x.OpenDate != null)
+                                          .Select(x => today - DateTime.Parse(x.OpenDate)).ToList();
+            var listOfNumericCycleTimesForBugs = listOfCycleTimesBugs.Select(x => (double)x.Days).ToList();
+            BugCycleTimePercentiles = CalculatePercentile(listOfNumericCycleTimesForBugs);
+        }
         AwaitCustPercentiles = CalculatePercentile(
             ListOfAwaitCust
             .Where(x => x.AwaitingCustomer > 0) // Filters out null CycleTime values
@@ -457,7 +494,8 @@ public class CreateNewProjectHandler
         var bugCycleTimeHigh = BugCycleTimePercentiles[1];
 
         // Safely calculate multipliers with checks for zero values to avoid NaN results
-        double bugCycleTimeMultiplierLow = (bugCycleTimeLow != 0) ? (bugCycleTimeLow / cycleTimeLowBound) * 100 : 0;
+        // double bugCycleTimeMultiplierLow = (bugCycleTimeLow != 0) ? (bugCycleTimeLow / cycleTimeLowBound) * 100 : 0; // sometimes produces a too high % for low bound
+        double bugCycleTimeMultiplierLow = 0;
         double bugCycleTimeMultiplierHigh = (bugCycleTimeHigh != 0) ? (bugCycleTimeHigh / cycleTimeHighBound) * 100 : 0;
         if (bugCycleTimeMultiplierLow > bugCycleTimeMultiplierHigh)
             bugCycleTimeMultiplierLow = 0;
