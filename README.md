@@ -1,5 +1,9 @@
 # ProjectRiskManagementSim
 
+<img src="https://github.com/Flakvard/ProjectRiskManagementSim/blob/master/Home%20screen.png?raw=true" width="30%" height="150px"></img> 
+<img src="https://github.com/Flakvard/ProjectRiskManagementSim/blob/master/Anon%20project.png?raw=true" width="30%" height="150px"></img> 
+<img src="https://github.com/Flakvard/ProjectRiskManagementSim/blob/master/Anon%20project%20visual.png?raw=true" width="30%" height="150px" ></img> 
+
 Welcome to **ProjectRiskManagementSim**, where the complexities of project management meet the simplicity of intuitive, user-friendly interfaces. This tool is designed with project managers in mind—those who seek to master project dynamics without delving into advanced statistical realms.
 
 Our robust simulation engine mirrors the principles of lean project management, seamlessly accommodating cross-functional teams that self-organize to eliminate bottlenecks. This ensures a fluid workflow, enhancing productivity and efficiency across the board.
