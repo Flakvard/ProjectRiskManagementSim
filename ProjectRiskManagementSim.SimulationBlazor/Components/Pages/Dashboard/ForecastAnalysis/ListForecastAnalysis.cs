@@ -49,7 +49,7 @@ public class ListForeCastAnalysis
         SimulationId = simulationId; // Store the simulationId for later  
 
         // Use the injected IMonteCarloSimulation instance to get a new simulation instance
-        MonteCarloSimulation.InitiateAndRunSimulation(mappedProjectData, 1000, simulationId);
+        MonteCarloSimulation.InitiateAndRunSimulation(mappedProjectData, 5000, simulationId);
 
         // Store the simulation instance with the simulationId for later retrieval
         SimulationManager.AddSimulationToManager(simulationId, MonteCarloSimulation);

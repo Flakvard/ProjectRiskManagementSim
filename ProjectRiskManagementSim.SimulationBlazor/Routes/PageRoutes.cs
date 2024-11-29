@@ -826,6 +826,14 @@ public static class PageRoutes
                 {
                     continue;
                 }
+                highBound = highBound.Replace(",", ".");
+                lowBound = lowBound.Replace(",", ".");
+                if(lowBoundOngoing != null && highBoundOngoing != null)
+                {
+                    lowBoundOngoing = lowBoundOngoing.Replace(",", ".");
+                    highBoundOngoing = highBoundOngoing.Replace(",", ".");
+                }
+                
 
                 if (colName == "Backlog" || colName == "Done")
                 {
@@ -836,8 +844,8 @@ public static class PageRoutes
                             Name = colName,
                             WIP = (int)deliverableNumber,
                             WIPMax = (int)deliverableNumber,
-                            EstimatedLowBound = int.Parse(lowBound),
-                            EstimatedHighBound = int.Parse(highBound),
+                            EstimatedLowBound = double.Parse(lowBound, CultureInfo.InvariantCulture),
+                            EstimatedHighBound = double.Parse(highBound, CultureInfo.InvariantCulture),
                             IsBuffer = isBuffer == "on"
                         });
                     }
@@ -846,10 +854,10 @@ public static class PageRoutes
                         columns.Add(new ViewColumnModel
                         {
                             Name = colName,
-                            WIP = int.Parse(wip),
-                            WIPMax = int.Parse(wipMax),
-                            EstimatedLowBound = int.Parse(lowBound),
-                            EstimatedHighBound = int.Parse(highBound),
+                            WIP = int.Parse(wip, CultureInfo.InvariantCulture),
+                            WIPMax = int.Parse(wipMax, CultureInfo.InvariantCulture),
+                            EstimatedLowBound = double.Parse(lowBound, CultureInfo.InvariantCulture),
+                            EstimatedHighBound = double.Parse(highBound, CultureInfo.InvariantCulture),
                             IsBuffer = isBuffer == "on"
                         });
                     }
@@ -864,8 +872,8 @@ public static class PageRoutes
                             Name = colName,
                             WIP = (int)totalDevelopers,
                             WIPMax = (int)totalDevelopers,
-                            EstimatedLowBound = int.Parse(lowBound),
-                            EstimatedHighBound = int.Parse(highBound),
+                            EstimatedLowBound = double.Parse(lowBound, CultureInfo.InvariantCulture),
+                            EstimatedHighBound = double.Parse(highBound, CultureInfo.InvariantCulture),
                             IsBuffer = isBuffer == "on"
                         });
                     }
@@ -874,10 +882,10 @@ public static class PageRoutes
                         columns.Add(new ViewColumnModel
                         {
                             Name = colName,
-                            WIP = int.Parse(wip),
-                            WIPMax = int.Parse(wipMax),
-                            EstimatedLowBound = int.Parse(lowBound),
-                            EstimatedHighBound = int.Parse(highBound),
+                            WIP = int.Parse(wip, CultureInfo.InvariantCulture),
+                            WIPMax = int.Parse(wipMax, CultureInfo.InvariantCulture),
+                            EstimatedLowBound = double.Parse(lowBound, CultureInfo.InvariantCulture),
+                            EstimatedHighBound = double.Parse(highBound, CultureInfo.InvariantCulture),
                             IsBuffer = isBuffer == "on"
                         });
                     }
@@ -890,8 +898,8 @@ public static class PageRoutes
                         double highBoundParsed = 0;
                         if (lowBoundOngoing != null && highBoundOngoing != null)
                         {
-                            lowBoundParsed = double.Parse(lowBoundOngoing);
-                            highBoundParsed = double.Parse(highBoundOngoing);
+                            lowBoundParsed = double.Parse(lowBoundOngoing, CultureInfo.InvariantCulture);
+                            highBoundParsed = double.Parse(highBoundOngoing, CultureInfo.InvariantCulture);
                         }
 
 
@@ -912,8 +920,8 @@ public static class PageRoutes
                             columns.Add(new ViewColumnModel
                             {
                                 Name = colName,
-                                WIP = int.Parse(wip),
-                                WIPMax = int.Parse(wipMax),
+                                WIP = int.Parse(wip, CultureInfo.InvariantCulture),
+                                WIPMax = int.Parse(wipMax, CultureInfo.InvariantCulture),
                                 EstimatedLowBound = lowBoundParsed,
                                 EstimatedHighBound = highBoundParsed,
                                 IsBuffer = isBuffer == "on"
@@ -929,8 +937,8 @@ public static class PageRoutes
                                 Name = colName,
                                 WIP = (int)testers,
                                 WIPMax = (int)testers,
-                                EstimatedLowBound = int.Parse(lowBound),
-                                EstimatedHighBound = int.Parse(highBound),
+                                EstimatedLowBound = double.Parse(lowBound, CultureInfo.InvariantCulture),
+                                EstimatedHighBound = double.Parse(highBound, CultureInfo.InvariantCulture),
                                 IsBuffer = isBuffer == "on"
                             });
                         }
@@ -939,10 +947,10 @@ public static class PageRoutes
                             columns.Add(new ViewColumnModel
                             {
                                 Name = colName,
-                                WIP = int.Parse(wip),
-                                WIPMax = int.Parse(wipMax),
-                                EstimatedLowBound = double.Parse(lowBound),
-                                EstimatedHighBound = double.Parse(highBound),
+                                WIP = int.Parse(wip, CultureInfo.InvariantCulture),
+                                WIPMax = int.Parse(wipMax, CultureInfo.InvariantCulture),
+                                EstimatedLowBound = double.Parse(lowBound, CultureInfo.InvariantCulture),
+                                EstimatedHighBound = double.Parse(highBound, CultureInfo.InvariantCulture),
                                 IsBuffer = isBuffer == "on"
                             });
                         }
@@ -956,16 +964,16 @@ public static class PageRoutes
                         double highBoundParsed = 0;
                         if (lowBoundOngoing != null && highBoundOngoing != null)
                         {
-                            lowBoundParsed = double.Parse(lowBoundOngoing);
-                            highBoundParsed = double.Parse(highBoundOngoing);
+                            lowBoundParsed = double.Parse(lowBoundOngoing, CultureInfo.InvariantCulture);
+                            highBoundParsed = double.Parse(highBoundOngoing, CultureInfo.InvariantCulture);
                         }
 
 
                         columns.Add(new ViewColumnModel
                         {
                             Name = colName,
-                            WIP = int.Parse(wip),
-                            WIPMax = int.Parse(wipMax),
+                            WIP = int.Parse(wip, CultureInfo.InvariantCulture),
+                            WIPMax = int.Parse(wipMax, CultureInfo.InvariantCulture),
                             EstimatedLowBound = lowBoundParsed,
                             EstimatedHighBound = highBoundParsed,
                             IsBuffer = isBuffer == "on"
@@ -976,10 +984,10 @@ public static class PageRoutes
                         columns.Add(new ViewColumnModel
                         {
                             Name = colName,
-                            WIP = int.Parse(wip),
-                            WIPMax = int.Parse(wipMax),
-                            EstimatedLowBound = double.Parse(lowBound),
-                            EstimatedHighBound = double.Parse(highBound),
+                            WIP = int.Parse(wip, CultureInfo.InvariantCulture),
+                            WIPMax = int.Parse(wipMax, CultureInfo.InvariantCulture),
+                            EstimatedLowBound = double.Parse(lowBound, CultureInfo.InvariantCulture),
+                            EstimatedHighBound = double.Parse(highBound, CultureInfo.InvariantCulture),
                             IsBuffer = isBuffer == "on"
                         });
                     }
@@ -991,8 +999,8 @@ public static class PageRoutes
                         Name = colName,
                         WIP = int.Parse(wip),
                         WIPMax = int.Parse(wipMax),
-                        EstimatedLowBound = int.Parse(lowBound),
-                        EstimatedHighBound = int.Parse(highBound),
+                        EstimatedLowBound = double.Parse(lowBound, CultureInfo.InvariantCulture),
+                        EstimatedHighBound = double.Parse(highBound, CultureInfo.InvariantCulture),
                         IsBuffer = isBuffer == "on"
                     });
             }
