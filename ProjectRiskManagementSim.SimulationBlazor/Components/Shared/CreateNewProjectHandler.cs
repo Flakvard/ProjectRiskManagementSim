@@ -120,7 +120,7 @@ public class CreateNewProjectHandler
             }
         }
 
-        // When we create a new simulation from other simulation
+        // When we create a new simulation from other simulation (Update/refresh button also lands here)
         else if (SimProjectId != 0 && !alreadyExists)
         {
             var simProjectModel = await contextSimulation.GetSimulationByIdAsync(SimProjectId);
@@ -136,6 +136,7 @@ public class CreateNewProjectHandler
                 MapProjectBackToModal(simProjectModel!.Project, simProjectModel);
                 await CalculateCount(contextAnalytics);
                 CalculatePercentiles();
+                MapImportantDetailsBackToModal(simProjectModel);
                 AlreadySimulated = true;
                 return;
             }
@@ -169,7 +170,7 @@ public class CreateNewProjectHandler
             AlreadySimulated = false;
             return;
         }
-
+        // when we create a new project from Home screen
         else if (simProject != null)
         {
             var allSimulations = simProject.ProjectSimulationModels.ToList();
@@ -210,8 +211,9 @@ public class CreateNewProjectHandler
             }
 
             MapProjectBackToModal(simProjectModel!.Project, simProjectModel);
-            await CalculateCount(contextAnalytics);
-            CalculatePercentiles();
+            // Does this in the `OnInitialization`
+            // await CalculateCount(contextAnalytics);
+            // CalculatePercentiles();
             return;
         }
 
@@ -267,6 +269,20 @@ public class CreateNewProjectHandler
         ReadyToTestOnProductionPercentiles = new List<double> { projectLowBound[8], projectHighBound[8] };
         ReadyToTestOnProductionPercentilesOngoing = new List<double> { projectLowBound[8], projectHighBound[8] };
         DonePercentiles = new List<double> { projectLowBound[9], projectHighBound[9] };
+    }
+    
+    private void MapImportantDetailsBackToModal(ProjectSimulationModel lastSimProject)
+    {
+        // Map to CreateNewProjectHandler
+        StartDate = lastSimProject.StartDate;
+        TargetDate = lastSimProject.TargetDate;
+        TotalRevenue = (double)lastSimProject.ActualRevenue;
+        BudgetCosts = lastSimProject.BudgetCosts;
+        FrontendDevs = lastSimProject.FrontendDevs;
+        BackendDevs = lastSimProject.BackendDevs;
+        Testers = lastSimProject.Testers;
+        DeliverablesCount = lastSimProject.DeliverablesCount;
+        EpicCount = (int)lastSimProject.DeliverablesCount;
     }
 
     private async Task CalculateCount(OxygenAnalyticsContext context)
