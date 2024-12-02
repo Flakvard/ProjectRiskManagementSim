@@ -755,6 +755,10 @@ public static class PageRoutes
             var todayDate = DateTime.Now;
             var daysSinceStart = todayDate - startDate;
             daysSinceStartInt = daysSinceStart.Days;
+            // Incase we just started the projekt or experimenting with features
+            // We want to use other values.
+            if (daysSinceStart.Days <= 1)
+                daysSinceStartInt = 1;
         }
         else
         {
@@ -763,6 +767,8 @@ public static class PageRoutes
 
         }
         costPrDay = cost / daysSinceStartInt;
+        if(daysSinceStartInt == 1)
+            costPrDay = 1500;
 
         //defects = new List<ViewDefectModel>();
 
