@@ -128,6 +128,11 @@
                                         <input class="input-border" type="number" name="hours"
                                                value="@double.Round(NewProjectHandler.TotalHours)" required />
                                     </div>
+                                    <div class="hidden">
+                                        <label>Refreshed:</label>
+                                        <input class="input-border" type="text" name="Refresh"
+                                               value="@IsRefreshed.ToString()" required />
+                                    </div>
                                 </div>
                             </div>
 
@@ -595,6 +600,7 @@
     public CreateNewProjectHandler NewProjectHandler { get; set; } = new CreateNewProjectHandler();
     [Parameter] public EventCallback<int> OnForecastSave { get; set; }
     [Parameter] public int ProjectSimulationId { get; set; } = 0;
+    public bool IsRefreshed { get; set; } = false;
 
     [SupplyParameterFromForm] public bool AlreadyExists { get; set; } = true;
     protected override async Task OnInitializedAsync()
@@ -620,6 +626,7 @@
     }
     private async Task HandleUpdate(HtmxEventArgs args)
     {
+        IsRefreshed = true;
         NewProjectHandler.SimProjectId = SimProjectId;
         await NewProjectHandler.UpdateAndFetchProjectInfor(SimProjectId, AnalyticsContext, SimContext);
         IsModalVisible = true;
