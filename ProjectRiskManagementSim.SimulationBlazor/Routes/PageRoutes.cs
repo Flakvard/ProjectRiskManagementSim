@@ -164,6 +164,7 @@ public static class PageRoutes
             List<ViewDefectModel> defects;
             List<ViewBlockingEventModel> blockingEvents;
             bool isOngoing;
+            bool isRefreshed = false;
 
             ParseAndExtractForm(form,
                                 out simProjectId,
@@ -207,6 +208,9 @@ public static class PageRoutes
                                 out isOngoing
                                   );
 
+            string? stringRefresh = form["Refresh"];
+            if (stringRefresh != null)
+                isRefreshed = bool.Parse(stringRefresh.ToLower());
             // Store simulation in database
             int simIdFromDb = 0; // Access the ID for later use
 
@@ -229,45 +233,49 @@ public static class PageRoutes
                 existingSimProject.ActualHours = hours;
                 existingSimProject.UpdatedAt = DateTime.Now;
                 existingSimProject.DeliverablesCount = deliverableNumber;
-                existingSimProject.IssueCount = issueNumber;
-                existingSimProject.IssueDoneCount = issueDoneCount;
-                existingSimProject.BugCount = bugCount;
                 existingSimProject.BugPercentage = bugPercentage;
-
-                existingSimProject.PercentageLowBound = percentageLowBound;
-                existingSimProject.PercentageHighBound = percentageHighBound;
-
-                // update existing columns
-                existingSimProject.Columns.Select((column, index) =>
+                if (isRefreshed)
                 {
-                    column.Name = columns[index].Name;
-                    column.EstimatedLowBound = columns[index].EstimatedLowBound;
-                    column.EstimatedHighBound = columns[index].EstimatedHighBound;
-                    column.WIP = columns[index].WIP;
-                    column.WIPMax = columns[index].WIPMax;
-                    column.IsBuffer = columns[index].IsBuffer;
-                    return column;
-                }).ToList();
+                    existingSimProject.IssueCount = issueNumber;
+                    existingSimProject.IssueDoneCount = issueDoneCount;
+                    existingSimProject.BugCount = bugCount;
 
-                // update existing Defects
-                existingSimProject.Defects.Select((column, index) =>
-                {
-                    column.Name = defects[index].Name;
-                    column.DefectPercentage = defects[index].DefectPercentage;
-                    column.DefectsPercentageLowBound = defects[index].DefectsPercentageLowBound;
-                    column.DefectsPercentageHighBound = defects[index].DefectsPercentageHighBound;
-                    return column;
-                }).ToList();
+                    existingSimProject.PercentageLowBound = percentageLowBound;
+                    existingSimProject.PercentageHighBound = percentageHighBound;
 
-                // update existing BlockingEvents
-                existingSimProject.BlockingEvents.Select((column, index) =>
-                {
-                    column.Name = blockingEvents[index].Name;
-                    column.BlockingEventPercentage = blockingEvents[index].BlockingEventPercentage;
-                    column.BlockingEventsPercentageLowBound = blockingEvents[index].BlockingEventsPercentageLowBound;
-                    column.BlockingEventsPercentageHighBound = blockingEvents[index].BlockingEventsPercentageHighBound;
-                    return column;
-                }).ToList();
+                    // update existing columns
+                    existingSimProject.Columns.Select((column, index) =>
+                    {
+                        column.Name = columns[index].Name;
+                        column.EstimatedLowBound = columns[index].EstimatedLowBound;
+                        column.EstimatedHighBound = columns[index].EstimatedHighBound;
+                        column.WIP = columns[index].WIP;
+                        column.WIPMax = columns[index].WIPMax;
+                        column.IsBuffer = columns[index].IsBuffer;
+                        return column;
+                    }).ToList();
+
+                    // update existing Defects
+                    existingSimProject.Defects.Select((column, index) =>
+                    {
+                        column.Name = defects[index].Name;
+                        column.DefectPercentage = defects[index].DefectPercentage;
+                        column.DefectsPercentageLowBound = defects[index].DefectsPercentageLowBound;
+                        column.DefectsPercentageHighBound = defects[index].DefectsPercentageHighBound;
+                        return column;
+                    }).ToList();
+
+                    // update existing BlockingEvents
+                    existingSimProject.BlockingEvents.Select((column, index) =>
+                    {
+                        column.Name = blockingEvents[index].Name;
+                        column.BlockingEventPercentage = blockingEvents[index].BlockingEventPercentage;
+                        column.BlockingEventsPercentageLowBound = blockingEvents[index].BlockingEventsPercentageLowBound;
+                        column.BlockingEventsPercentageHighBound = blockingEvents[index].BlockingEventsPercentageHighBound;
+                        return column;
+                    }).ToList();
+
+                }
 
                 await _context.UpdateSimulationAsync(existingSimProject);
                 // Save all changes at once
@@ -732,7 +740,7 @@ public static class PageRoutes
         await3PPercentilesHighBound = double.Parse(stringAwait3PPercentilesHighBound.Replace(',', '.'), CultureInfo.InvariantCulture);
         bugCycleTimePercentilesLowBound = double.Parse(stringBugCycleTimePercentilesLowBound.Replace(',', '.'), CultureInfo.InvariantCulture);
         bugCycleTimePercentilesHighBound = double.Parse(stringBugCycleTimePercentilesHighBound.Replace(',', '.'), CultureInfo.InvariantCulture);
-         isOngoing = stringIsOngoing == "on";
+        isOngoing = stringIsOngoing == "on";
 
 
         if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(jiraProjectId) || string.IsNullOrWhiteSpace(jiraProjectName))
@@ -767,7 +775,7 @@ public static class PageRoutes
 
         }
         costPrDay = cost / daysSinceStartInt;
-        if(daysSinceStartInt == 1)
+        if (daysSinceStartInt == 1)
             costPrDay = 1500;
 
         //defects = new List<ViewDefectModel>();
@@ -834,12 +842,12 @@ public static class PageRoutes
                 }
                 highBound = highBound.Replace(",", ".");
                 lowBound = lowBound.Replace(",", ".");
-                if(lowBoundOngoing != null && highBoundOngoing != null)
+                if (lowBoundOngoing != null && highBoundOngoing != null)
                 {
                     lowBoundOngoing = lowBoundOngoing.Replace(",", ".");
                     highBoundOngoing = highBoundOngoing.Replace(",", ".");
                 }
-                
+
 
                 if (colName == "Backlog" || colName == "Done")
                 {
