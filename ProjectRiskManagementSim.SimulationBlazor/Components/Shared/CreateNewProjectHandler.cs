@@ -270,7 +270,7 @@ public class CreateNewProjectHandler
         ReadyToTestOnProductionPercentilesOngoing = new List<double> { projectLowBound[8], projectHighBound[8] };
         DonePercentiles = new List<double> { projectLowBound[9], projectHighBound[9] };
     }
-    
+
     private void MapImportantDetailsBackToModal(ProjectSimulationModel lastSimProject)
     {
         // Map to CreateNewProjectHandler
@@ -307,7 +307,7 @@ public class CreateNewProjectHandler
         }
         foreach (var issueLeadTime in IssueLeadTimes)
         {
-            if (issueLeadTime.IssueType == "Task" || issueLeadTime.IssueType == "Sub-task" || issueLeadTime.IssueType == "Subtask" || issueLeadTime.IssueType == "Tech Task" || issueLeadTime.IssueType == "Story")
+            if (issueLeadTime.IssueType == "Task" || issueLeadTime.IssueType == "Sub-task" || issueLeadTime.IssueType == "Subtask" || issueLeadTime.IssueType == "Tech Task" || issueLeadTime.IssueType == "Story" || issueLeadTime.IssueType == "Opgave" || issueLeadTime.IssueType == "Underopgave")
             {
                 issuesCount += 1;
                 if (issueLeadTime.CurrentStatus == "Done" || issueLeadTime.CurrentStatus == "Closed" || issueLeadTime.CurrentStatus == "Resolved")
