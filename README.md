@@ -1,5 +1,12 @@
 # My bachelor thesis: 
 > ## _User-friendly Monte Carlo Simulation for Data-Driven Decisions in Project Management • A Solution for Optimized Project Management & Risk Management”_
+
+### Purpose: 
+> To develop a user-friendly tool based on Monte Carlo simulation, so that project managers can predict project deadlines and risks more accurately.
+
+### Result:
+> In short: a project simulator actively used by project managers at Oxygen to predict deadlines, costs, bottlenecks and visualize the kanban board flow.
+
 # ProjectRiskManagementSim
 
 <img src="https://github.com/Flakvard/ProjectRiskManagementSim/blob/master/Home%20screen.png?raw=true" width="30%" height="150px"></img> 
