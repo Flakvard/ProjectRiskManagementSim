@@ -1,3 +1,5 @@
+# My bachelor thesis: 
+> ## _User-friendly Monte Carlo Simulation for Data-Driven Decisions in Project Management • A Solution for Optimized Project Management & Risk Management”_
 # ProjectRiskManagementSim
 
 <img src="https://github.com/Flakvard/ProjectRiskManagementSim/blob/master/Home%20screen.png?raw=true" width="30%" height="150px"></img> 
