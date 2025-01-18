@@ -8,6 +8,7 @@ using ProjectRiskManagementSim.SimulationBlazor.Components.Pages.RunSimulation;
 using ProjectRiskManagementSim.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using ProjectRiskManagementSim.DataAccess.Models;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,27 +29,69 @@ var connectionStringSimulation = useWindowsAuth
     ? builder.Configuration.GetConnectionString("EfCoreSqlDbConnectionWindows")
     : builder.Configuration.GetConnectionString("EfCoreSqlDbConnection");
 
-// Add Database connection string for OxygenSimulationContext
-builder.Services.AddDbContext<OxygenAnalyticsContext>(options =>
-    options.UseSqlServer(connectionStringAnalytics,
-      sqlServerOptionsAction: sqlOptions =>
-    {
-        sqlOptions.EnableRetryOnFailure();
-    }));
 
-builder.Services.AddDbContext<OxygenSimulationContext>(options =>
-    options.UseSqlServer(connectionStringSimulation,
-      sqlServerOptionsAction: sqlOptions =>
-    {
-        sqlOptions.EnableRetryOnFailure();
-    }));
-
-// Ensure database migration
-using (var serviceScope = builder.Services.BuildServiceProvider().CreateScope())
+if (builder.Configuration.GetValue<bool>("UseInMemoryDatabase"))
 {
-    var dbContext = serviceScope.ServiceProvider.GetRequiredService<OxygenSimulationContext>();
-    dbContext.Database.Migrate();
+    // Use In-Memory Database for OxygenAnalyticsContext
+    builder.Services.AddDbContext<OxygenAnalyticsContext>(options =>
+        options.UseInMemoryDatabase("InMemoryAnalyticsDb"));
+
+    // Use In-Memory Database for OxygenSimulationContext
+    builder.Services.AddDbContext<OxygenSimulationContext>(options =>
+        options.UseInMemoryDatabase("InMemorySimulationDb"));
 }
+else
+{
+    // Add Database connection string for OxygenSimulationContext
+    builder.Services.AddDbContext<OxygenAnalyticsContext>(options =>
+        options.UseSqlServer(connectionStringAnalytics,
+          sqlServerOptionsAction: sqlOptions =>
+        {
+            sqlOptions.EnableRetryOnFailure();
+        }));
+
+    builder.Services.AddDbContext<OxygenSimulationContext>(options =>
+        options.UseSqlServer(connectionStringSimulation,
+          sqlServerOptionsAction: sqlOptions =>
+        {
+            sqlOptions.EnableRetryOnFailure();
+        }));
+    // Ensure database migration
+    using (var serviceScope = builder.Services.BuildServiceProvider().CreateScope())
+    {
+        var dbContext = serviceScope.ServiceProvider.GetRequiredService<OxygenSimulationContext>();
+        dbContext.Database.Migrate();
+    }
+}
+
+if (builder.Configuration.GetValue<bool>("UseInMemoryDatabase"))
+{
+    using (var serviceScope = builder.Services.BuildServiceProvider().CreateScope())
+    {
+        var analyticsContext = serviceScope.ServiceProvider.GetRequiredService<OxygenAnalyticsContext>();
+        var simulationContext = serviceScope.ServiceProvider.GetRequiredService<OxygenSimulationContext>();
+
+        // Load data from JSON files or other sources
+        // SeedInMemoryDatabase(analyticsContext, simulationContext);
+    }
+}
+
+void SeedInMemoryDatabase(OxygenAnalyticsContext analyticsContext, OxygenSimulationContext simulationContext)
+{
+    // Load data into OxygenAnalyticsContext
+    var projectData = JsonSerializer.Deserialize<List<ProjectJira>>(File.ReadAllText("projects.json"));
+    analyticsContext.Projects.AddRange(projectData!);
+
+    // Load other datasets as needed
+    analyticsContext.SaveChanges();
+
+    // Load data into OxygenSimulationContext
+    var simulationData = JsonSerializer.Deserialize<List<ProjectSimulationModel>>(File.ReadAllText("simulations.json"));
+    simulationContext.ProjectSimulationModel.AddRange(simulationData!);
+    simulationContext.SaveChanges();
+}
+
+
 
 // Register as Scoped or Transient depending on how you want the lifecycle to work
 builder.Services.AddScoped<SimulationManager>();
