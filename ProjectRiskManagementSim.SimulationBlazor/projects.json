@@ -1,0 +1,23 @@
+﻿[
+  {
+    "Id": 168,
+    "Name": "Working Project",
+    "JiraId": "RD25",
+    "ProjectCategory": "Projekt",
+    "JiraProjectId": "10264"
+  },
+  {
+    "Id": 169,
+    "Name": "Project 3 Not Working",
+    "JiraId": "RM",
+    "ProjectCategory": "Samarbejde",
+    "JiraProjectId": "10030"
+  },
+  {
+    "Id": 170,
+    "Name": "Project 4 Not Working",
+    "JiraId": "RNP",
+    "ProjectCategory": "Arkiveret",
+    "JiraProjectId": "10031"
+  }
+]
