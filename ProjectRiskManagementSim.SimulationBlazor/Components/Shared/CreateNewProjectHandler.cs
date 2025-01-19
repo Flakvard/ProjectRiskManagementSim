@@ -1,3 +1,4 @@
+using System.Globalization;
 using ProjectRiskManagementSim.DataAccess;
 using ProjectRiskManagementSim.DataAccess.Models;
 
@@ -332,7 +333,7 @@ public class CreateNewProjectHandler
             var issueCreatedDate = new DateTime();
             if (issueLeadTime.CreatedDate != null)
             {
-                issueCreatedDate = DateTime.Parse(issueLeadTime.CreatedDate);
+                issueCreatedDate = DateTime.ParseExact(issueLeadTime.CreatedDate, "dd-MM-yyyy HH:mm:ss", CultureInfo.InvariantCulture);
             }
             if (FirstIssueDate == DateTime.MinValue || issueCreatedDate < FirstIssueDate)
             {
@@ -342,7 +343,7 @@ public class CreateNewProjectHandler
             var issueUpdatedDate = new DateTime();
             if (issueLeadTime.LastUpdated != null)
             {
-                issueUpdatedDate = DateTime.Parse(issueLeadTime.LastUpdated);
+                issueUpdatedDate = DateTime.ParseExact(issueLeadTime.LastUpdated, "dd-MM-yyyy HH:mm:ss", CultureInfo.InvariantCulture);
             }
             if (LastIssueDate == DateTime.MinValue || issueUpdatedDate > LastIssueDate)
             {
@@ -423,7 +424,7 @@ public class CreateNewProjectHandler
             var listOfCycleTimesDev = IssueLeadTimes
                                           .Where(x => x.OpenDate != null)
                                           .Where(x => x.IssueType == "Task" || x.IssueType == "Sub-task" || x.IssueType == "Subtask" || x.IssueType == "Tech Task" || x.IssueType == "Story")
-                                          .Select(x => today - DateTime.Parse(x.OpenDate)).ToList();
+                                          .Select(x => today - DateTime.ParseExact(x.OpenDate, "dd-MM-yyyy HH:mm:ss", CultureInfo.InvariantCulture)).ToList();
             var listOfNumericCycleTimesDev = listOfCycleTimesDev.Select(x => (double)x.Days).ToList();
             TestingOnStagePercentiles = CalculatePercentile(listOfNumericCycleTimesDev);
         }
@@ -434,7 +435,7 @@ public class CreateNewProjectHandler
         var listOfCycleTimes = IssueLeadTimes
                                   .Where(x => x.OpenDate != null)
                                   .Where(x => x.IssueType == "Task" || x.IssueType == "Sub-task" || x.IssueType == "Subtask" || x.IssueType == "Tech Task" || x.IssueType == "Story")
-                                  .Select(x => today - DateTime.Parse(x.OpenDate)).ToList();
+                                  .Select(x => today - DateTime.ParseExact(x.OpenDate, "dd-MM-yyyy HH:mm:ss", CultureInfo.InvariantCulture)).ToList();
         var listOfNumericCycleTimes = listOfCycleTimes.Select(x => (double)x.Days).ToList();
         if (ReadyToTestOnProductionPercentiles[0] == 0 && ReadyToTestOnProductionPercentiles[1] == 0)
         {
@@ -494,7 +495,7 @@ public class CreateNewProjectHandler
         {
             var listOfCycleTimesBugs = ListOfBugIssues
                                           .Where(x => x.OpenDate != null)
-                                          .Select(x => today - DateTime.Parse(x.OpenDate)).ToList();
+                                          .Select(x => today - DateTime.ParseExact(x.OpenDate, "dd-MM-yyyy HH:mm:ss", CultureInfo.InvariantCulture)).ToList();
             var listOfNumericCycleTimesForBugs = listOfCycleTimesBugs.Select(x => (double)x.Days).ToList();
             BugCycleTimePercentiles = CalculatePercentile(listOfNumericCycleTimesForBugs);
         }
