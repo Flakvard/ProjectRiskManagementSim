@@ -72,23 +72,27 @@ if (builder.Configuration.GetValue<bool>("UseInMemoryDatabase"))
         var simulationContext = serviceScope.ServiceProvider.GetRequiredService<OxygenSimulationContext>();
 
         // Load data from JSON files or other sources
-        // SeedInMemoryDatabase(analyticsContext, simulationContext);
+        SeedInMemoryDatabase(analyticsContext, simulationContext);
     }
 }
 
 void SeedInMemoryDatabase(OxygenAnalyticsContext analyticsContext, OxygenSimulationContext simulationContext)
 {
     // Load data into OxygenAnalyticsContext
+    var issueleadtime = JsonSerializer.Deserialize<List<IssueLeadTime>>(File.ReadAllText("issueLeadTimes.json"));
     var projectData = JsonSerializer.Deserialize<List<ProjectJira>>(File.ReadAllText("projects.json"));
+    var issueData = JsonSerializer.Deserialize<List<IssueModel>>(File.ReadAllText("issueModel.json"));
+    analyticsContext.IssueLeadTimes.AddRange(issueleadtime!);
     analyticsContext.Projects.AddRange(projectData!);
+    analyticsContext.Issues.AddRange(issueData!);
 
     // Load other datasets as needed
     analyticsContext.SaveChanges();
 
     // Load data into OxygenSimulationContext
-    var simulationData = JsonSerializer.Deserialize<List<ProjectSimulationModel>>(File.ReadAllText("simulations.json"));
-    simulationContext.ProjectSimulationModel.AddRange(simulationData!);
-    simulationContext.SaveChanges();
+    // var simulationData = JsonSerializer.Deserialize<List<ProjectSimulationModel>>(File.ReadAllText("simulations.json"));
+    // simulationContext.ProjectSimulationModel.AddRange(simulationData!);
+    // simulationContext.SaveChanges();
 }
 
 
